@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin – Resy & Afif Wedding</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --brown:    #4A2E10;
@@ -22,501 +23,230 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Lato', sans-serif; background: var(--ivory); color: var(--text); min-height: 100vh; }
 
-    header {
-      background: var(--brown);
-      border-bottom: 3px solid var(--gold);
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    header { background: var(--brown); border-bottom: 3px solid var(--gold); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
     .header-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--cream); }
-    .header-sub { font-size: 12px; color: var(--gold-lt); letter-spacing: 1px; margin-top: 2px; }
-    .admin-badge {
-      background: var(--gold); color: var(--brown);
-      font-size: 11px; font-weight: 700; padding: 4px 12px;
-      border-radius: 20px; letter-spacing: 1px;
-    }
 
     main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
 
-    /* STATS */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
-    .stat-card {
-      background: white; border: 1px solid var(--border); border-radius: 8px;
-      padding: 16px; text-align: center;
-    }
-    .stat-num { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--brown); line-height: 1; }
-    .stat-num.green  { color: var(--green); }
-    .stat-num.red    { color: var(--red); }
-    .stat-num.orange { color: #E65100; }
-    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    /* Login Overlay */
+    #login-overlay { position: fixed; inset: 0; background: var(--ivory); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+    .login-box { background: white; padding: 30px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
-    /* CARD */
-    .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-    .card-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--brown); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    /* Dashboard Stats - Sesuai Foto */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 38px; color: var(--brown); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* FORM */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-    .form-input {
-      padding: 9px 12px; border: 1px solid var(--border); border-radius: 5px;
-      font-family: 'Lato', sans-serif; font-size: 14px; color: var(--text);
-      background: var(--ivory); outline: none; width: 100%;
-    }
-    .form-input:focus { border-color: var(--gold); background: white; }
-    .btn { padding: 9px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s; white-space: nowrap; }
+    /* Cards & Tables */
+    .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 24px; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--brown); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; margin-bottom: 24px; }
+    .form-input { padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; width: 100%; }
+    
+    .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 13px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-brown { background: var(--brown); color: var(--cream); }
-    .btn-brown:hover { background: #3A2008; }
-    .btn-gold  { background: var(--gold); color: var(--brown); }
-    .btn-gold:hover  { background: var(--gold-lt); }
-    .btn-green { background: #25D366; color: white; }
-    .btn-green:hover { background: #1faa52; }
-    .btn-blue  { background: var(--blue); color: white; font-size: 12px; padding: 6px 12px; }
-    .btn-blue:hover  { background: #0D47A1; }
-    .btn-red   { background: #e53935; color: white; font-size: 12px; padding: 6px 12px; }
-    .btn-red:hover   { background: #b71c1c; }
-    .btn-sm    { font-size: 12px; padding: 5px 10px; }
+    .btn-gold { background: var(--gold); color: var(--brown); }
+    .btn-red { background: var(--red); color: white; }
+    .btn-green { background: var(--green); color: white; }
 
-    /* TABLE */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    thead tr { background: var(--brown); }
-    thead th { color: var(--cream); padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
-    tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tbody tr:hover td { background: #FFF8EC; }
-    .td-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--brown); }
-    .td-wa   { font-size: 12px; color: var(--muted); font-family: monospace; }
-    .td-link { font-size: 11px; color: #1565C0; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { background: #F8F5F0; padding: 14px 10px; text-align: left; font-size: 11px; text-transform: uppercase; color: var(--brown); letter-spacing: 0.5px; }
+    td { padding: 14px 10px; border-bottom: 1px solid var(--border); font-size: 14px; }
 
-    /* BADGE */
-    .badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 700; }
-    .badge-hadir  { background: #E8F5E9; color: var(--green); }
-    .badge-tidak  { background: #FFEBEE; color: var(--red); }
-    .badge-belum  { background: #FFF8E1; color: #E65100; }
-    .badge-terkirim { background: #E3F2FD; color: var(--blue); }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .badge-hadir { background: #E8F5E9; color: var(--green); }
+    .badge-tidak { background: #FFEBEE; color: var(--red); }
+    .badge-belum { background: #F5F5F5; color: #999; }
 
-    /* BULK ROW */
-    .bulk-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-    .bulk-bar span { font-size: 13px; color: var(--muted); }
-
-    /* TABS */
-    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
-    .tab { padding: 10px 20px; font-size: 13px; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s; }
-    .tab.active { color: var(--brown); border-bottom-color: var(--gold); }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* MESSAGE PREVIEW */
-    .msg-preview {
-      background: #E8F5E9; border-left: 4px solid #25D366;
-      border-radius: 0 8px 8px 0; padding: 12px 16px;
-      font-size: 13px; line-height: 1.7; color: #1B5E20;
-      white-space: pre-wrap; margin-top: 12px;
-    }
-
-    /* SEARCH */
-    .search-row { display: flex; gap: 10px; margin-bottom: 14px; }
-    .search-row .form-input { max-width: 300px; }
-
-    /* TOAST */
-    .toast {
-      position: fixed; bottom: 24px; right: 24px;
-      background: var(--brown); color: var(--gold-lt);
-      border: 1px solid var(--gold); padding: 10px 20px; border-radius: 8px;
-      font-size: 14px; z-index: 999; opacity: 0; transform: translateY(10px);
-      transition: all 0.3s; pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
-
-    @media (max-width: 700px) {
-      .form-row { grid-template-columns: 1fr 1fr; }
-      .form-row > :last-child { grid-column: span 2; }
-      thead th:nth-child(n+5) { display: none; }
-      tbody td:nth-child(n+5) { display: none; }
-    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <div class="header-title">Resy & Afif – Admin Panel</div>
-    <div class="header-sub">Manajemen Tamu & Pengiriman Undangan</div>
+<div id="login-overlay">
+  <div class="login-box">
+    <h2 style="font-family:'Playfair Display'; margin-bottom: 20px;">Admin Login</h2>
+    <input type="email" id="login-email" class="form-input" placeholder="Email" style="margin-bottom:12px">
+    <input type="password" id="login-password" class="form-input" placeholder="Password" style="margin-bottom:20px">
+    <button class="btn btn-brown" style="width:100%; justify-content:center" onclick="handleLogin()">Masuk</button>
   </div>
-  <span class="admin-badge">ADMIN</span>
+</div>
+
+<header>
+  <div class="header-title">Admin – Resy & Afif Wedding</div>
+  <button class="btn btn-red" onclick="handleLogout()">Logout</button>
 </header>
 
 <main>
-  <!-- STATS -->
-  <div class="stats-grid" id="stats-grid">
+  <div class="stats-grid">
     <div class="stat-card"><div class="stat-num" id="s-total">0</div><div class="stat-label">Total Tamu</div></div>
-    <div class="stat-card"><div class="stat-num green" id="s-hadir">0</div><div class="stat-label">Hadir</div></div>
-    <div class="stat-card"><div class="stat-num red" id="s-tidak">0</div><div class="stat-label">Tidak Hadir</div></div>
-    <div class="stat-card"><div class="stat-num orange" id="s-belum">0</div><div class="stat-label">Belum Respon</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-hadir" style="color:var(--green)">0</div><div class="stat-label">Akan Hadir</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-tidak" style="color:var(--red)">0</div><div class="stat-label">Berhalangan</div></div>
     <div class="stat-card"><div class="stat-num" id="s-sent" style="color:var(--blue)">0</div><div class="stat-label">WA Terkirim</div></div>
   </div>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('guests', this)">Daftar Tamu</button>
-    <button class="tab" onclick="switchTab('rsvp', this)">Konfirmasi RSVP</button>
-    <button class="tab" onclick="switchTab('wishes', this)">Ucapan & Doa</button>
-    <button class="tab" onclick="switchTab('settings', this)">Pengaturan Pesan</button>
-  </div>
-
-  <!-- TAB: GUESTS -->
-  <div id="tab-guests" class="tab-content active">
-    <div class="card">
-      <div class="card-title">Tambah Tamu</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nama Tamu</label>
-          <input class="form-input" id="new-name" placeholder="Nama lengkap..." />
-        </div>
-        <div class="form-group">
-          <label class="form-label">No. WhatsApp</label>
-          <input class="form-input" id="new-wa" placeholder="628xxxxxxxxxx" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Keterangan</label>
-          <input class="form-input" id="new-note" placeholder="Keluarga / Teman / Kolega..." />
-        </div>
-        <button class="btn btn-brown" onclick="addGuest()" style="align-self:flex-end">+ Tambah</button>
+  <div class="card">
+    <div class="card-title">
+      <span>Daftar Tamu Undangan</span>
+      <div style="display:flex; gap:8px">
+        <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="importCSV(event)">
+        <button class="btn btn-gold" onclick="document.getElementById('csv-file').click()">⬆ Import CSV</button>
+        <button class="btn btn-brown" onclick="exportCSV()">⬇ Export CSV</button>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">Daftar Tamu Undangan</div>
-      <div class="search-row">
-        <input class="form-input" id="search-guest" placeholder="Cari nama..." oninput="filterGuests()" />
-        <button class="btn btn-gold" onclick="sendAllPending()">📲 Kirim Semua WA Belum Terkirim</button>
-        <button class="btn btn-blue btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nama Tamu</th>
-              <th>No. WhatsApp</th>
-              <th>Keterangan</th>
-              <th>Status RSVP</th>
-              <th>WA Terkirim</th>
-              <th>Link Undangan</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="guest-tbody"></tbody>
-        </table>
-      </div>
+    <div class="form-row">
+      <div><label style="display:block; font-size:11px; margin-bottom:4px">NAMA TAMU</label><input type="text" id="in-name" class="form-input" placeholder="Nama Lengkap"></div>
+      <div><label style="display:block; font-size:11px; margin-bottom:4px">WHATSAPP (62...)</label><input type="text" id="in-wa" class="form-input" placeholder="62812345678"></div>
+      <div><label style="display:block; font-size:11px; margin-bottom:4px">KATEGORI</label><input type="text" id="in-note" class="form-input" placeholder="Keluarga/Teman"></div>
+      <button class="btn btn-brown" onclick="addGuest()">Tambah</button>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Tamu</th>
+            <th>Kategori</th>
+            <th>RSVP Web</th>
+            <th>Status WA</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="guest-list-body"></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- TAB: RSVP -->
-  <div id="tab-rsvp" class="tab-content">
-    <div class="card">
-      <div class="card-title">Data Konfirmasi Kehadiran</div>
-      <div id="rsvp-admin-list"><p style="color:var(--muted);font-style:italic">Memuat data...</p></div>
-    </div>
-  </div>
-
-  <!-- TAB: WISHES -->
-  <div id="tab-wishes" class="tab-content">
-    <div class="card">
-      <div class="card-title">Ucapan & Doa dari Tamu</div>
-      <div id="wishes-admin-list"><p style="color:var(--muted);font-style:italic">Memuat data...</p></div>
-    </div>
-  </div>
-
-  <!-- TAB: SETTINGS -->
-  <div id="tab-settings" class="tab-content">
-    <div class="card">
-      <div class="card-title">Template Pesan WhatsApp</div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Gunakan <code>{nama}</code> untuk nama tamu dan <code>{link}</code> untuk link undangan.</p>
-      <textarea class="form-input" id="wa-template" rows="8" style="font-size:14px;line-height:1.7">Assalamu'alaikum warahmatullahi wabarakatuh,
-
-Yth. {nama}
-
-Dengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami:
-
-👰🤵 *Resy & Afif*
-📅 Ahad, 27 Desember 2026
-⏰ 08.00 WIB – Selesai
-📍 Rumah Mempelai Wanita, Cilaja Hilir, Sindanglaya, Kab. Bandung
-
-Undangan digital Anda:
-🔗 {link}
-
-Melalui link tersebut, Bapak/Ibu/Saudara/i dapat:
-✅ Konfirmasi kehadiran
-💬 Mengirim ucapan & doa
-📱 Melihat QR Code kehadiran
-
-Kehadiran Bapak/Ibu/Saudara/i merupakan kehormatan bagi kami.
-Jazakumullahu khairan wa barakallahu fiikum 🙏
-
-Wassalamu'alaikum warahmatullahi wabarakatuh
-
-_Resy & Afif_
-_Beserta Keluarga Besar_</textarea>
-      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
-        <button class="btn btn-brown" onclick="saveTemplate()">Simpan Template</button>
-        <button class="btn btn-gold" onclick="previewTemplate()">Preview</button>
-      </div>
-      <div id="preview-result"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Base URL Undangan</div>
-      <div class="form-group">
-        <label class="form-label">URL Website Undangan</label>
-        <input class="form-input" id="base-url" value="https://resy-afif.vercel.app" />
-      </div>
-      <button class="btn btn-brown" style="margin-top:10px" onclick="saveBaseUrl()">Simpan URL</button>
-    </div>
+  <div class="card">
+    <div class="card-title">Konfirmasi RSVP (Supabase)</div>
+    <div id="rsvp-realtime-list">Memuat data...</div>
   </div>
 </main>
 
-<div class="toast" id="toast"></div>
-
 <script>
-// CONFIG
 const SUPABASE_URL = 'https://bijessmsedrtfxbnieza.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
-const BASE_URL_DEFAULT = 'https://resy-afif.vercel.app';
+const SUPABASE_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// STATE
 let guests = JSON.parse(localStorage.getItem('wedding_guests') || '[]');
-let waTemplate = localStorage.getItem('wa_template') || '';
-let baseUrl = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
+let waTemplate = "Halo {nama}, kami mengundang Anda ke acara pernikahan kami...";
 
-// Prefill template if empty
-if (!waTemplate) {
-  waTemplate = document.getElementById('wa-template').value;
-  localStorage.setItem('wa_template', waTemplate);
+// AUTH
+async function handleLogin() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) alert("Login Gagal: " + error.message);
+  else { document.getElementById('login-overlay').classList.add('hidden'); init(); }
 }
 
-// Seed data if empty
-if (guests.length === 0) {
-  guests = [
-    { id: 1, name: 'Keluarga H. Dadan Suryadi', wa: '6281234567890', note: 'Keluarga', status: 'belum', sent: false },
-    { id: 2, name: 'Ibu Titi Rahayu', wa: '6289876543210', note: 'Tetangga', status: 'belum', sent: false },
-    { id: 3, name: 'Bpk. Arif Nugraha', wa: '6285551234567', note: 'Rekan Kerja', status: 'belum', sent: false },
-    { id: 4, name: 'Teh Rini & Kang Dedi', wa: '6287890123456', note: 'Teman SMA', status: 'belum', sent: false },
-    { id: 5, name: 'Komunitas Masjid Al-Ikhlas', wa: '6282345678901', note: 'Komunitas', status: 'belum', sent: false },
-  ];
-  saveGuests();
+async function checkSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) { document.getElementById('login-overlay').classList.add('hidden'); init(); }
 }
 
-function saveGuests() { localStorage.setItem('wedding_guests', JSON.stringify(guests)); }
-function showToast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+function handleLogout() { supabaseClient.auth.signOut(); location.reload(); }
+
+function init() {
+  renderGuests();
+  loadRsvpData();
 }
 
-function getInviteLink(name) {
-  const url = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
-  return `${url}?to=${encodeURIComponent(name)}`;
+// MANAGEMENT
+function addGuest() {
+  const name = document.getElementById('in-name').value;
+  const wa = document.getElementById('in-wa').value;
+  const note = document.getElementById('in-note').value;
+  if (!name) return;
+  guests.push({ id: Date.now(), name, wa, note, sent: false });
+  saveAndRender();
+  document.getElementById('in-name').value = ''; document.getElementById('in-wa').value = '';
 }
 
-function buildWaMsg(guestName) {
-  const tmpl = localStorage.getItem('wa_template') || document.getElementById('wa-template').value;
-  const link = getInviteLink(guestName);
-  return tmpl.replace(/{nama}/g, guestName).replace(/{link}/g, link);
+function saveAndRender() {
+  localStorage.setItem('wedding_guests', JSON.stringify(guests));
+  renderGuests();
 }
 
-function switchTab(name, el) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  el.classList.add('active');
-  if (name === 'rsvp') loadRsvpAdmin();
-  if (name === 'wishes') loadWishesAdmin();
-}
-
-function updateStats() {
-  const hadir = guests.filter(g => g.status === 'hadir').length;
-  const tidak = guests.filter(g => g.status === 'tidak').length;
-  const belum = guests.filter(g => g.status === 'belum').length;
-  const sent  = guests.filter(g => g.sent).length;
-  document.getElementById('s-total').textContent = guests.length;
-  document.getElementById('s-hadir').textContent = hadir;
-  document.getElementById('s-tidak').textContent = tidak;
-  document.getElementById('s-belum').textContent = belum;
-  document.getElementById('s-sent').textContent  = sent;
-}
-
-function filterGuests() {
-  const q = document.getElementById('search-guest').value.toLowerCase();
-  const filtered = q ? guests.filter(g => g.name.toLowerCase().includes(q)) : guests;
-  renderGuestTable(filtered);
-}
-
-function renderGuestTable(data) {
-  data = data || guests;
-  updateStats();
-  const tbody = document.getElementById('guest-tbody');
-  tbody.innerHTML = data.map((g, i) => `
+function renderGuests() {
+  const body = document.getElementById('guest-list-body');
+  body.innerHTML = guests.map(g => `
     <tr>
-      <td style="color:#A09080;font-size:12px">${i+1}</td>
-      <td class="td-name">${g.name}</td>
-      <td class="td-wa">${g.wa || '–'}</td>
-      <td style="font-size:12px;color:var(--muted)">${g.note || '–'}</td>
+      <td><b>${g.name}</b></td>
+      <td>${g.note || '-'}</td>
+      <td id="rsvp-status-${g.name.replace(/\s/g, '')}"><span class="badge badge-belum">Belum Isi</span></td>
+      <td>${g.sent ? '<span style="color:green">✓ Sent</span>' : '<span style="color:#999">Belum</span>'}</td>
       <td>
-        <select onchange="updateStatus(${g.id},this.value)" style="font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--ivory)">
-          <option value="belum" ${g.status==='belum'?'selected':''}>⏳ Belum</option>
-          <option value="hadir" ${g.status==='hadir'?'selected':''}>✓ Hadir</option>
-          <option value="tidak" ${g.status==='tidak'?'selected':''}>✗ Tidak</option>
-        </select>
-      </td>
-      <td>${g.sent ? '<span class="badge badge-terkirim">✓ Terkirim</span>' : '<span class="badge badge-belum">Belum</span>'}</td>
-      <td>
-        <div style="display:flex;gap:4px;align-items:center">
-          <span class="td-link">${getInviteLink(g.name)}</span>
-          <button class="btn btn-blue btn-sm" onclick="copyLink('${g.name}')">📋</button>
-        </div>
-      </td>
-      <td>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${g.wa ? `<button class="btn btn-green btn-sm" onclick="sendWA(${g.id})">📲 WA</button>` : ''}
-          <button class="btn btn-red btn-sm" onclick="deleteGuest(${g.id})">✕</button>
-        </div>
+        <button class="btn btn-green" style="padding:4px 8px" onclick="sendWA('${g.name}', '${g.wa}', ${g.id})">Kirim WA</button>
+        <button class="btn btn-red" style="padding:4px 8px" onclick="deleteGuest(${g.id})">Hapus</button>
       </td>
     </tr>
   `).join('');
+  document.getElementById('s-total').textContent = guests.length;
+  document.getElementById('s-sent').textContent = guests.filter(g => g.sent).length;
 }
 
-function addGuest() {
-  const name = document.getElementById('new-name').value.trim();
-  const wa   = document.getElementById('new-wa').value.trim();
-  const note = document.getElementById('new-note').value.trim();
-  if (!name) { showToast('⚠️ Nama tamu wajib diisi'); return; }
-  const id = Date.now();
-  guests.push({ id, name, wa, note, status: 'belum', sent: false });
-  saveGuests();
-  document.getElementById('new-name').value = '';
-  document.getElementById('new-wa').value = '';
-  document.getElementById('new-note').value = '';
-  renderGuestTable();
-  showToast(`✅ Tamu "${name}" berhasil ditambahkan`);
+function sendWA(name, wa, id) {
+  if (!wa) return alert("No WA kosong!");
+  const msg = waTemplate.replace('{nama}', name);
+  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  const idx = guests.findIndex(g => g.id === id);
+  guests[idx].sent = true;
+  saveAndRender();
 }
 
 function deleteGuest(id) {
-  if (!confirm('Hapus tamu ini?')) return;
-  guests = guests.filter(g => g.id !== id);
-  saveGuests(); renderGuestTable();
-  showToast('🗑️ Tamu dihapus');
+  if(confirm('Hapus tamu?')) { guests = guests.filter(g => g.id !== id); saveAndRender(); }
 }
 
-function updateStatus(id, status) {
-  const g = guests.find(g => g.id === id);
-  if (g) { g.status = status; saveGuests(); updateStats(); }
-}
+// REALTIME RSVP
+async function loadRsvpData() {
+  const el = document.getElementById('rsvp-realtime-list');
+  const { data, error } = await supabaseClient.from('rsvp').select('*').order('created_at', {ascending: false});
+  if (error) return;
 
-function copyLink(name) {
-  const link = getInviteLink(name);
-  navigator.clipboard.writeText(link).then(() => showToast('📋 Link disalin!')).catch(() => {
-    prompt('Salin link ini:', link);
+  el.innerHTML = data.map(r => `
+    <div style="padding:12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center">
+      <div><b>${r.name}</b><br><small style="color:var(--muted)">${r.count} orang · "${r.message || '-'}"</small></div>
+      <span class="badge ${r.status === 'hadir' ? 'badge-hadir' : 'badge-tidak'}">${r.status.toUpperCase()}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('s-hadir').textContent = data.filter(d => d.status === 'hadir').length;
+  document.getElementById('s-tidak').textContent = data.filter(d => d.status === 'tidak').length;
+
+  // Sync status ke tabel tamu
+  data.forEach(r => {
+    const statusEl = document.getElementById(`rsvp-status-${r.name.replace(/\s/g, '')}`);
+    if (statusEl) statusEl.innerHTML = `<span class="badge ${r.status==='hadir'?'badge-hadir':'badge-tidak'}">${r.status}</span>`;
   });
 }
 
-function sendWA(id) {
-  const g = guests.find(g => g.id === id);
-  if (!g || !g.wa) { showToast('⚠️ Nomor WhatsApp tidak tersedia'); return; }
-  const msg = buildWaMsg(g.name);
-  window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
-  g.sent = true;
-  saveGuests(); renderGuestTable();
-  showToast(`📲 Membuka WhatsApp untuk ${g.name}`);
-}
-
-function sendAllPending() {
-  const pending = guests.filter(g => !g.sent && g.wa);
-  if (pending.length === 0) { showToast('✅ Semua tamu sudah dikirim undangan'); return; }
-  if (!confirm(`Akan membuka ${pending.length} tab WhatsApp untuk tamu yang belum dikirim. Lanjutkan?`)) return;
-  pending.forEach((g, i) => {
-    setTimeout(() => {
-      const msg = buildWaMsg(g.name);
-      window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
-      g.sent = true;
-    }, i * 1200);
-  });
-  setTimeout(() => { saveGuests(); renderGuestTable(); }, pending.length * 1200 + 500);
+// IMPORT / EXPORT
+function importCSV(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    const lines = evt.target.result.split('\n');
+    lines.slice(1).forEach((l, i) => {
+      const c = l.split(',');
+      if(c[0]) guests.push({ id: Date.now()+i, name: c[0].trim(), wa: c[1]?.trim(), note: c[2]?.trim(), sent: false });
+    });
+    saveAndRender();
+  };
+  reader.readAsText(file);
 }
 
 function exportCSV() {
-  const headers = ['Nama', 'WhatsApp', 'Keterangan', 'Status RSVP', 'WA Terkirim', 'Link Undangan'];
-  const rows = guests.map(g => [
-    `"${g.name}"`, `"${g.wa}"`, `"${g.note}"`, `"${g.status}"`,
-    g.sent ? 'Ya' : 'Belum', `"${getInviteLink(g.name)}"`
-  ]);
-  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'daftar-tamu-resy-afif.csv';
-  a.click();
-  showToast('⬇️ File CSV diunduh');
+  let csv = "Nama,WhatsApp,Kategori\n" + guests.map(g => `${g.name},${g.wa},${g.note}`).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tamu_wedding.csv'; a.click();
 }
 
-function saveTemplate() {
-  const tmpl = document.getElementById('wa-template').value;
-  localStorage.setItem('wa_template', tmpl);
-  showToast('✅ Template tersimpan');
-}
-
-function previewTemplate() {
-  const msg = buildWaMsg('Bapak/Ibu Contoh Tamu');
-  document.getElementById('preview-result').innerHTML = `<div class="msg-preview">${msg.replace(/\n/g,'<br>')}</div>`;
-}
-
-function saveBaseUrl() {
-  const url = document.getElementById('base-url').value.trim();
-  localStorage.setItem('base_url', url);
-  showToast('✅ Base URL tersimpan: ' + url);
-}
-
-async function loadRsvpAdmin() {
-  const el = document.getElementById('rsvp-admin-list');
-  el.innerHTML = '<p style="color:var(--muted);font-style:italic">Memuat...</p>';
-  // Dummy data for admin preview
-  const data = [
-    { name: 'Keluarga H. Dadan', count: 4, status: 'hadir', message: 'InsyaAllah hadir semua', created_at: new Date(Date.now()-86400000*2).toISOString() },
-    { name: 'Siti Rahayu', count: 2, status: 'hadir', message: '', created_at: new Date(Date.now()-86400000).toISOString() },
-    { name: 'Kang Asep', count: 1, status: 'tidak', message: 'Mohon maaf ada halangan', created_at: new Date(Date.now()-3600000*5).toISOString() },
-  ];
-  el.innerHTML = data.map(r => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--brown)">${r.name}</div>
-        <div style="font-size:12px;color:var(--muted)">${r.count} tamu · ${r.message || 'Tanpa pesan'}</div>
-      </div>
-      <span class="badge badge-${r.status}">
-        ${r.status==='hadir'?'✓ Hadir':r.status==='tidak'?'✗ Tidak':'? Belum'}
-      </span>
-    </div>
-  `).join('') || '<p style="color:var(--muted)">Belum ada data RSVP</p>';
-}
-
-async function loadWishesAdmin() {
-  const el = document.getElementById('wishes-admin-list');
-  const data = [
-    { name: 'Keluarga Sonjaya', text: 'Semoga menjadi keluarga yang sakinah mawaddah warahmah. Barakallahu lakuma!', created_at: new Date(Date.now()-86400000*3).toISOString() },
-    { name: 'Teh Sari & Kang Ujang', text: 'Semoga pernikahan kalian menjadi awal yang indah untuk perjalanan panjang yang penuh berkah.', created_at: new Date(Date.now()-86400000).toISOString() },
-  ];
-  el.innerHTML = data.map(w => `
-    <div style="padding:14px;border-bottom:1px solid var(--border)">
-      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--brown)">${w.name}</div>
-      <div style="font-size:14px;color:var(--muted);font-style:italic;margin-top:4px;line-height:1.7">"${w.text}"</div>
-    </div>
-  `).join('');
-}
-
-// INIT
-renderGuestTable();
-document.getElementById('wa-template').value = localStorage.getItem('wa_template') || document.getElementById('wa-template').value;
-document.getElementById('base-url').value = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
+checkSession();
 </script>
 </body>
 </html>
