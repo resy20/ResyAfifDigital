@@ -27,82 +27,58 @@
       background: var(--brown);
       border-bottom: 3px solid var(--gold);
       padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .header-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--cream); }
     .header-sub { font-size: 12px; color: var(--gold-lt); letter-spacing: 1px; margin-top: 2px; }
-    .admin-badge {
-      background: var(--gold); color: var(--brown);
-      font-size: 11px; font-weight: 700; padding: 4px 12px;
-      border-radius: 20px; letter-spacing: 1px;
-    }
 
     main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
 
-    /* STATS */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
-    .stat-card {
-      background: white; border: 1px solid var(--border); border-radius: 8px;
-      padding: 16px; text-align: center;
-    }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
     .stat-num { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--brown); line-height: 1; }
-    .stat-num.green  { color: var(--green); }
-    .stat-num.red    { color: var(--red); }
+    .stat-num.green { color: var(--green); }
+    .stat-num.red { color: var(--red); }
     .stat-num.orange { color: #E65100; }
     .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
 
-    /* CARD */
     .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
     .card-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--brown); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 
-    /* FORM */
     .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-    .form-input {
-      padding: 9px 12px; border: 1px solid var(--border); border-radius: 5px;
-      font-family: 'Lato', sans-serif; font-size: 14px; color: var(--text);
-      background: var(--ivory); outline: none; width: 100%;
-    }
-    .form-input:focus { border-color: var(--gold); background: white; }
-    .btn { padding: 9px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s; white-space: nowrap; }
-    .btn-brown { background: var(--brown); color: var(--cream); }
-    .btn-gold  { background: var(--gold); color: var(--brown); }
-    .btn-green { background: #25D366; color: white; }
-    .btn-blue  { background: var(--blue); color: white; font-size: 12px; padding: 6px 12px; }
-    .btn-red   { background: #e53935; color: white; font-size: 12px; padding: 6px 12px; }
+    .form-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: 5px; font-size: 14px; background: var(--ivory); outline: none; width: 100%; }
 
-    /* TABLE */
+    .btn { padding: 9px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; white-space: nowrap; }
+    .btn-brown { background: var(--brown); color: var(--cream); }
+    .btn-gold { background: var(--gold); color: var(--brown); }
+    .btn-green { background: #25D366; color: white; }
+    .btn-red { background: #e53935; color: white; }
+    .btn-sm { font-size: 12px; padding: 5px 10px; }
+
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     thead tr { background: var(--brown); }
-    thead th { color: var(--cream); padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+    thead th { color: var(--cream); padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; }
     tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .td-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--brown); }
-    .td-link { font-size: 11px; color: #1565C0; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    
+    .action-cell { display: flex; gap: 6px; }
 
-    /* BADGE */
     .badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 700; }
-    .badge-hadir  { background: #E8F5E9; color: var(--green); }
-    .badge-tidak  { background: #FFEBEE; color: var(--red); }
-    .badge-belum  { background: #FFF8E1; color: #E65100; }
-    .badge-terkirim { background: #E3F2FD; color: var(--blue); }
+    .badge-hadir { background: #E8F5E9; color: var(--green); }
+    .badge-tidak { background: #FFEBEE; color: var(--red); }
+    .badge-belum { background: #FFF8E1; color: #E65100; }
 
-    /* TABS */
-    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
-    .tab { padding: 10px 20px; font-size: 13px; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s; }
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+    .tab { padding: 10px 20px; font-size: 13px; cursor: pointer; border: none; background: none; color: var(--muted); font-weight: 700; border-bottom: 2px solid transparent; margin-bottom: -2px; }
     .tab.active { color: var(--brown); border-bottom-color: var(--gold); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* LOGIN OVERLAY */
     #login-overlay { position: fixed; inset: 0; background: var(--ivory); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-    .login-box { background: white; padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
+    .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; text-align: center; }
     .hidden { display: none !important; }
 
-    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--brown); color: var(--gold-lt); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 8px; font-size: 14px; z-index: 999; opacity: 0; transition: all 0.3s; pointer-events: none; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--brown); color: var(--gold-lt); padding: 10px 20px; border-radius: 8px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 10000; }
     .toast.show { opacity: 1; }
   </style>
 </head>
@@ -110,8 +86,8 @@
 
 <div id="login-overlay">
   <div class="login-box">
-    <h2 style="font-family:'Playfair Display'; margin-bottom: 25px; color: var(--brown);">Admin Login</h2>
-    <input type="email" id="login-email" class="form-input" placeholder="Email Admin" style="margin-bottom: 10px;">
+    <h2 style="font-family:'Playfair Display'; margin-bottom: 20px; color: var(--brown);">Admin Login</h2>
+    <input type="email" id="login-email" class="form-input" placeholder="Email" style="margin-bottom: 10px;">
     <input type="password" id="login-password" class="form-input" placeholder="Password" style="margin-bottom: 20px;">
     <button class="btn btn-brown" style="width: 100%" onclick="handleLogin()">Masuk</button>
   </div>
@@ -120,16 +96,13 @@
 <header>
   <div>
     <div class="header-title">Resy & Afif – Admin Panel</div>
-    <div class="header-sub">Manajemen Tamu & Pengiriman Undangan</div>
+    <div class="header-sub">Manajemen Tamu</div>
   </div>
-  <div style="display:flex; align-items:center; gap:10px">
-    <span class="admin-badge">ADMIN</span>
-    <button class="btn btn-red btn-sm" onclick="handleLogout()">Logout</button>
-  </div>
+  <button class="btn btn-red btn-sm" onclick="handleLogout()">Logout</button>
 </header>
 
 <main>
-  <div class="stats-grid" id="stats-grid">
+  <div class="stats-grid">
     <div class="stat-card"><div class="stat-num" id="s-total">0</div><div class="stat-label">Total Tamu</div></div>
     <div class="stat-card"><div class="stat-num green" id="s-hadir">0</div><div class="stat-label">Hadir</div></div>
     <div class="stat-card"><div class="stat-num red" id="s-tidak">0</div><div class="stat-label">Tidak Hadir</div></div>
@@ -141,19 +114,19 @@
     <button class="tab active" onclick="switchTab('guests', this)">Daftar Tamu</button>
     <button class="tab" onclick="switchTab('rsvp', this)">Konfirmasi RSVP</button>
     <button class="tab" onclick="switchTab('wishes', this)">Ucapan & Doa</button>
-    <button class="tab" onclick="switchTab('settings', this)">Pengaturan Pesan</button>
+    <button class="tab" onclick="switchTab('settings', this)">Pengaturan</button>
   </div>
 
   <div id="tab-guests" class="tab-content active">
     <div class="card">
       <div class="card-title">Tambah Tamu</div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Nama</label><input class="form-input" id="new-name" /></div>
-        <div class="form-group"><label class="form-label">WA</label><input class="form-input" id="new-wa" /></div>
-        <div class="form-group"><label class="form-label">Ket</label><input class="form-input" id="new-note" /></div>
+        <input class="form-input" id="new-name" placeholder="Nama" />
+        <input class="form-input" id="new-wa" placeholder="WhatsApp (628...)" />
+        <input class="form-input" id="new-note" placeholder="Ket" />
         <button class="btn btn-brown" onclick="addGuest()">+ Tambah</button>
       </div>
-      <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
         <input type="file" id="csv-import" accept=".csv" style="display:none" onchange="importCSV(this)">
         <button class="btn btn-gold btn-sm" onclick="document.getElementById('csv-import').click()">⬆ Import CSV</button>
       </div>
@@ -165,15 +138,14 @@
         <button class="btn btn-gold btn-sm" onclick="syncAllData()" id="sync-btn">🔄 Sinkronisasi Data RSVP</button>
       </div>
       <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <input class="form-input" id="search-guest" placeholder="Cari nama..." oninput="filterGuests()" style="max-width:300px" />
-        <button class="btn btn-gold" onclick="sendAllPending()">📲 Kirim Semua WA</button>
+        <button class="btn btn-green btn-sm" onclick="sendAllPending()">📲 Kirim Semua WA Terpilih</button>
         <button class="btn btn-blue btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>#</th><th>Nama</th><th>WA</th><th>Ket</th><th>RSVP</th><th>Sent</th><th>Link</th><th>Aksi</th>
+              <th>#</th><th>Nama</th><th>WhatsApp</th><th>Ket</th><th>RSVP</th><th>Sent</th><th>Aksi</th>
             </tr>
           </thead>
           <tbody id="guest-tbody"></tbody>
@@ -182,12 +154,32 @@
     </div>
   </div>
 
-  <div id="tab-rsvp" class="tab-content"><div class="card"><div class="card-title">Konfirmasi Live</div><div id="rsvp-admin-list"></div></div></div>
-  <div id="tab-wishes" class="tab-content"><div class="card"><div class="card-title">Ucapan Live</div><div id="wishes-admin-list"></div></div></div>
+  <div id="tab-rsvp" class="tab-content">
+    <div class="card">
+      <div class="card-title">Data RSVP Real-time</div>
+      <div id="rsvp-admin-list"></div>
+    </div>
+  </div>
+
+  <div id="tab-wishes" class="tab-content">
+    <div class="card">
+      <div class="card-title">Ucapan & Doa Masuk</div>
+      <div id="wishes-admin-list"></div>
+    </div>
+  </div>
 
   <div id="tab-settings" class="tab-content">
-    <div class="card"><div class="card-title">Template WhatsApp</div><textarea class="form-input" id="wa-template" rows="8"></textarea><button class="btn btn-brown" style="margin-top:12px" onclick="saveTemplate()">Simpan</button></div>
-    <div class="card"><div class="card-title">URL Undangan</div><input class="form-input" id="base-url" /><button class="btn btn-brown" style="margin-top:10px" onclick="saveBaseUrl()">Simpan URL</button></div>
+    <div class="card">
+      <div class="card-title">Template WhatsApp</div>
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 10px;">Gunakan {nama} dan {link} untuk otomatis.</p>
+      <textarea class="form-input" id="wa-template" rows="8"></textarea>
+      <button class="btn btn-brown" style="margin-top:12px" onclick="saveTemplate()">Simpan Template</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Base URL Undangan</div>
+      <input class="form-input" id="base-url" placeholder="https://undangan-anda.vercel.app" />
+      <button class="btn btn-brown" style="margin-top:10px" onclick="saveBaseUrl()">Simpan URL</button>
+    </div>
   </div>
 </main>
 
@@ -197,7 +189,6 @@
 const SUPABASE_URL = 'https://bijessmsedrtfxbnieza.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const BASE_URL_DEFAULT = 'https://resy-afif.vercel.app';
 
 let guests = JSON.parse(localStorage.getItem('wedding_guests') || '[]');
 
@@ -205,7 +196,7 @@ async function handleLogin() {
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
   const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) alert("Gagal"); else document.getElementById('login-overlay').classList.add('hidden');
+  if (error) alert("Gagal Login"); else { document.getElementById('login-overlay').classList.add('hidden'); checkSession(); }
 }
 
 async function handleLogout() { await supabaseClient.auth.signOut(); location.reload(); }
@@ -217,66 +208,48 @@ async function checkSession() {
 
 function saveGuests() { localStorage.setItem('wedding_guests', JSON.stringify(guests)); }
 
-function renderGuestTable(data) {
-  data = data || guests;
-  updateStats();
-  document.getElementById('guest-tbody').innerHTML = data.map((g, i) => `
+function showToast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
+
+function renderGuestTable() {
+  const tbody = document.getElementById('guest-tbody');
+  tbody.innerHTML = guests.map((g, i) => `
     <tr>
       <td>${i+1}</td>
-      <td class="td-name">${g.name}</td>
-      <td style="font-family:monospace">${g.wa || '–'}</td>
-      <td>${g.note || '–'}</td>
+      <td><b>${g.name}</b></td>
+      <td style="font-family:monospace">${g.wa || '-'}</td>
+      <td>${g.note || '-'}</td>
       <td><span class="badge badge-${g.status}">${g.status.toUpperCase()}</span></td>
       <td>${g.sent ? '✅' : '⏳'}</td>
-      <td class="td-link">${getInviteLink(g.name)}</td>
-      <td>
-        <div style="display:flex; gap:5px;">
-          <button class="btn btn-green btn-sm" onclick="sendWA(${g.id})">WA</button>
-          <button class="btn btn-red btn-sm" onclick="deleteGuest(${g.id})">✕</button>
-        </div>
+      <td class="action-cell">
+        <button class="btn btn-green btn-sm" onclick="sendWA(${g.id})">WA</button>
+        <button class="btn btn-red btn-sm" onclick="deleteGuest(${g.id})">✕</button>
       </td>
     </tr>
   `).join('');
+  updateStats();
 }
 
 async function syncAllData() {
   const btn = document.getElementById('sync-btn');
-  btn.innerHTML = '⌛ Sync...';
-  const { data, error } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: true });
+  btn.innerHTML = '⌛ Sinkronisasi...';
+  const { data, error } = await supabaseClient.from('rsvp').select('*');
   if (!error && data) {
     guests.forEach(g => g.status = 'belum');
     data.forEach(rsvp => {
       const idx = guests.findIndex(g => g.name.toLowerCase().trim() === rsvp.name.toLowerCase().trim());
       if (idx !== -1) guests[idx].status = rsvp.status;
     });
-    saveGuests(); renderGuestTable();
+    saveGuests(); renderGuestTable(); showToast('Data Berhasil Diperbarui!');
   }
   btn.innerHTML = '🔄 Sinkronisasi Data RSVP';
 }
 
 function addGuest() {
-  const name = document.getElementById('new-name').value.trim();
-  if (!name) return;
-  guests.push({ id: Date.now(), name, wa: document.getElementById('new-wa').value, note: document.getElementById('new-note').value, status: 'belum', sent: false });
+  const n = document.getElementById('new-name').value;
+  if (!n) return;
+  guests.push({ id: Date.now(), name: n, wa: document.getElementById('new-wa').value, note: document.getElementById('new-note').value, status: 'belum', sent: false });
   saveGuests(); renderGuestTable();
-}
-
-async function loadRsvpList() {
-  const { data } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: false });
-  document.getElementById('rsvp-admin-list').innerHTML = (data || []).map(r => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid var(--border)"><div><b>${r.name}</b><br><small>${r.count} tamu · ${r.message || '-'}</small></div><span class="badge badge-${r.status}">${r.status.toUpperCase()}</span></div>`).join('') || 'Kosong';
-}
-
-async function loadWishesList() {
-  const { data } = await supabaseClient.from('wishes').select('*').order('created_at', { ascending: false });
-  document.getElementById('wishes-admin-list').innerHTML = (data || []).map(w => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${w.name}</b>: <i>"${w.message || w.ucapan || w.text || '...'}"</i></div>`).join('') || 'Kosong';
-}
-
-function switchTab(name, el) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active'); el.classList.add('active');
-  if (name === 'rsvp') loadRsvpList();
-  if (name === 'wishes') loadWishesList();
+  document.getElementById('new-name').value = '';
 }
 
 function updateStats() {
@@ -287,21 +260,86 @@ function updateStats() {
   document.getElementById('s-sent').textContent = guests.filter(g => g.sent).length;
 }
 
-function getInviteLink(n) { return (localStorage.getItem('base_url') || BASE_URL_DEFAULT) + "?to=" + encodeURIComponent(n); }
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active'); el.classList.add('active');
+  if (name === 'rsvp') loadRsvpList();
+  if (name === 'wishes') loadWishesList();
+}
+
+async function loadRsvpList() {
+  const { data } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: false });
+  document.getElementById('rsvp-admin-list').innerHTML = (data || []).map(r => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${r.name}</b> (${r.status}) - ${r.count} orang</div>`).join('') || 'Belum ada data';
+}
+
+async function loadWishesList() {
+  const { data } = await supabaseClient.from('wishes').select('*').order('created_at', { ascending: false });
+  document.getElementById('wishes-admin-list').innerHTML = (data || []).map(w => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${w.name}</b>: <i>"${w.message || w.ucapan || w.text || '...'}"</i></div>`).join('') || 'Belum ada ucapan';
+}
+
+function getInviteLink(n) { return (localStorage.getItem('base_url') || 'https://resy-afif.vercel.app') + "?to=" + encodeURIComponent(n); }
+
+// --- PERBAIKAN KIRIM WA (EMOJI AMAN) ---
 function sendWA(id) { 
   const g = guests.find(g => g.id === id); 
-  const msg = (localStorage.getItem('wa_template') || '').replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
+  const template = localStorage.getItem('wa_template') || "Halo {nama}, ini undangan pernikahan kami: {link}";
+  const msg = template.replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
+  
+  // Menggunakan encodeURIComponent agar emoji tidak error
   window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  
   g.sent = true; saveGuests(); renderGuestTable();
 }
 
-function deleteGuest(id) { if(confirm('Hapus?')) { guests = guests.filter(g => g.id !== id); saveGuests(); renderGuestTable(); } }
-function saveTemplate() { localStorage.setItem('wa_template', document.getElementById('wa-template').value); }
-function saveBaseUrl() { localStorage.setItem('base_url', document.getElementById('base-url').value); }
+// --- PERBAIKAN KIRIM MASSAL (DENGAN JEDA) ---
+function sendAllPending() {
+  const pending = guests.filter(g => !g.sent && g.wa);
+  if (pending.length === 0) return showToast("Tidak ada antrean kirim!");
+  if (!confirm(`Akan membuka ${pending.length} tab WhatsApp. Pastikan Pop-up diizinkan browser. Lanjutkan?`)) return;
 
-checkSession(); renderGuestTable();
+  pending.forEach((g, i) => {
+    setTimeout(() => {
+      const template = localStorage.getItem('wa_template') || "";
+      const msg = template.replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
+      window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
+      g.sent = true;
+      if (i === pending.length - 1) { saveGuests(); renderGuestTable(); showToast("Proses selesai!"); }
+    }, i * 2000); // Jeda 2 detik tiap tab
+  });
+}
+
+function deleteGuest(id) { if(confirm('Hapus?')) { guests = guests.filter(g => g.id !== id); saveGuests(); renderGuestTable(); } }
+function saveTemplate() { localStorage.setItem('wa_template', document.getElementById('wa-template').value); showToast('Template Disimpan!'); }
+function saveBaseUrl() { localStorage.setItem('base_url', document.getElementById('base-url').value); showToast('URL Disimpan!'); }
+
+// Load Init Data
+checkSession();
+renderGuestTable();
 document.getElementById('wa-template').value = localStorage.getItem('wa_template') || "";
-document.getElementById('base-url').value = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
+document.getElementById('base-url').value = localStorage.getItem('base_url') || "https://resy-afif.vercel.app";
+
+// CSV Helper
+function exportCSV() {
+  let csv = "Nama,WhatsApp,Ket,Status\n";
+  guests.forEach(g => { csv += `${g.name},${g.wa},${g.note},${g.status}\n`; });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', 'daftar_tamu.csv'); a.click();
+}
+
+function importCSV(input) {
+  const reader = new FileReader();
+  reader.onload = function() {
+    const lines = reader.result.split('\n').slice(1);
+    lines.forEach(line => {
+      const col = line.split(',');
+      if (col[0]) guests.push({ id: Date.now()+Math.random(), name: col[0], wa: col[1], note: col[2], status: 'belum', sent: false });
+    });
+    saveGuests(); renderGuestTable(); showToast('Berhasil Import!');
+  };
+  reader.readAsText(input.files[0]);
+}
 </script>
 </body>
 </html>
