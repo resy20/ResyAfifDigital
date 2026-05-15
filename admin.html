@@ -53,7 +53,7 @@
     .btn-gold { background: var(--gold); color: var(--brown); }
     .btn-green { background: #25D366; color: white; }
     .btn-red { background: #e53935; color: white; }
-    .btn-sm { font-size: 12px; padding: 5px 10px; }
+    .btn-blue { background: var(--blue); color: white; font-size: 12px; padding: 6px 12px; }
 
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -138,7 +138,7 @@
         <button class="btn btn-gold btn-sm" onclick="syncAllData()" id="sync-btn">🔄 Sinkronisasi Data RSVP</button>
       </div>
       <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <button class="btn btn-green btn-sm" onclick="sendAllPending()">📲 Kirim Semua WA Terpilih</button>
+        <button class="btn btn-green btn-sm" onclick="sendAllPending()">📲 Kirim Semua WA Belum Terkirim</button>
         <button class="btn btn-blue btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
       </div>
       <div class="table-wrap">
@@ -154,30 +154,18 @@
     </div>
   </div>
 
-  <div id="tab-rsvp" class="tab-content">
-    <div class="card">
-      <div class="card-title">Data RSVP Real-time</div>
-      <div id="rsvp-admin-list"></div>
-    </div>
-  </div>
-
-  <div id="tab-wishes" class="tab-content">
-    <div class="card">
-      <div class="card-title">Ucapan & Doa Masuk</div>
-      <div id="wishes-admin-list"></div>
-    </div>
-  </div>
+  <div id="tab-rsvp" class="tab-content"><div class="card"><div class="card-title">Live RSVP</div><div id="rsvp-admin-list"></div></div></div>
+  <div id="tab-wishes" class="tab-content"><div class="card"><div class="card-title">Wishes</div><div id="wishes-admin-list"></div></div></div>
 
   <div id="tab-settings" class="tab-content">
     <div class="card">
       <div class="card-title">Template WhatsApp</div>
-      <p style="font-size: 12px; color: var(--muted); margin-bottom: 10px;">Gunakan {nama} dan {link} untuk otomatis.</p>
       <textarea class="form-input" id="wa-template" rows="8"></textarea>
       <button class="btn btn-brown" style="margin-top:12px" onclick="saveTemplate()">Simpan Template</button>
     </div>
     <div class="card">
-      <div class="card-title">Base URL Undangan</div>
-      <input class="form-input" id="base-url" placeholder="https://undangan-anda.vercel.app" />
+      <div class="card-title">Base URL</div>
+      <input class="form-input" id="base-url" />
       <button class="btn btn-brown" style="margin-top:10px" onclick="saveBaseUrl()">Simpan URL</button>
     </div>
   </div>
@@ -231,15 +219,15 @@ function renderGuestTable() {
 
 async function syncAllData() {
   const btn = document.getElementById('sync-btn');
-  btn.innerHTML = '⌛ Sinkronisasi...';
-  const { data, error } = await supabaseClient.from('rsvp').select('*');
+  btn.innerHTML = '⌛ Sync...';
+  const { data, error } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: true });
   if (!error && data) {
     guests.forEach(g => g.status = 'belum');
     data.forEach(rsvp => {
       const idx = guests.findIndex(g => g.name.toLowerCase().trim() === rsvp.name.toLowerCase().trim());
       if (idx !== -1) guests[idx].status = rsvp.status;
     });
-    saveGuests(); renderGuestTable(); showToast('Data Berhasil Diperbarui!');
+    saveGuests(); renderGuestTable(); showToast('Update Berhasil!');
   }
   btn.innerHTML = '🔄 Sinkronisasi Data RSVP';
 }
@@ -250,6 +238,43 @@ function addGuest() {
   guests.push({ id: Date.now(), name: n, wa: document.getElementById('new-wa').value, note: document.getElementById('new-note').value, status: 'belum', sent: false });
   saveGuests(); renderGuestTable();
   document.getElementById('new-name').value = '';
+}
+
+function getInviteLink(n) { return (localStorage.getItem('base_url') || 'https://resy-afif.vercel.app') + "?to=" + encodeURIComponent(n); }
+
+// PERBAIKAN EMOJI: Gunakan encodeURIComponent pada seluruh pesan
+function sendWA(id) { 
+  const g = guests.find(g => g.id === id); 
+  if (!g.wa) return showToast("No WA Kosong");
+  const template = localStorage.getItem('wa_template') || "";
+  const msg = template.replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
+  
+  // Membuka tab baru
+  window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  
+  g.sent = true; saveGuests(); renderGuestTable();
+}
+
+// PERBAIKAN KIRIM MASSAL: Tambahkan Jeda dan Deteksi Pop-up
+function sendAllPending() {
+  const pending = guests.filter(g => !g.sent && g.wa);
+  if (pending.length === 0) return showToast("Antrean Kosong");
+  if (!confirm(`Buka ${pending.length} tab WA? Pastikan Izinkan Pop-up di browser.`)) return;
+
+  pending.forEach((g, i) => {
+    setTimeout(() => {
+      const template = localStorage.getItem('wa_template') || "";
+      const msg = template.replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
+      const win = window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
+      
+      if(!win || win.closed || typeof win.closed=='undefined') {
+          showToast("⚠️ Pop-up Blocker Aktif! Izinkan di browser.");
+      } else {
+          g.sent = true;
+          if (i === pending.length - 1) { saveGuests(); renderGuestTable(); showToast("Selesai!"); }
+      }
+    }, i * 2000); // Jeda 2 detik
+  });
 }
 
 function updateStats() {
@@ -270,76 +295,21 @@ function switchTab(name, el) {
 
 async function loadRsvpList() {
   const { data } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: false });
-  document.getElementById('rsvp-admin-list').innerHTML = (data || []).map(r => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${r.name}</b> (${r.status}) - ${r.count} orang</div>`).join('') || 'Belum ada data';
+  document.getElementById('rsvp-admin-list').innerHTML = (data || []).map(r => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${r.name}</b> (${r.status}) - ${r.count} orang</div>`).join('') || 'Kosong';
 }
 
 async function loadWishesList() {
   const { data } = await supabaseClient.from('wishes').select('*').order('created_at', { ascending: false });
-  document.getElementById('wishes-admin-list').innerHTML = (data || []).map(w => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${w.name}</b>: <i>"${w.message || w.ucapan || w.text || '...'}"</i></div>`).join('') || 'Belum ada ucapan';
-}
-
-function getInviteLink(n) { return (localStorage.getItem('base_url') || 'https://resy-afif.vercel.app') + "?to=" + encodeURIComponent(n); }
-
-// --- PERBAIKAN KIRIM WA (EMOJI AMAN) ---
-function sendWA(id) { 
-  const g = guests.find(g => g.id === id); 
-  const template = localStorage.getItem('wa_template') || "Halo {nama}, ini undangan pernikahan kami: {link}";
-  const msg = template.replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
-  
-  // Menggunakan encodeURIComponent agar emoji tidak error
-  window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
-  
-  g.sent = true; saveGuests(); renderGuestTable();
-}
-
-// --- PERBAIKAN KIRIM MASSAL (DENGAN JEDA) ---
-function sendAllPending() {
-  const pending = guests.filter(g => !g.sent && g.wa);
-  if (pending.length === 0) return showToast("Tidak ada antrean kirim!");
-  if (!confirm(`Akan membuka ${pending.length} tab WhatsApp. Pastikan Pop-up diizinkan browser. Lanjutkan?`)) return;
-
-  pending.forEach((g, i) => {
-    setTimeout(() => {
-      const template = localStorage.getItem('wa_template') || "";
-      const msg = template.replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
-      window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
-      g.sent = true;
-      if (i === pending.length - 1) { saveGuests(); renderGuestTable(); showToast("Proses selesai!"); }
-    }, i * 2000); // Jeda 2 detik tiap tab
-  });
+  document.getElementById('wishes-admin-list').innerHTML = (data || []).map(w => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${w.name}</b>: <i>"${w.message || w.ucapan || w.text || '...'}"</i></div>`).join('') || 'Kosong';
 }
 
 function deleteGuest(id) { if(confirm('Hapus?')) { guests = guests.filter(g => g.id !== id); saveGuests(); renderGuestTable(); } }
-function saveTemplate() { localStorage.setItem('wa_template', document.getElementById('wa-template').value); showToast('Template Disimpan!'); }
-function saveBaseUrl() { localStorage.setItem('base_url', document.getElementById('base-url').value); showToast('URL Disimpan!'); }
+function saveTemplate() { localStorage.setItem('wa_template', document.getElementById('wa-template').value); showToast('Tersimpan'); }
+function saveBaseUrl() { localStorage.setItem('base_url', document.getElementById('base-url').value); showToast('Tersimpan'); }
 
-// Load Init Data
-checkSession();
-renderGuestTable();
+checkSession(); renderGuestTable();
 document.getElementById('wa-template').value = localStorage.getItem('wa_template') || "";
 document.getElementById('base-url').value = localStorage.getItem('base_url') || "https://resy-afif.vercel.app";
-
-// CSV Helper
-function exportCSV() {
-  let csv = "Nama,WhatsApp,Ket,Status\n";
-  guests.forEach(g => { csv += `${g.name},${g.wa},${g.note},${g.status}\n`; });
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', 'daftar_tamu.csv'); a.click();
-}
-
-function importCSV(input) {
-  const reader = new FileReader();
-  reader.onload = function() {
-    const lines = reader.result.split('\n').slice(1);
-    lines.forEach(line => {
-      const col = line.split(',');
-      if (col[0]) guests.push({ id: Date.now()+Math.random(), name: col[0], wa: col[1], note: col[2], status: 'belum', sent: false });
-    });
-    saveGuests(); renderGuestTable(); showToast('Berhasil Import!');
-  };
-  reader.readAsText(input.files[0]);
-}
 </script>
 </body>
 </html>
