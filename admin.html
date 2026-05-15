@@ -179,7 +179,7 @@
       <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
         <input type="file" id="csv-import" accept=".csv" style="display:none" onchange="importCSV(this)">
         <button class="btn btn-gold btn-sm" onclick="document.getElementById('csv-import').click()">⬆ Import Daftar Tamu (CSV)</button>
-        <small style="color: var(--muted); margin-left: 10px;">Format: Nama, No WA, Keterangan</small>
+        <small style="color: var(--muted); margin-left: 10px;">Format CSV: Nama, No WA, Keterangan</small>
       </div>
     </div>
 
@@ -227,6 +227,7 @@
   <div id="tab-settings" class="tab-content">
     <div class="card">
       <div class="card-title">Template Pesan WhatsApp</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Gunakan <code>{nama}</code> untuk nama tamu dan <code>{link}</code> untuk link undangan.</p>
       <textarea class="form-input" id="wa-template" rows="8" style="font-size:14px;line-height:1.7"></textarea>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
         <button class="btn btn-brown" onclick="saveTemplate()">Simpan Template</button>
@@ -237,7 +238,10 @@
 
     <div class="card">
       <div class="card-title">Base URL Undangan</div>
-      <input class="form-input" id="base-url" />
+      <div class="form-group">
+        <label class="form-label">URL Website Undangan</label>
+        <input class="form-input" id="base-url" />
+      </div>
       <button class="btn btn-brown" style="margin-top:10px" onclick="saveBaseUrl()">Simpan URL</button>
     </div>
   </div>
@@ -246,7 +250,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// CONFIG SUPABASE (Tetap Pakai Supabase untuk Live RSVP & Auth)
+// CONFIG SUPABASE
 const SUPABASE_URL = 'https://bijessmsedrtfxbnieza.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -257,7 +261,7 @@ let guests = JSON.parse(localStorage.getItem('wedding_guests') || '[]');
 let waTemplate = localStorage.getItem('wa_template') || '';
 let baseUrl = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
 
-// --- FITUR BARU: AUTH ---
+// AUTH FUNCTIONS
 async function handleLogin() {
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
@@ -276,8 +280,9 @@ async function checkSession() {
   if (session) document.getElementById('login-overlay').classList.add('hidden');
 }
 
-// --- FUNGSI ASLI ANDA (TIDAK BERUBAH) ---
+// GUEST MANAGEMENT
 function saveGuests() { localStorage.setItem('wedding_guests', JSON.stringify(guests)); }
+
 function showToast(msg) {
   const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
@@ -313,6 +318,12 @@ function updateStats() {
   document.getElementById('s-tidak').textContent = tidak;
   document.getElementById('s-belum').textContent = belum;
   document.getElementById('s-sent').textContent  = sent;
+}
+
+function filterGuests() {
+  const q = document.getElementById('search-guest').value.toLowerCase();
+  const filtered = q ? guests.filter(g => g.name.toLowerCase().includes(q)) : guests;
+  renderGuestTable(filtered);
 }
 
 function renderGuestTable(data) {
@@ -364,7 +375,6 @@ function addGuest() {
   showToast(`✅ Tamu "${name}" berhasil ditambahkan`);
 }
 
-// --- FITUR BARU: IMPORT CSV ---
 function importCSV(el) {
   const file = el.files[0];
   const reader = new FileReader();
@@ -390,7 +400,7 @@ function importCSV(el) {
   reader.readAsText(file);
 }
 
-// --- UPDATE LIVE DATA (Supabase) ---
+// LIVE DATA FUNCTIONS (SUPABASE)
 async function loadRsvpAdmin() {
   const el = document.getElementById('rsvp-admin-list');
   el.innerHTML = '<p style="color:var(--muted);font-style:italic">Memuat...</p>';
@@ -398,6 +408,18 @@ async function loadRsvpAdmin() {
   const { data, error } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: false });
   
   if (error) { el.innerHTML = `<p>Error: ${error.message}</p>`; return; }
+
+  // AUTO-SINKRONISASI KE DAFTAR TAMU
+  if (data && data.length > 0) {
+    data.forEach(rsvp => {
+      const guestIdx = guests.findIndex(g => g.name.toLowerCase().trim() === rsvp.name.toLowerCase().trim());
+      if (guestIdx !== -1) {
+        guests[guestIdx].status = rsvp.status;
+      }
+    });
+    saveGuests();
+    renderGuestTable();
+  }
 
   el.innerHTML = data.map(r => `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)">
@@ -423,7 +445,7 @@ async function loadWishesAdmin() {
   `).join('');
 }
 
-// Lanjutkan fungsi deleteGuest, updateStatus, copyLink, sendWA, sendAllPending, exportCSV, saveTemplate, previewTemplate, saveBaseUrl sesuai script asli Anda...
+// ORIGINAL UTILITY FUNCTIONS
 function deleteGuest(id) {
   if (!confirm('Hapus tamu ini?')) return;
   guests = guests.filter(g => g.id !== id);
