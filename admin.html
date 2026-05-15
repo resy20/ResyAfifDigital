@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Resy & Afif Wedding</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --green:      #2E6B35;
+      --green-mid:  #4A8C52;
+      --green-lt:   #7CB87F;
+      --green-pale: #C8E6CA;
+      --green-bg:   #EBF5EC;
+      --yellow:     #C8960A;
+      --yellow-mid: #E5B030;
+      --yellow-lt:  #F5D060;
+      --yellow-pale:#FEF3C0;
+      --blue:       #1A5496;
+      --blue-mid:   #3A74B8;
+      --blue-lt:    #7AAAD8;
+      --blue-pale:  #CCDFF5;
+      --white:      #FFFFFF;
+      --off-white:  #F8FBF7;
+      --ivory:      #F2F7F0;
+      --red:        #C62828;
+      --text:       #1E3D22;
+      --muted:      #4A6645;
+      --border:     rgba(46,107,53,0.15);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Lato", sans-serif; background: var(--off-white); color: var(--text); min-height: 100vh; }
+
+    /* LOGIN */
+    #login-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #0D2E14 0%, #1A4D22 40%, #0A2030 100%);
+    }
+    #login-overlay::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(124,184,127,0.04) 18px, rgba(124,184,127,0.04) 19px),
+        repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(58,116,184,0.03) 18px, rgba(58,116,184,0.03) 19px);
+    }
+    .login-box {
+      background: var(--off-white); border-radius: 12px; padding: 40px 36px;
+      width: 100%; max-width: 400px; text-align: center;
+      border-top: 4px solid var(--yellow-mid); position: relative; z-index: 2;
+    }
+    .login-title { font-family: "Playfair Display", serif; font-size: 26px; color: var(--green); margin-bottom: 4px; }
+    .login-sub { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+    .login-divider { display: flex; align-items: center; gap: 8px; margin: 16px 0; }
+    .login-divider::before, .login-divider::after { content: ""; flex: 1; height: 1px; background: var(--green-lt); opacity: 0.5; }
+    .login-divider span { color: var(--yellow-mid); font-size: 12px; }
+    .flbl { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 5px; display: block; text-align: left; font-weight: 700; }
+    .finp {
+      width: 100%; padding: 11px 14px; border: 1px solid var(--green-pale);
+      border-radius: 5px; font-size: 15px; color: var(--text);
+      background: white; outline: none; margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    .finp:focus { border-color: var(--green-mid); }
+    .login-btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+      color: #FFFFFF; border: none; border-radius: 5px;
+      font-family: "Playfair Display", serif; font-size: 16px;
+      letter-spacing: 2px; cursor: pointer; transition: all 0.2s; margin-top: 4px;
+    }
+    .login-btn:hover { background: linear-gradient(135deg, #1E5224 0%, var(--green) 100%); }
+    .login-err { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; }
+    .login-note { font-size: 12px; color: var(--muted); margin-top: 16px; line-height: 1.7; }
+
+    /* HEADER */
+    header {
+      background: var(--green); border-bottom: 3px solid var(--yellow-mid);
+      padding: 14px 24px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    }
+    .h-title { font-family: "Playfair Display", serif; font-size: 20px; color: #FFFFFF; }
+    .h-sub { font-size: 11px; color: rgba(200,240,200,0.8); margin-top: 2px; }
+    .admin-badge {
+      background: var(--yellow-mid); color: var(--green);
+      font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; margin-left: 12px;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.1); color: rgba(200,240,200,0.9);
+      border: 1px solid rgba(124,184,127,0.4); padding: 6px 14px;
+      border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 10px; margin-bottom: 24px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+    .stat-num { font-family: "Playfair Display", serif; font-size: 34px; color: var(--green); line-height: 1; }
+    .stat-num.g { color: #2E7D32; } .stat-num.r { color: var(--red); }
+    .stat-num.o { color: #E65100; } .stat-num.b { color: var(--blue); }
+    .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+    /* TABS */
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { padding: 10px 18px; font-size: 13px; cursor: pointer; border: none; background: none; color: var(--muted); font-weight: 700; border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.2s; }
+    .tab.active { color: var(--green); border-bottom-color: var(--yellow-mid); }
+    .tab-content { display: none; } .tab-content.active { display: block; }
+
+    /* CARD */
+    .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+    .card-title { font-family: "Playfair Display", serif; font-size: 17px; color: var(--green); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+    /* FORM */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+    .fg { display: flex; flex-direction: column; gap: 5px; }
+    .flb { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .fi { padding: 9px 12px; border: 1px solid var(--green-pale); border-radius: 5px; font-size: 14px; color: var(--text); background: var(--off-white); outline: none; width: 100%; transition: border-color 0.2s; }
+    .fi:focus { border-color: var(--green-mid); background: white; }
+    textarea.fi { resize: vertical; min-height: 80px; }
+
+    /* BUTTONS */
+    .btn { padding: 9px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-br { background: var(--green); color: #FFFFFF; } .btn-br:hover { background: #1E5224; }
+    .btn-go { background: var(--yellow-mid); color: var(--green); } .btn-go:hover { background: var(--yellow-lt); }
+    .btn-gr { background: #25D366; color: white; } .btn-gr:hover { background: #1faa52; }
+    .btn-bl { background: var(--blue); color: white; font-size: 12px; padding: 6px 12px; } .btn-bl:hover { background: #0D47A1; }
+    .btn-re { background: #e53935; color: white; font-size: 12px; padding: 5px 10px; } .btn-re:hover { background: #b71c1c; }
+    .btn-ot { background: transparent; border: 1px solid var(--border); color: var(--muted); } .btn-ot:hover { border-color: var(--green-mid); color: var(--green); }
+
+    /* TABLE */
+    .tw { overflow-x: auto; }
+    table.gt { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.gt thead tr { background: var(--green); }
+    table.gt thead th { color: #FFFFFF; padding: 9px 10px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+    table.gt tbody td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    table.gt tbody tr:hover td { background: var(--green-bg); }
+
+    /* BADGE */
+    .bdg { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 700; }
+    .bh { background: #E8F5E9; color: #2E7D32; } .bt { background: #FFEBEE; color: var(--red); }
+    .bb { background: #FFF8E1; color: #E65100; } .bs { background: #E3F2FD; color: var(--blue); }
+
+    /* DATA ITEM */
+    .di { padding: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .di:last-child { border-bottom: none; }
+    .di-name { font-family: "Playfair Display", serif; font-size: 16px; color: var(--green); }
+    .di-detail { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+    .di-text { font-size: 14px; color: var(--text); margin-top: 5px; font-style: italic; line-height: 1.7; }
+
+    /* TOOLBAR */
+    .toolbar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+    .toolbar .fi { max-width: 240px; }
+
+    /* EXCEL */
+    .excel-zone { border: 2px dashed rgba(46,107,53,0.2); border-radius: 8px; padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--off-white); margin-bottom: 12px; }
+    .excel-zone:hover { border-color: var(--green-mid); background: var(--green-bg); }
+    .tmpl-hint { background: var(--green-bg); border: 1px solid var(--green-pale); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--green); margin-bottom: 14px; line-height: 1.8; }
+
+    /* SETTINGS */
+    .msg-prev { background: var(--green-bg); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 14px 16px; font-size: 13px; line-height: 1.8; color: var(--green); white-space: pre-wrap; margin-top: 12px; }
+
+    /* LOADING */
+    .loading-row { text-align: center; padding: 24px; color: var(--muted); font-style: italic; font-size: 14px; }
+    .spin { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--green-pale); border-top-color: var(--green-mid); border-radius: 50%; animation: sp 0.8s linear infinite; margin-right: 6px; vertical-align: middle; }
+    @keyframes sp { to { transform: rotate(360deg); } }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: var(--yellow-lt); border: 1px solid var(--yellow-mid); padding: 10px 20px; border-radius: 8px; font-size: 14px; z-index: 10000; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; max-width: 320px; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 700px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+      .form-row > :last-child { grid-column: span 2; }
+      table.gt thead th:nth-child(n+5) { display: none; }
+      table.gt tbody td:nth-child(n+5) { display: none; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar .fi { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-title">Resy & Afif</div>
+    <div class="login-sub">Admin Panel · 27 Desember 2026</div>
+    <div class="login-divider"><span>✦</span></div>
+    <label class="flbl">Email</label>
+    <input type="email" class="finp" id="login-email" placeholder="admin@email.com" />
+    <label class="flbl">Password</label>
+    <input type="password" class="finp" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()" />
+    <button class="login-btn" onclick="handleLogin()" id="login-btn">Masuk ke Admin Panel</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-note">Panel ini hanya untuk pengelola undangan.<br>Hubungi Resy atau Afif jika lupa password.</div>
+  </div>
+</div>
+
+<header>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div>
+      <div class="h-title">Resy & Afif – Admin</div>
+      <div class="h-sub" id="logged-email">–</div>
+    </div>
+    <span class="admin-badge">ADMIN</span>
+  </div>
+  <button class="logout-btn" onclick="handleLogout()">Keluar ↩</button>
+</header>
+
+<main>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">Total Tamu</div></div>
+    <div class="stat-card"><div class="stat-num g" id="s-hadir">0</div><div class="stat-lbl">Hadir</div></div>
+    <div class="stat-card"><div class="stat-num r" id="s-tidak">0</div><div class="stat-lbl">Tidak Hadir</div></div>
+    <div class="stat-card"><div class="stat-num o" id="s-belum">0</div><div class="stat-lbl">Belum Respon</div></div>
+    <div class="stat-card"><div class="stat-num b" id="s-sent">0</div><div class="stat-lbl">WA Terkirim</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('guests',this)">Daftar Tamu</button>
+    <button class="tab" onclick="switchTab('import',this)">Import Excel</button>
+    <button class="tab" onclick="switchTab('rsvp',this)">Konfirmasi RSVP</button>
+    <button class="tab" onclick="switchTab('wishes',this)">Ucapan & Doa</button>
+    <button class="tab" onclick="switchTab('settings',this)">Pengaturan</button>
+  </div>
+
+  <!-- TAMU -->
+  <div id="tab-guests" class="tab-content active">
+    <div class="card">
+      <div class="card-title">Tambah Tamu Manual</div>
+      <div class="form-row">
+        <div class="fg"><label class="flb">Nama Tamu</label><input class="fi" id="new-name" placeholder="Nama lengkap..." /></div>
+        <div class="fg"><label class="flb">No. WhatsApp</label><input class="fi" id="new-wa" placeholder="628xxxxxxxxxx" /></div>
+        <div class="fg"><label class="flb">Keterangan</label><input class="fi" id="new-note" placeholder="Keluarga / Teman..." /></div>
+        <button class="btn btn-br" onclick="addGuest()" style="align-self:flex-end">+ Tambah</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <span>Daftar Tamu Undangan</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-go" onclick="syncRsvp()" id="sync-btn" style="font-size:12px;padding:6px 12px">↺ Sinkronisasi RSVP</button>
+          <button class="btn btn-gr" onclick="sendAllPending()" style="font-size:12px;padding:6px 12px">📲 Kirim Semua WA</button>
+          <button class="btn btn-bl" onclick="exportCSV()">⬇ CSV</button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <input class="fi" id="search-guest" placeholder="Cari nama..." oninput="renderGuestTable()" />
+        <select class="fi" id="filter-status" onchange="renderGuestTable()" style="max-width:160px">
+          <option value="">Semua Status</option>
+          <option value="belum">Belum Respon</option>
+          <option value="hadir">Hadir</option>
+          <option value="tidak">Tidak Hadir</option>
+        </select>
+      </div>
+      <div class="tw">
+        <table class="gt">
+          <thead><tr><th>#</th><th>Nama</th><th>WhatsApp</th><th>Keterangan</th><th>RSVP</th><th>WA Terkirim</th><th>Aksi</th></tr></thead>
+          <tbody id="guest-tbody"><tr><td colspan="7" class="loading-row">Memuat...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT EXCEL -->
+  <div id="tab-import" class="tab-content">
+    <div class="card">
+      <div class="card-title">Import Daftar Tamu dari Excel / CSV</div>
+      <div class="tmpl-hint">
+        <strong>📋 Format kolom:</strong>
+        Kolom A: <strong>Nama</strong> &nbsp;|&nbsp; Kolom B: <strong>WhatsApp</strong> (628xxx) &nbsp;|&nbsp; Kolom C: <strong>Keterangan</strong> (opsional)<br>
+        Baris pertama = header (dilewati otomatis). Duplikat nama akan dilewati.
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn btn-go" onclick="dlTemplate()">⬇ Download Template Excel</button>
+      </div>
+      <div class="excel-zone" id="excel-zone" onclick="document.getElementById('excel-file').click()" ondrop="onDrop(event)" ondragover="event.preventDefault()">
+        <div style="font-size:32px;margin-bottom:8px">📊</div>
+        <div style="font-size:14px;color:var(--muted)">Klik atau drag & drop file Excel/CSV di sini</div>
+        <div style="font-size:12px;color:rgba(74,102,69,0.6);margin-top:6px">Format: .xlsx / .xls / .csv</div>
+      </div>
+      <input type="file" id="excel-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)" />
+      <div id="excel-preview-wrap" style="display:none">
+        <div id="excel-preview" style="overflow-x:auto;margin-top:12px"></div>
+        <div style="display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap">
+          <span id="excel-count" style="font-size:13px;color:var(--muted)"></span>
+          <button class="btn btn-br" onclick="importGuests()">✅ Import ke Daftar Tamu</button>
+          <button class="btn btn-ot" onclick="clearExcel()">✕ Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RSVP -->
+  <div id="tab-rsvp" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span>Data Konfirmasi Kehadiran</span>
+        <button class="btn btn-bl" onclick="loadRsvpList()" style="font-size:12px;padding:6px 12px">↺ Refresh</button>
+      </div>
+      <div id="rsvp-admin-list"><div class="loading-row"><span class="spin"></span>Memuat data...</div></div>
+    </div>
+  </div>
+
+  <!-- WISHES -->
+  <div id="tab-wishes" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span>Ucapan & Doa dari Tamu</span>
+        <button class="btn btn-bl" onclick="loadWishesList()" style="font-size:12px;padding:6px 12px">↺ Refresh</button>
+      </div>
+      <div id="wishes-admin-list"><div class="loading-row"><span class="spin"></span>Memuat data...</div></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="tab-settings" class="tab-content">
+    <div class="card">
+      <div class="card-title">Template Pesan WhatsApp</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Gunakan <code>{nama}</code> untuk nama tamu dan <code>{link}</code> untuk link undangan.</p>
+      <textarea class="fi" id="wa-template" rows="10" style="font-size:14px;line-height:1.7;resize:vertical"></textarea>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-br" onclick="saveTemplate()">💾 Simpan Template</button>
+        <button class="btn btn-go" onclick="previewTemplate()">👁 Preview</button>
+      </div>
+      <div id="preview-result"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Base URL Undangan</div>
+      <div class="fg" style="margin-bottom:10px"><label class="flb">URL Website</label><input class="fi" id="base-url" /></div>
+      <button class="btn btn-br" onclick="saveBaseUrl()">💾 Simpan URL</button>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = "https://bijessmsedrtfxbnieza.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const BASE_DEFAULT = "https://resyafif.site";
+const DEF_TEMPLATE = `Assalamu'alaikum warahmatullahi wabarakatuh,
+
+Yth. {nama}
+
+Dengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami:
+
+\u{1F470}\u{1F935} *Resy & Afif*
+\u{1F4C5} Ahad, 27 Desember 2026
+\u{23F0} 08.00 WIB \u2013 Selesai
+\u{1F4CD} Rumah Mempelai Wanita
+    Cilaja Hilir, Sindanglaya, Kab. Bandung
+
+Undangan digital Anda:
+\u{1F517} {link}
+
+Kehadiran Bapak/Ibu/Saudara/i merupakan kehormatan bagi kami.
+Jazakumullahu khairan \u{1F64F}
+
+Wassalamu'alaikum warahmatullahi wabarakatuh
+
+_Resy & Afif_
+_Beserta Keluarga Besar_`;
+
+let guests = JSON.parse(localStorage.getItem("wedding_guests") || "[]");
+let excelData = [];
+
+if (!guests.length) {
+  guests = [
+    { id: 1, name: "Keluarga H. Dadan Suryadi", wa: "6281234567890", note: "Keluarga", status: "belum", sent: false },
+    { id: 2, name: "Ibu Titi Rahayu", wa: "6289876543210", note: "Tetangga", status: "belum", sent: false },
+  ];
+  saveGuests();
+}
+
+// AUTH
+async function handleLogin() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+  const errEl = document.getElementById("login-err");
+  const btn = document.getElementById("login-btn");
+  if (!email || !password) { errEl.textContent = "Email dan password wajib diisi."; return; }
+  btn.textContent = "Memeriksa..."; btn.disabled = true;
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) {
+    errEl.textContent = "\u274C Email atau password salah.";
+    btn.textContent = "Masuk ke Admin Panel"; btn.disabled = false;
+  } else {
+    document.getElementById("login-overlay").classList.add("hidden");
+    document.getElementById("logged-email").textContent = "Login sebagai: " + data.user.email;
+    initApp();
+  }
+}
+
+async function handleLogout() {
+  if (!confirm("Yakin ingin keluar?")) return;
+  await supabaseClient.auth.signOut(); location.reload();
+}
+
+async function checkSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    document.getElementById("login-overlay").classList.add("hidden");
+    document.getElementById("logged-email").textContent = "Login sebagai: " + session.user.email;
+    initApp();
+  }
+}
+
+function initApp() {
+  document.getElementById("wa-template").value = localStorage.getItem("wa_template") || DEF_TEMPLATE;
+  document.getElementById("base-url").value = localStorage.getItem("base_url") || BASE_DEFAULT;
+  renderGuestTable();
+}
+
+// UTILS
+function saveGuests() { localStorage.setItem("wedding_guests", JSON.stringify(guests)); }
+function getBaseUrl() { return localStorage.getItem("base_url") || BASE_DEFAULT; }
+function getLink(name) { return `${getBaseUrl()}/?to=${encodeURIComponent(name)}`; }
+function buildMsg(name) {
+  const tmpl = localStorage.getItem("wa_template") || DEF_TEMPLATE;
+  return tmpl.replace(/{nama}/g, name).replace(/{link}/g, getLink(name));
+}
+function timeAgo(iso) {
+  const d = Math.floor((Date.now()-new Date(iso))/86400000);
+  const h = Math.floor((Date.now()-new Date(iso))/3600000);
+  const m = Math.floor((Date.now()-new Date(iso))/60000);
+  if(d>0)return`${d} hari lalu`;if(h>0)return`${h} jam lalu`;if(m>0)return`${m} menit lalu`;return"Baru saja";
+}
+function showToast(msg) {
+  const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+function switchTab(name, el) {
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.getElementById("tab-"+name).classList.add("active"); el.classList.add("active");
+  if (name==="rsvp") loadRsvpList();
+  if (name==="wishes") loadWishesList();
+}
+
+// GUEST TABLE
+function renderGuestTable() {
+  const q = document.getElementById("search-guest").value.toLowerCase();
+  const st = document.getElementById("filter-status").value;
+  let filtered = guests;
+  if (q) filtered = filtered.filter(g => g.name.toLowerCase().includes(q)||(g.wa||"").includes(q));
+  if (st) filtered = filtered.filter(g => g.status===st);
+  updateStats();
+  document.getElementById("guest-tbody").innerHTML = filtered.length===0
+    ? "<tr><td colspan=\"7\" style=\"text-align:center;padding:20px;color:var(--muted);font-style:italic\">Tidak ada data.</td></tr>"
+    : filtered.map((g,i) => `<tr>
+        <td style="color:var(--muted);font-size:12px">${i+1}</td>
+        <td style="font-family:'Playfair Display',serif;color:var(--green);font-weight:600">${g.name}</td>
+        <td style="font-family:monospace;font-size:12px;color:var(--muted)">${g.wa||"–"}</td>
+        <td style="font-size:12px;color:var(--muted)">${g.note||"–"}</td>
+        <td><select onchange="updSt(${g.id},this.value)" style="font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--off-white)">
+          <option value="belum" ${g.status==="belum"?"selected":""}>\u23F3 Belum</option>
+          <option value="hadir" ${g.status==="hadir"?"selected":""}>✓ Hadir</option>
+          <option value="tidak" ${g.status==="tidak"?"selected":""}>\u2717 Tidak</option>
+        </select></td>
+        <td>${g.sent?"<span class=\"bdg bs\">✓ Terkirim</span>":"<span class=\"bdg bb\">Belum</span>"}</td>
+        <td><div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${g.wa?`<button class="btn btn-gr" style="font-size:12px;padding:5px 10px" onclick="sendWA(${g.id})">\u{1F4F2} WA</button>`:""}
+          <button class="btn btn-ot" style="font-size:11px;padding:4px 8px" onclick="cpLink('${g.name.replace(/'/g,"\\'")}')">\u{1F517}</button>
+          <button class="btn btn-re" onclick="delGuest(${g.id})">\u2715</button>
+        </div></td>
+      </tr>`).join("");
+}
+
+function updateStats() {
+  document.getElementById("s-total").textContent = guests.length;
+  document.getElementById("s-hadir").textContent = guests.filter(g=>g.status==="hadir").length;
+  document.getElementById("s-tidak").textContent = guests.filter(g=>g.status==="tidak").length;
+  document.getElementById("s-belum").textContent = guests.filter(g=>g.status==="belum").length;
+  document.getElementById("s-sent").textContent  = guests.filter(g=>g.sent).length;
+}
+
+function addGuest() {
+  const name = document.getElementById("new-name").value.trim();
+  if (!name) { showToast("\u26A0\uFE0F Nama wajib diisi"); return; }
+  guests.push({ id: Date.now(), name, wa: document.getElementById("new-wa").value.trim(), note: document.getElementById("new-note").value.trim(), status: "belum", sent: false });
+  saveGuests(); renderGuestTable();
+  document.getElementById("new-name").value=""; document.getElementById("new-wa").value=""; document.getElementById("new-note").value="";
+  showToast(`\u2705 Tamu "${name}" ditambahkan`);
+}
+
+function delGuest(id) {
+  if (!confirm("Hapus tamu ini?")) return;
+  guests = guests.filter(g=>g.id!==id); saveGuests(); renderGuestTable(); showToast("\u{1F5D1}\uFE0F Tamu dihapus");
+}
+
+function updSt(id,st) { const g=guests.find(g=>g.id===id); if(g){g.status=st;saveGuests();updateStats();} }
+
+function cpLink(name) {
+  navigator.clipboard.writeText(getLink(name)).then(()=>showToast("\u{1F4CB} Link disalin!")).catch(()=>prompt("Salin link ini:",getLink(name)));
+}
+
+function sendWA(id) {
+  const g = guests.find(g=>g.id===id);
+  if (!g?.wa) { showToast("\u26A0\uFE0F No. WA tidak ada"); return; }
+  window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(buildMsg(g.name))}`,"_blank");
+  g.sent=true; saveGuests(); renderGuestTable(); showToast(`\u{1F4F2} WA dibuka untuk ${g.name}`);
+}
+
+function sendAllPending() {
+  const p = guests.filter(g=>!g.sent&&g.wa);
+  if (!p.length) { showToast("\u2705 Semua tamu sudah dikirim"); return; }
+  if (!confirm(`Akan membuka ${p.length} tab WhatsApp. Lanjutkan?`)) return;
+  p.forEach((g,i)=>setTimeout(()=>{ window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(buildMsg(g.name))}`,"_blank"); g.sent=true; },i*2000));
+  setTimeout(()=>{saveGuests();renderGuestTable();showToast("\u2705 Semua undangan terkirim!");},p.length*2000+500);
+}
+
+async function syncRsvp() {
+  const btn=document.getElementById("sync-btn"); btn.textContent="Menyinkronkan..."; btn.disabled=true;
+  const { data, error } = await supabaseClient.from("rsvp").select("*");
+  if (!error && data) {
+    data.forEach(r => {
+      const idx = guests.findIndex(g=>g.name.toLowerCase().trim()===r.name.toLowerCase().trim());
+      if (idx!==-1) guests[idx].status=r.status;
+    });
+    saveGuests(); renderGuestTable(); showToast(`\u2705 ${data.length} data RSVP disinkronkan`);
+  } else { showToast("\u274C Gagal sinkronisasi"); }
+  btn.textContent="\u21BA Sinkronisasi RSVP"; btn.disabled=false;
+}
+
+function exportCSV() {
+  const h=["Nama","WhatsApp","Keterangan","Status RSVP","WA Terkirim","Link Undangan"];
+  const r=guests.map(g=>[`"${g.name}"`,`"${g.wa||""}"`,`"${g.note||""}"`,`"${g.status}"`,g.sent?"Ya":"Belum",`"${getLink(g.name)}"`]);
+  const csv=[h.join(","),...r.map(x=>x.join(","))].join("\n");
+  const a=document.createElement("a"); a.href="data:text/csv;charset=utf-8,\uFEFF"+encodeURIComponent(csv);
+  a.download="daftar-tamu-resy-afif.csv"; a.click(); showToast("\u2B07\uFE0F CSV diunduh");
+}
+
+// EXCEL IMPORT
+function onDrop(e) { e.preventDefault(); if(e.dataTransfer.files[0]) procFile(e.dataTransfer.files[0]); }
+function handleFile(e) { if(e.target.files[0]) procFile(e.target.files[0]); }
+function procFile(file) {
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try {
+      const wb=XLSX.read(e.target.result,{type:"binary"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1});
+      excelData=raw.slice(1).filter(r=>r[0]).map((r,i)=>({
+        id:Date.now()+i, name:String(r[0]||"").trim(),
+        wa:String(r[1]||"").trim().replace(/\s/g,""),
+        note:String(r[2]||"").trim(), status:"belum", sent:false
+      })).filter(r=>r.name);
+      if(!excelData.length){showToast("\u26A0\uFE0F Tidak ada data");return;}
+      document.getElementById("excel-preview-wrap").style.display="block";
+      document.getElementById("excel-count").textContent=`${excelData.length} tamu ditemukan`;
+      document.getElementById("excel-preview").innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:var(--green)"><th style="color:#fff;padding:8px 10px;text-align:left">#</th><th style="color:#fff;padding:8px 10px;text-align:left">Nama</th><th style="color:#fff;padding:8px 10px;text-align:left">WhatsApp</th><th style="color:#fff;padding:8px 10px;text-align:left">Keterangan</th></tr></thead>
+        <tbody>${excelData.slice(0,10).map((r,i)=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 10px">${i+1}</td><td style="padding:8px 10px">${r.name}</td><td style="padding:8px 10px;font-family:monospace">${r.wa||"–"}</td><td style="padding:8px 10px">${r.note||"–"}</td></tr>`).join("")}
+        ${excelData.length>10?`<tr><td colspan="4" style="padding:8px 10px;text-align:center;color:var(--muted);font-style:italic">... dan ${excelData.length-10} tamu lainnya</td></tr>`:""}
+        </tbody></table>`;
+    } catch(err){showToast("\u274C Gagal baca file: "+err.message);}
+  };
+  reader.readAsBinaryString(file);
+}
+function importGuests() {
+  if(!excelData.length)return;
+  const existing=guests.map(g=>g.name.toLowerCase());
+  const newG=excelData.filter(g=>!existing.includes(g.name.toLowerCase()));
+  guests=[...guests,...newG]; saveGuests(); clearExcel(); renderGuestTable();
+  showToast(`\u2705 ${newG.length} tamu diimport! (${excelData.length-newG.length} duplikat dilewati)`);
+  document.querySelectorAll(".tab")[0].click();
+}
+function clearExcel() {
+  excelData=[];
+  document.getElementById("excel-preview-wrap").style.display="none";
+  document.getElementById("excel-file").value="";
+}
+function dlTemplate() {
+  const ws=XLSX.utils.aoa_to_sheet([["Nama","WhatsApp","Keterangan"],["Keluarga H. Contoh","628123456789","Keluarga"],["Bpk. Ahmad Tamu","628987654321","Rekan Kerja"]]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Daftar Tamu");
+  XLSX.writeFile(wb,"template-daftar-tamu.xlsx"); showToast("\u2B07\uFE0F Template diunduh");
+}
+
+// RSVP dari Supabase
+async function loadRsvpList() {
+  const el=document.getElementById("rsvp-admin-list");
+  el.innerHTML="<div class=\"loading-row\"><span class=\"spin\"></span>Memuat dari database...</div>";
+  const { data, error } = await supabaseClient.from("rsvp").select("*").order("created_at",{ascending:false});
+  if (error||!data?.length) { el.innerHTML="<div class=\"loading-row\">Belum ada konfirmasi kehadiran.</div>"; return; }
+  el.innerHTML=data.map(r=>`<div class="di">
+    <div>
+      <div class="di-name">${r.name}</div>
+      <div class="di-detail">${r.count} tamu · ${timeAgo(r.created_at)}${r.message?" · <em>\""+r.message+"\"</em>":""}</div>
+    </div>
+    <span class="bdg ${r.status==="hadir"?"bh":r.status==="tidak"?"bt":"bb"}">${r.status==="hadir"?"✓ Hadir":r.status==="tidak"?"✗ Tidak":"? Belum"}</span>
+  </div>`).join("");
+}
+
+// WISHES dari Supabase
+async function loadWishesList() {
+  const el=document.getElementById("wishes-admin-list");
+  el.innerHTML="<div class=\"loading-row\"><span class=\"spin\"></span>Memuat dari database...</div>";
+  const { data, error } = await supabaseClient.from("wishes").select("*").order("created_at",{ascending:false});
+  if (error||!data?.length) { el.innerHTML="<div class=\"loading-row\">Belum ada ucapan.</div>"; return; }
+  el.innerHTML=data.map(w=>`<div class="di">
+    <div style="flex:1">
+      <div class="di-name">${w.name}</div>
+      <div class="di-text">"${w.text}"</div>
+      <div class="di-detail" style="margin-top:6px">${timeAgo(w.created_at)}</div>
+    </div>
+  </div>`).join("");
+}
+
+// SETTINGS
+function saveTemplate() { localStorage.setItem("wa_template",document.getElementById("wa-template").value); showToast("\u2705 Template tersimpan"); }
+function previewTemplate() {
+  const msg=buildMsg("Bapak/Ibu Contoh Tamu");
+  document.getElementById("preview-result").innerHTML=`<div class="msg-prev">${msg.replace(/\n/g,"<br>").replace(/\*(.*?)\*/g,"<strong>$1</strong>")}</div>`;
+}
+function saveBaseUrl() { localStorage.setItem("base_url",document.getElementById("base-url").value.trim()); showToast("\u2705 URL tersimpan"); }
+
+// BOOT
+checkSession();
+</script>
+</body>
+</html>
