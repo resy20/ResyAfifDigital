@@ -69,27 +69,20 @@
     .form-input:focus { border-color: var(--gold); background: white; }
     .btn { padding: 9px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s; white-space: nowrap; }
     .btn-brown { background: var(--brown); color: var(--cream); }
-    .btn-brown:hover { background: #3A2008; }
     .btn-gold  { background: var(--gold); color: var(--brown); }
-    .btn-gold:hover  { background: var(--gold-lt); }
     .btn-green { background: #25D366; color: white; }
-    .btn-green:hover { background: #1faa52; }
     .btn-blue  { background: var(--blue); color: white; font-size: 12px; padding: 6px 12px; }
-    .btn-blue:hover  { background: #0D47A1; }
     .btn-red   { background: #e53935; color: white; font-size: 12px; padding: 6px 12px; }
-    .btn-red:hover   { background: #b71c1c; }
     .btn-sm    { font-size: 12px; padding: 5px 10px; }
 
-    /* TABLE */
+    /* TABLE - DIPERBAIKI AGAR TOMBOL RAPI */
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     thead tr { background: var(--brown); }
     thead th { color: var(--cream); padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
     tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tbody tr:hover td { background: #FFF8EC; }
     .td-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--brown); }
-    .td-wa   { font-size: 12px; color: var(--muted); font-family: monospace; }
-    .td-link { font-size: 11px; color: #1565C0; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .td-link { font-size: 11px; color: #1565C0; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* BADGE */
     .badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 700; }
@@ -105,9 +98,10 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* LOGIN OVERLAY (Tetap diperlukan untuk keamanan) */
+    /* LOGIN OVERLAY */
     #login-overlay { position: fixed; inset: 0; background: var(--ivory); z-index: 9999; display: flex; align-items: center; justify-content: center; }
     .login-box { background: white; padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
+    .hidden { display: none !important; }
 
     .toast {
       position: fixed; bottom: 24px; right: 24px;
@@ -117,14 +111,6 @@
       transition: all 0.3s; pointer-events: none;
     }
     .toast.show { opacity: 1; transform: translateY(0); }
-    .hidden { display: none !important; }
-
-    @media (max-width: 700px) {
-      .form-row { grid-template-columns: 1fr 1fr; }
-      .form-row > :last-child { grid-column: span 2; }
-      thead th:nth-child(n+5) { display: none; }
-      tbody td:nth-child(n+5) { display: none; }
-    }
   </style>
 </head>
 <body>
@@ -179,9 +165,9 @@
         </div>
         <div class="form-group">
           <label class="form-label">Keterangan</label>
-          <input class="form-input" id="new-note" placeholder="Keluarga / Teman / Kolega..." />
+          <input class="form-input" id="new-note" placeholder="Keluarga / Teman..." />
         </div>
-        <button class="btn btn-brown" onclick="addGuest()" style="align-self:flex-end">+ Tambah</button>
+        <button class="btn btn-brown" onclick="addGuest()">+ Tambah</button>
       </div>
       <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
         <input type="file" id="csv-import" accept=".csv" style="display:none" onchange="importCSV(this)">
@@ -191,9 +177,9 @@
 
     <div class="card">
       <div class="card-title">Daftar Tamu Undangan</div>
-      <div class="search-row">
-        <input class="form-input" id="search-guest" placeholder="Cari nama..." oninput="filterGuests()" />
-        <button class="btn btn-gold" onclick="sendAllPending()">📲 Kirim Semua WA Belum Terkirim</button>
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <input class="form-input" id="search-guest" placeholder="Cari nama..." oninput="filterGuests()" style="max-width:300px" />
+        <button class="btn btn-gold" onclick="sendAllPending()">📲 Kirim Semua WA</button>
         <button class="btn btn-blue btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
       </div>
       <div class="table-wrap">
@@ -219,14 +205,14 @@
   <div id="tab-rsvp" class="tab-content">
     <div class="card">
       <div class="card-title">Data Konfirmasi Kehadiran (Live)</div>
-      <div id="rsvp-admin-list"><p style="color:var(--muted);font-style:italic">Memuat data...</p></div>
+      <div id="rsvp-admin-list"></div>
     </div>
   </div>
 
   <div id="tab-wishes" class="tab-content">
     <div class="card">
       <div class="card-title">Ucapan & Doa dari Tamu (Live)</div>
-      <div id="wishes-admin-list"><p style="color:var(--muted);font-style:italic">Memuat data...</p></div>
+      <div id="wishes-admin-list"></div>
     </div>
   </div>
 
@@ -234,14 +220,7 @@
     <div class="card">
       <div class="card-title">Template Pesan WhatsApp</div>
       <textarea class="form-input" id="wa-template" rows="8"></textarea>
-      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
-        <button class="btn btn-brown" onclick="saveTemplate()">Simpan Template</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Base URL Undangan</div>
-      <input class="form-input" id="base-url" />
-      <button class="btn btn-brown" style="margin-top:10px" onclick="saveBaseUrl()">Simpan URL</button>
+      <button class="btn btn-brown" style="margin-top:12px" onclick="saveTemplate()">Simpan Template</button>
     </div>
   </div>
 </main>
@@ -249,87 +228,74 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// CONFIG SUPABASE
 const SUPABASE_URL = 'https://bijessmsedrtfxbnieza.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const BASE_URL_DEFAULT = 'https://resy-afif.vercel.app';
 
-// STATE
 let guests = JSON.parse(localStorage.getItem('wedding_guests') || '[]');
 
-// --- AUTH ---
 async function handleLogin() {
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) alert("Login Gagal: " + error.message);
-  else { document.getElementById('login-overlay').classList.add('hidden'); }
+  else document.getElementById('login-overlay').classList.add('hidden');
 }
-async function handleLogout() { await supabaseClient.auth.signOut(); location.reload(); }
+
+async function handleLogout() {
+  await supabaseClient.auth.signOut();
+  location.reload();
+}
+
 async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) document.getElementById('login-overlay').classList.add('hidden');
 }
 
-// --- GUEST LOGIC ---
 function saveGuests() { localStorage.setItem('wedding_guests', JSON.stringify(guests)); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function getInviteLink(name) {
+  const url = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
+  return `${url}?to=${encodeURIComponent(name)}`;
+}
+
+function updateStats() {
+  document.getElementById('s-total').textContent = guests.length;
+  document.getElementById('s-hadir').textContent = guests.filter(g => g.status === 'hadir').length;
+  document.getElementById('s-tidak').textContent = guests.filter(g => g.status === 'tidak').length;
+  document.getElementById('s-belum').textContent = guests.filter(g => g.status === 'belum').length;
+  document.getElementById('s-sent').textContent  = guests.filter(g => g.sent).length;
+}
+
 function renderGuestTable(data) {
   data = data || guests;
   updateStats();
   const tbody = document.getElementById('guest-tbody');
   tbody.innerHTML = data.map((g, i) => `
     <tr>
-      <td style="color:#A09080;font-size:12px">${i+1}</td>
+      <td>${i+1}</td>
       <td class="td-name">${g.name}</td>
-      <td class="td-wa">${g.wa || '–'}</td>
-      <td style="font-size:12px;color:var(--muted)">${g.note || '–'}</td>
+      <td style="font-family:monospace">${g.wa || '–'}</td>
+      <td>${g.note || '–'}</td>
       <td><span class="badge badge-${g.status}">${g.status.toUpperCase()}</span></td>
-      <td>${g.sent ? '<span class="badge badge-terkirim">✓ Terkirim</span>' : '<span class="badge badge-belum">Belum</span>'}</td>
-      <td><span class="td-link">${getInviteLink(g.name)}</span></td>
+      <td>${g.sent ? '✅' : '⏳'}</td>
+      <td class="td-link">${getInviteLink(g.name)}</td>
       <td>
-        <button class="btn btn-green btn-sm" onclick="sendWA(${g.id})">📲 WA</button>
-        <button class="btn btn-red btn-sm" onclick="deleteGuest(${g.id})">✕</button>
+        <div style="display:flex; gap:5px;">
+          <button class="btn btn-green btn-sm" onclick="sendWA(${g.id})">WA</button>
+          <button class="btn btn-red btn-sm" onclick="deleteGuest(${g.id})">✕</button>
+        </div>
       </td>
     </tr>
   `).join('');
 }
 
-// --- LOGIKA SINKRONISASI (BARU: PRIORITASKAN YANG TERBARU) ---
-async function loadRsvpAdmin() {
-  const el = document.getElementById('rsvp-admin-list');
-  el.innerHTML = '<p style="color:var(--muted);font-style:italic">Memuat...</p>';
-  
-  // Ambil data dengan urutan ASC (lama ke baru) 
-  // agar saat looping, data terbaru yang diproses terakhir menimpa data lama
-  const { data, error } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: true });
-  
-  if (error) { el.innerHTML = `<p>Error: ${error.message}</p>`; return; }
-
-  if (data && data.length > 0) {
-    data.forEach(rsvp => {
-      const guestIdx = guests.findIndex(g => g.name.toLowerCase().trim() === rsvp.name.toLowerCase().trim());
-      if (guestIdx !== -1) {
-        guests[guestIdx].status = rsvp.status;
-      }
-    });
-    saveGuests(); renderGuestTable();
-  }
-
-  // Tampilkan di list (dibalik lagi ke DESC agar user melihat yang terbaru di atas)
-  const displayData = [...data].reverse();
-  el.innerHTML = displayData.map(r => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border)">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--brown)">${r.name}</div>
-        <div style="font-size:12px;color:var(--muted)">${r.count} tamu · ${r.message || 'Tanpa pesan'}</div>
-      </div>
-      <span class="badge badge-${r.status}">${r.status.toUpperCase()}</span>
-    </div>
-  `).join('');
-}
-
-// --- FUNGSI ASLI LAINNYA ---
 function addGuest() {
   const name = document.getElementById('new-name').value.trim();
   const wa = document.getElementById('new-wa').value.trim();
@@ -337,28 +303,42 @@ function addGuest() {
   if (!name) return;
   guests.push({ id: Date.now(), name, wa, note, status: 'belum', sent: false });
   saveGuests(); renderGuestTable();
+  document.getElementById('new-name').value = '';
 }
-function importCSV(el) {
-  const file = el.files[0];
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const lines = e.target.result.split('\n');
-    lines.slice(1).forEach((line, i) => {
-      const cols = line.split(',');
-      if(cols[0]) guests.push({ id: Date.now() + i, name: cols[0].trim(), wa: cols[1]?.trim(), note: cols[2]?.trim(), status: 'belum', sent: false });
+
+async function loadRsvpAdmin() {
+  const el = document.getElementById('rsvp-admin-list');
+  el.innerHTML = '<p>Memuat...</p>';
+  const { data, error } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: true });
+  
+  if (data) {
+    data.forEach(rsvp => {
+      const idx = guests.findIndex(g => g.name.toLowerCase().trim() === rsvp.name.toLowerCase().trim());
+      if (idx !== -1) guests[idx].status = rsvp.status;
     });
     saveGuests(); renderGuestTable();
-  };
-  reader.readAsText(file);
+    el.innerHTML = [...data].reverse().map(r => `
+      <div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid var(--border)">
+        <div><b>${r.name}</b><br><small>${r.count} tamu · ${r.message || '-'}</small></div>
+        <span class="badge badge-${r.status}">${r.status.toUpperCase()}</span>
+      </div>
+    `).join('');
+  }
 }
-// Sertakan fungsi updateStats, sendWA, sendAllPending, exportCSV, saveTemplate, switchTab, loadWishesAdmin dll sesuai script Anda...
-function updateStats() {
-  document.getElementById('s-total').textContent = guests.length;
-  document.getElementById('s-hadir').textContent = guests.filter(g => g.status === 'hadir').length;
-  document.getElementById('s-tidak').textContent = guests.filter(g => g.status === 'tidak').length;
-  document.getElementById('s-belum').textContent = guests.filter(g => g.status === 'belum').length;
-  document.getElementById('s-sent').textContent = guests.filter(g => g.sent).length;
+
+async function loadWishesAdmin() {
+  const el = document.getElementById('wishes-admin-list');
+  const { data } = await supabaseClient.from('wishes').select('*').order('created_at', { ascending: false });
+  if (data) {
+    el.innerHTML = data.map(w => `
+      <div style="padding:12px; border-bottom:1px solid var(--border)">
+        <b>${w.name}</b><br>
+        <i>"${w.message || w.ucapan || w.text || '...'}"</i>
+      </div>
+    `).join('');
+  }
 }
+
 function switchTab(name, el) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -367,18 +347,21 @@ function switchTab(name, el) {
   if (name === 'rsvp') loadRsvpAdmin();
   if (name === 'wishes') loadWishesAdmin();
 }
-async function loadWishesAdmin() {
-  const { data } = await supabaseClient.from('wishes').select('*').order('created_at', { ascending: false });
-  document.getElementById('wishes-admin-list').innerHTML = data.map(w => `<div style="padding:14px;border-bottom:1px solid var(--border)"><b>${w.name}</b><br><small>"${w.message}"</small></div>`).join('');
-}
-function getInviteLink(name) { return (localStorage.getItem('base_url') || BASE_URL_DEFAULT) + "?to=" + encodeURIComponent(name); }
-function deleteGuest(id) { guests = guests.filter(g => g.id !== id); saveGuests(); renderGuestTable(); }
 
-// INIT
+function sendWA(id) {
+  const g = guests.find(g => g.id === id);
+  const msg = (localStorage.getItem('wa_template') || '').replace(/{nama}/g, g.name).replace(/{link}/g, getInviteLink(g.name));
+  window.open(`https://wa.me/${g.wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  g.sent = true; saveGuests(); renderGuestTable();
+}
+
+function deleteGuest(id) {
+  if (confirm('Hapus?')) { guests = guests.filter(g => g.id !== id); saveGuests(); renderGuestTable(); }
+}
+
 checkSession();
 renderGuestTable();
 document.getElementById('wa-template').value = localStorage.getItem('wa_template') || "";
-document.getElementById('base-url').value = localStorage.getItem('base_url') || BASE_URL_DEFAULT;
 </script>
 </body>
 </html>
