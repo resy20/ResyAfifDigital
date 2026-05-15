@@ -7,49 +7,81 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    /* Styling tetap sama seperti sebelumnya */
-    :root { --brown: #4A2E10; --gold: #C8972A; --gold-lt: #E8C06A; --cream: #FAF3E0; --ivory: #FFF9F0; --red: #C62828; --green: #2E7D32; --blue: #1565C0; --text: #2C1A08; --muted: #7A6A52; --border: rgba(74,46,16,0.15); }
+    :root {
+      --brown:    #4A2E10;
+      --gold:     #C8972A;
+      --gold-lt:  #E8C06A;
+      --cream:    #FAF3E0;
+      --ivory:    #FFF9F0;
+      --red:      #C62828;
+      --green:    #2E7D32;
+      --blue:     #1565C0;
+      --text:     #2C1A08;
+      --muted:    #7A6A52;
+      --border:   rgba(74,46,16,0.15);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Lato', sans-serif; background: var(--ivory); color: var(--text); min-height: 100vh; }
-    header { background: var(--brown); border-bottom: 3px solid var(--gold); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+
+    header {
+      background: var(--brown); border-bottom: 3px solid var(--gold);
+      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+    }
     .header-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--cream); }
-    .admin-badge { background: var(--gold); color: var(--brown); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+
     main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+
+    /* LOGIN OVERLAY */
+    #login-overlay {
+      position: fixed; inset: 0; background: var(--ivory); z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: white; padding: 40px; border-radius: 12px;
+      border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    /* STATS */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
     .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
     .stat-num { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--brown); line-height: 1; }
+
+    /* CARD & TABS */
     .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
     .card-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--brown); margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
-    .form-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: 5px; width: 100%; }
-    .btn { padding: 9px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 700; }
-    .btn-brown { background: var(--brown); color: var(--cream); }
-    .btn-gold { background: var(--gold); color: var(--brown); }
-    .btn-red { background: #e53935; color: white; }
     .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
-    .tab { padding: 10px 20px; cursor: pointer; border: none; background: none; color: var(--muted); }
+    .tab { padding: 10px 20px; cursor: pointer; border: none; background: none; color: var(--muted); font-weight: 700; }
     .tab.active { color: var(--brown); border-bottom: 2px solid var(--gold); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    #login-overlay { position: fixed; inset: 0; background: var(--ivory); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-    .login-box { background: white; padding: 30px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
+
+    /* FORM & TABLE */
+    .form-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 5px; width: 100%; margin-bottom: 10px; font-family: 'Lato', sans-serif; }
+    .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 700; transition: 0.2s; }
+    .btn-brown { background: var(--brown); color: var(--cream); }
+    .btn-gold { background: var(--gold); color: var(--brown); }
+    .btn-red { background: #e53935; color: white; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+    th { background: var(--brown); color: white; padding: 12px; text-align: left; text-transform: uppercase; font-size: 11px; }
+    td { padding: 12px; border-bottom: 1px solid var(--border); }
+
+    .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+    .badge-hadir { background: #E8F5E9; color: var(--green); }
+    .badge-tidak { background: #FFEBEE; color: var(--red); }
     .hidden { display: none !important; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { background: var(--brown); color: white; padding: 10px; text-align: left; }
-    td { padding: 10px; border-bottom: 1px solid var(--border); }
-    .badge { padding: 3px 8px; border-radius: 10px; font-size: 11px; }
-    .badge-hadir { background: #E8F5E9; color: green; }
-    .badge-tidak { background: #FFEBEE; color: red; }
   </style>
 </head>
 <body>
 
 <div id="login-overlay">
   <div class="login-box">
-    <h2 style="font-family:'Playfair Display'; margin-bottom: 20px;">Admin Login</h2>
-    <input type="email" id="login-email" class="form-input" placeholder="Email" style="margin-bottom: 10px;">
-    <input type="password" id="login-password" class="form-input" placeholder="Password" style="margin-bottom: 20px;">
-    <button class="btn btn-brown" style="width: 100%" onclick="handleLogin()">Masuk</button>
+    <h2 style="font-family:'Playfair Display'; margin-bottom: 25px; color: var(--brown);">Admin Login</h2>
+    <input type="email" id="login-email" class="form-input" placeholder="Email Admin">
+    <input type="password" id="login-password" class="form-input" placeholder="Password">
+    <button class="btn btn-brown" style="width: 100%; margin-top: 10px;" onclick="handleLogin()">Masuk</button>
+    <p style="font-size: 12px; color: var(--muted); margin-top: 15px;">Khusus pengantin & panitia</p>
   </div>
 </div>
 
@@ -57,14 +89,14 @@
   <div>
     <div class="header-title">Resy & Afif – Admin Panel</div>
   </div>
-  <button class="btn btn-red" style="font-size: 11px;" onclick="handleLogout()">Logout</button>
+  <button class="btn btn-red" style="font-size: 11px; padding: 5px 15px;" onclick="handleLogout()">Keluar</button>
 </header>
 
 <main>
   <div class="stats-grid">
-    <div class="stat-card"><div class="stat-num" id="s-total">0</div><div>Total Tamu</div></div>
-    <div class="stat-card"><div class="stat-num" id="s-hadir" style="color:green">0</div><div>Hadir</div></div>
-    <div class="stat-card"><div class="stat-num" id="s-sent" style="color:blue">0</div><div>WA Terkirim</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-total">0</div><div style="font-size:12px; color:var(--muted)">Total Tamu</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-hadir" style="color:var(--green)">0</div><div style="font-size:12px; color:var(--muted)">Hadir (RSVP)</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-sent" style="color:var(--blue)">0</div><div style="font-size:12px; color:var(--muted)">WA Terkirim</div></div>
   </div>
 
   <div class="tabs">
@@ -74,24 +106,24 @@
 
   <div id="tab-guests" class="tab-content active">
     <div class="card">
-      <div class="card-title">Manajemen Tamu</div>
-      <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+      <div class="card-title">Data Tamu Undangan</div>
+      <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
         <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="importCSV(event)">
-        <button class="btn btn-gold" onclick="document.getElementById('csv-file').click()">⬆ Upload CSV</button>
-        <button class="btn btn-brown" onclick="exportCSV()">⬇ Download Data</button>
+        <button class="btn btn-gold" onclick="document.getElementById('csv-file').click()">⬆ Import CSV</button>
+        <button class="btn btn-brown" onclick="exportCSV()">⬇ Export CSV</button>
       </div>
       <div style="overflow-x: auto;">
         <table>
           <thead>
             <tr>
-              <th>Nama</th>
+              <th>Nama Tamu</th>
               <th>WhatsApp</th>
-              <th>Status RSVP</th>
-              <th>WA Sent</th>
+              <th>Keterangan</th>
+              <th>Status WA</th>
               <th>Aksi</th>
             </tr>
           </thead>
-          <tbody id="guest-list"></tbody>
+          <tbody id="guest-list-body"></tbody>
         </table>
       </div>
     </div>
@@ -99,141 +131,150 @@
 
   <div id="tab-rsvp" class="tab-content">
     <div class="card">
-      <div class="card-title">Real-time RSVP dari Database</div>
-      <div id="rsvp-realtime-list">Memuat data...</div>
+      <div class="card-title">Real-time RSVP (Supabase)</div>
+      <div id="rsvp-realtime-list">Memuat data terbaru...</div>
     </div>
   </div>
 </main>
 
 <script>
-// KONFIGURASI SUPABASE
+// 1. INITIALIZE SUPABASE
 const SUPABASE_URL = 'https://bijessmsedrtfxbnieza.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
-const supabase = typeof supabase !== 'undefined' ? supabase : supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let guests = JSON.parse(localStorage.getItem('wedding_guests') || '[]');
 
-// 1. FUNGSI LOGIN & SECURITY
+// 2. AUTHENTICATION LOGIC
 async function handleLogin() {
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
   
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (!email || !password) { alert("Isi email dan password!"); return; }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   
   if (error) {
     alert("Login Gagal: " + error.message);
   } else {
     document.getElementById('login-overlay').classList.add('hidden');
-    loadRsvpData();
-    renderGuests();
+    initDashboard();
   }
 }
 
 async function handleLogout() {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   location.reload();
 }
 
-// Cek session saat halaman dimuat
 async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     document.getElementById('login-overlay').classList.add('hidden');
-    loadRsvpData();
-    renderGuests();
+    initDashboard();
   }
 }
-checkSession();
 
-// 2. FUNGSI RSVP (REAL DATABASE)
-async function loadRsvpData() {
-  const el = document.getElementById('rsvp-realtime-list');
-  
-  const { data, error } = await supabase
-    .from('rsvp')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    el.innerHTML = "Error memuat data: " + error.message;
-    return;
-  }
-
-  if (data.length === 0) {
-    el.innerHTML = "Belum ada tamu yang mengisi RSVP.";
-    return;
-  }
-
-  el.innerHTML = data.map(r => `
-    <div style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
-      <div>
-        <strong>${r.name}</strong> (${r.count} orang)<br>
-        <small style="color: #666">"${r.message || '-'}"</small>
-      </div>
-      <span class="badge ${r.status === 'hadir' ? 'badge-hadir' : 'badge-tidak'}">${r.status.toUpperCase()}</span>
-    </div>
-  `).join('');
-  
-  // Update stats
-  document.getElementById('s-hadir').textContent = data.filter(d => d.status === 'hadir').length;
+function initDashboard() {
+  renderGuests();
+  loadRsvpData();
 }
 
-// 3. FUNGSI IMPORT CSV
-function importCSV(event) {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const text = e.target.result;
-    const lines = text.split('\n');
-    const newGuests = [];
-    
-    // Asumsi CSV: Nama, No WA, Keterangan
-    for(let i = 1; i < lines.length; i++) {
-      const cols = lines[i].split(',');
-      if(cols.length >= 2) {
-        newGuests.push({
-          id: Date.now() + i,
-          name: cols[0].trim(),
-          wa: cols[1].trim(),
-          note: cols[2] ? cols[2].trim() : '',
-          status: 'belum',
-          sent: false
-        });
-      }
-    }
-    guests = [...guests, ...newGuests];
-    saveGuests();
-    renderGuests();
-    alert(`Berhasil mengimpor ${newGuests.length} tamu.`);
-  };
-  reader.readAsText(file);
-}
-
-function saveGuests() {
-  localStorage.setItem('wedding_guests', JSON.stringify(guests));
-}
-
+// 3. GUEST MANAGEMENT (Local Storage)
 function renderGuests() {
-  const list = document.getElementById('guest-list');
+  const list = document.getElementById('guest-list-body');
   list.innerHTML = guests.map(g => `
     <tr>
-      <td>${g.name}</td>
-      <td>${g.wa}</td>
-      <td>${g.status}</td>
-      <td>${g.sent ? '✅' : '❌'}</td>
-      <td><button class="btn btn-red" style="padding: 4px 8px" onclick="deleteGuest(${g.id})">Hapus</button></td>
+      <td style="font-family:'Playfair Display'; font-weight:600;">${g.name}</td>
+      <td style="font-family:monospace;">${g.wa || '-'}</td>
+      <td style="color:var(--muted);">${g.note || '-'}</td>
+      <td>${g.sent ? '<span class="badge" style="background:#E3F2FD; color:#1565C0;">✓ Terkirim</span>' : '<span class="badge" style="background:#eee;">Belum</span>'}</td>
+      <td>
+        <button class="btn btn-red" style="padding: 4px 10px; font-size:11px;" onclick="deleteGuest(${g.id})">Hapus</button>
+      </td>
     </tr>
   `).join('');
+  
   document.getElementById('s-total').textContent = guests.length;
   document.getElementById('s-sent').textContent = guests.filter(g => g.sent).length;
 }
 
 function deleteGuest(id) {
-  if(confirm('Hapus tamu?')) {
+  if(confirm('Hapus tamu ini dari daftar?')) {
     guests = guests.filter(g => g.id !== id);
-    saveGuests();
+    localStorage.setItem('wedding_guests', JSON.stringify(guests));
     renderGuests();
   }
+}
+
+// 4. CSV IMPORT/EXPORT
+function importCSV(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const lines = e.target.result.split('\n');
+    const newGuests = [];
+    for(let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',');
+      if(cols[0]) {
+        newGuests.push({
+          id: Date.now() + i,
+          name: cols[0].trim(),
+          wa: cols[1] ? cols[1].trim() : '',
+          note: cols[2] ? cols[2].trim() : '',
+          sent: false
+        });
+      }
+    }
+    guests = [...guests, ...newGuests];
+    localStorage.setItem('wedding_guests', JSON.stringify(guests));
+    renderGuests();
+    alert(`Berhasil menambah ${newGuests.length} tamu.`);
+  };
+  reader.readAsText(file);
+}
+
+function exportCSV() {
+  let csv = 'Nama,WhatsApp,Keterangan\n';
+  guests.forEach(g => { csv += `"${g.name}","${g.wa}","${g.note}"\n`; });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'daftar_tamu_wedding.csv'; a.click();
+}
+
+// 5. REAL-TIME RSVP (FROM SUPABASE)
+async function loadRsvpData() {
+  const el = document.getElementById('rsvp-realtime-list');
+  
+  const { data, error } = await supabaseClient
+    .from('rsvp')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    el.innerHTML = `<p style="color:red">Gagal memuat: ${error.message}</p>`;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    el.innerHTML = "<p style='color:var(--muted); font-style:italic;'>Belum ada konfirmasi RSVP masuk.</p>";
+    return;
+  }
+
+  el.innerHTML = data.map(r => `
+    <div style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-family:'Playfair Display'; font-weight:bold; color:var(--brown);">${r.name}</div>
+        <div style="font-size: 12px; color:var(--muted);">${r.count} Orang • "${r.message || '-'}"</div>
+      </div>
+      <span class="badge ${r.status === 'hadir' ? 'badge-hadir' : 'badge-tidak'}">
+        ${r.status === 'hadir' ? '✓ HADIR' : '✗ TIDAK'}
+      </span>
+    </div>
+  `).join('');
+  
+  document.getElementById('s-hadir').textContent = data.filter(d => d.status === 'hadir').length;
 }
 
 function switchTab(tab, btn) {
@@ -244,18 +285,8 @@ function switchTab(tab, btn) {
   if(tab === 'rsvp') loadRsvpData();
 }
 
-function exportCSV() {
-  let csv = 'Nama,WhatsApp,Keterangan\n';
-  guests.forEach(g => {
-    csv += `${g.name},${g.wa},${g.note}\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.setAttribute('href', url);
-  a.setAttribute('download', 'daftar_tamu.csv');
-  a.click();
-}
+// Jalankan pengecekan session di awal
+checkSession();
 </script>
 </body>
 </html>
