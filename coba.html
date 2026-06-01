@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan 3D Zoom Effect</title>
+    <title>Undangan Pernikahan 3D Sempurna</title>
     <style>
         * {
             margin: 0;
@@ -22,7 +22,7 @@
             align-items: center;
         }
 
-        /* Bingkai utama (Simulasi Layar HP) */
+        /* CONTAINER UTAMA DENGAN PERSPEKTIF 3D */
         .parallax-container {
             position: relative;
             width: 100%;
@@ -33,9 +33,24 @@
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
             background: linear-gradient(180deg, #b3e5fc 0%, #e1f5fe 100%);
+            
+            /* Kunci Efek 3D: Memberi jarak pandang kamera ke dalam layar */
+            perspective: 800px;
+            perspective-origin: center center;
         }
 
-        /* Pengaturan dasar elemen transisi */
+        /* PANGGUNG 3D (Tempat semua layer berada) */
+        .3d-stage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            /* Efek maju mundurnya kamera diatur di sini */
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        /* Pengaturan Dasar Semua Layer */
         .layer {
             position: absolute;
             width: 100%;
@@ -43,14 +58,34 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease;
-            will-change: transform, opacity;
+            transform-style: preserve-3d;
         }
 
-        /* 1. KONTEN AWAL: KARAKTER PENGANTIN & TOMBOL BUKA */
-        .layer-front {
-            z-index: 3;
+        /* ========================
+           PENGATURAN JARAK 3D (Z-AXIS)
+           ======================== */
+
+        /* 1. LAYER BACKGROUND (Paling Jauh di Belakang) */
+        .layer-bg {
+            transform: translateZ(-400px) scale(1.5); 
+            z-index: 1;
+        }
+        .cloud-dummy {
+            width: 300px;
+            height: 120px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 60px;
+            filter: blur(8px);
+            position: absolute;
+            top: 20%;
+        }
+
+        /* 2. LAYER TENGAH (Karakter Utama) */
+        .layer-char {
+            transform: translateZ(0px); /* Berada di titik tengah koordinat */
+            z-index: 2;
             flex-direction: column;
+            transition: opacity 0.8s ease;
         }
         .dummy-avatar {
             width: 160px;
@@ -59,7 +94,7 @@
             border-radius: 50%;
             border: 6px solid #fff;
             box-shadow: 0 10px 25px rgba(255,64,129,0.3);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .btn-start {
             padding: 12px 28px;
@@ -69,17 +104,33 @@
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
         }
-        .btn-start:active { transform: scale(0.95); }
 
-        /* 2. KONTEN KEDUA: SURAT UNDANGAN (Sembunyi di awal) */
+        /* 3. LAYER DEPAN BLUR (Kupu-kupu/Dedaunan Terbang) */
+        .layer-fg {
+            transform: translateZ(250px); /* Sangat dekat dengan mata/kamera */
+            z-index: 4;
+            pointer-events: none;
+        }
+        .leaf-1, .leaf-2 {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #ffeb3b;
+            border-radius: 50% 0 50% 50%;
+            filter: blur(4px); /* Efek blur depan */
+            opacity: 0.8;
+        }
+        .leaf-1 { top: 15%; left: 10%; transform: rotate(45deg); }
+        .leaf-2 { bottom: 25%; right: 10%; transform: rotate(-15deg); background: #00e676; width: 80px; height: 80px;}
+
+        /* 4. LAYER SURAT (Berada agak di belakang karakter awalnya) */
         .layer-envelope {
-            z-index: 2;
+            transform: translateZ(-200px); 
+            z-index: 3;
             opacity: 0;
-            transform: scale(0.2); /* Di awal ukurannya sangat kecil di belakang */
+            transition: opacity 1s ease;
         }
         .envelope {
             width: 180px;
@@ -94,27 +145,22 @@
             align-items: center;
             color: white;
             font-weight: bold;
-            font-size: 0.9rem;
         }
-        /* Segitiga Tutup Surat */
         .envelope::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             border-left: 90px solid transparent;
             border-right: 90px solid transparent;
             border-top: 65px solid #f57c00;
             border-radius: 8px 8px 0 0;
         }
 
-        /* 3. POP-UP DETAIL ISI UNDANGAN ASLI */
+        /* 5. POP-UP DETAIL ISI UNDANGAN (MODAL) */
         .invitation-modal {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.98);
             z-index: 10;
             display: flex;
@@ -126,40 +172,31 @@
             opacity: 0;
             pointer-events: none;
             transition: all 0.5s ease;
-            transform: translateY(100%); /* Muncul slide-up dari bawah */
+            transform: translateY(100%);
         }
         .invitation-modal.active {
             opacity: 1;
             pointer-events: auto;
             transform: translateY(0);
         }
-        .invitation-modal h1 {
-            font-family: 'Georgia', serif;
-            color: #ff4081;
-            margin-bottom: 20px;
-        }
-        .btn-close {
-            margin-top: 30px;
-            padding: 10px 20px;
-            background: #374151;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
+
+        /* ========================
+           STATE ANIMASI 3D ZOOM IN
+           ======================== */
+        
+        /* Kamera melaju masuk ke dalam sejauh 350px mendobrak ruang 3D */
+        .state-zoom .3d-stage {
+            transform: translateZ(350px);
         }
 
-        /* --- LOGIKA ANIMASI ZOOM IN SAAT TOMBOL DIKLIK --- */
-        
-        /* Karakter utama membesar parah (efek kamera menembus objek) & menghilang */
-        .state-zoom .layer-front {
-            transform: scale(4);
+        /* Saat di-zoom, karakter memudar agar tidak menghalangi surat di belakangnya */
+        .state-zoom .layer-char {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Surat dari belakang maju ke depan dan ukurannya normal */
+        /* Surat menjadi jelas kelihatan */
         .state-zoom .layer-envelope {
-            transform: scale(1);
             opacity: 1;
         }
     </style>
@@ -167,24 +204,34 @@
 <body>
 
     <div class="parallax-container" id="mainContainer">
-        
-        <div class="layer layer-front">
-            <div class="dummy-avatar"></div>
-            <button class="btn-start" id="btnBuka">Lihat Undangan</button>
-        </div>
+        <div class="3d-stage">
+            
+            <div class="layer layer-bg">
+                <div class="cloud-dummy"></div>
+            </div>
 
-        <div class="layer layer-envelope">
-            <div class="envelope" id="btnSurat">KLIK SURAT</div>
+            <div class="layer layer-envelope">
+                <div class="envelope" id="btnSurat">KLIK SURAT</div>
+            </div>
+
+            <div class="layer layer-char">
+                <div class="dummy-avatar"></div>
+                <button class="btn-start" id="btnBuka">Lihat Undangan</button>
+            </div>
+
+            <div class="layer layer-fg">
+                <div class="leaf-1"></div>
+                <div class="leaf-2"></div>
+            </div>
+
         </div>
 
         <div class="invitation-modal" id="modalUndangan">
-            <h1>The Wedding of</h1>
+            <h1 style="font-family: 'Georgia', serif; color: #ff4081; margin-bottom: 20px;">The Wedding of</h1>
             <p style="font-size: 1.3rem; font-weight: bold; margin-bottom: 15px;">Romeo & Juliet</p>
             <p>Sabtu, 12 Desember 2026</p>
-            <p>Gedung Kebahagiaan, Bandung</p>
-            <button class="btn-close" id="btnTutup">Kembali ke Awal</button>
+            <button class="btn-start" id="btnTutup" style="margin-top: 30px; background-color: #9ca3af;">Kembali</button>
         </div>
-
     </div>
 
     <script>
@@ -194,17 +241,14 @@
         const modalUndangan = document.getElementById('modalUndangan');
         const btnTutup = document.getElementById('btnTutup');
 
-        // Alur 1: Klik tombol pertama -> Efek Zoom In otomatis langsung jalan
         btnBuka.addEventListener('click', () => {
             mainContainer.classList.add('state-zoom');
         });
 
-        // Alur 2: Klik Surat -> Membuka lembar isi undangan pernikahan
         btnSurat.addEventListener('click', () => {
             modalUndangan.classList.add('active');
         });
 
-        // Alur 3: Klik Tutup -> Reset semua kembali ke tampilan paling awal
         btnTutup.addEventListener('click', () => {
             modalUndangan.classList.remove('active');
             mainContainer.classList.remove('state-zoom');
