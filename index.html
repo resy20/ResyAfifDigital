@@ -61,9 +61,10 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
   90%  { opacity:0.6; }
   100% { transform:translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity:0; }
 }
-@keyframes sealPulse {
-  0%,100%{box-shadow:0 4px 16px rgba(0,0,0,0.2),0 0 0 0 rgba(139,16,16,0.3)}
-  50%{box-shadow:0 4px 16px rgba(0,0,0,0.2),0 0 0 10px rgba(139,16,16,0)}
+@keyframes sunflowerSpin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  50% { transform: translate(-50%, -50%) rotate(180deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 @keyframes hintBob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(5px)} }
 
@@ -102,14 +103,45 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 #s-env { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; opacity:0; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 .env-scroll-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; padding-bottom: 140px; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; }
 .env-wrap { position:relative; width:min(300px,80vw); z-index:10; cursor:pointer; transition: margin-top 0.6s ease; }
-.env-body { width:100%; padding-bottom:66%; background:linear-gradient(145deg,var(--white),var(--broken-white)); border-radius:6px; border:1.5px solid var(--green-lt); position:relative; overflow:hidden; box-shadow:0 20px 60px rgba(46,107,53,0.15); }
-.env-lines { position:absolute; inset:0; background: linear-gradient(135deg,transparent 49.5%,rgba(124,184,127,0.18) 49.5%,rgba(124,184,127,0.18) 50.5%,transparent 50.5%), linear-gradient(-135deg,transparent 49.5%,rgba(124,184,127,0.18) 49.5%,rgba(124,184,127,0.18) 50.5%,transparent 50.5%); }
+
+/* PERBAIKAN WARNA SURAT: Mengubah badan surat menjadi Hijau dengan bayangan lembut */
+.env-body { width:100%; padding-bottom:66%; background:linear-gradient(145deg, var(--green), #1E4623); border-radius:6px; border:1.5px solid var(--green-pale); position:relative; overflow:hidden; box-shadow:0 20px 60px rgba(13,36,16,0.3); }
+.env-lines { position:absolute; inset:0; background: linear-gradient(135deg,transparent 49.5%,rgba(200,230,200,0.1) 49.5%,rgba(200,230,200,0.1) 50.5%,transparent 50.5%), linear-gradient(-135deg,transparent 49.5%,rgba(200,230,200,0.1) 49.5%,rgba(200,230,200,0.1) 50.5%,transparent 50.5%); }
 .env-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
-.env-cpl { font-size:16px; font-style:italic; color:var(--green); letter-spacing:2px; font-family:'Playfair Display',serif; font-weight: 600; }
-.env-dt { font-size:10px; color:var(--text-mid); letter-spacing:3px; }
+
+/* Menyesuaikan warna font di dalam amplop agar kontras dengan warna hijau */
+.env-cpl { font-size:16px; font-style:italic; color:var(--white); letter-spacing:2px; font-family:'Playfair Display',serif; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.env-dt { font-size:10px; color:var(--green-pale); letter-spacing:3px; }
+
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
-.env-flap { width:100%; height:100%; background:linear-gradient(175deg,var(--broken-white),var(--cream)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; border: 1px solid var(--green-lt); }
-.env-seal { position:absolute; top:46%; left:50%; transform:translate(-50%,-50%); width:46px; height:46px; border-radius:50%; background:radial-gradient(circle at 35% 35%,var(--yellow-mid),var(--yellow)); border:2px solid var(--white); display:flex; align-items:center; justify-content:center; color:var(--white); font-size:16px; z-index:10; box-shadow:0 4px 16px rgba(0,0,0,0.1); animation:sealPulse 2.2s ease-in-out infinite; }
+
+/* PERBAIKAN WARNA SURAT: Mengubah warna lipatan tutup surat menjadi hijau senada */
+.env-flap { width:100%; height:100%; background:linear-gradient(175deg, #24542A, var(--green)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
+
+/* PERBAIKAN TOMBOL: Mengubah segel tombol menjadi bentuk bunga matahari kuning interaktif */
+.env-seal { 
+  position:absolute; top:46%; left:50%; transform:translate(-50%,-50%); 
+  width:48px; height:48px; 
+  background: #FFD700; /* Warna Kuning Emas */
+  clip-path: polygon(
+    50% 0%, 64% 19%, 85% 15%, 79% 36%, 98% 44%, 85% 61%, 88% 82%, 67% 79%, 50% 98%, 33% 79%, 12% 82%, 15% 61%, 2% 44%, 21% 36%, 15% 15%, 36% 19%
+  ); /* Kliping Kelopak Bunga Matahari */
+  display:flex; align-items:center; justify-content:center; 
+  z-index:10; 
+  box-shadow:0 4px 12px rgba(0,0,0,0.2); 
+  animation: sunflowerSpin 12s linear infinite; 
+}
+/* Inti cokelat di tengah bunga matahari */
+.env-seal::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #5C3A21; /* Cokelat Inti Bunga */
+  border-radius: 50%;
+  border: 1px dashed var(--yellow-mid);
+}
+
 .env-hint { position:absolute; bottom:-36px; left:50%; transform:translateX(-50%); font-size:11px; letter-spacing:3px; color:var(--text-mid); white-space:nowrap; animation:hintBob 2s ease-in-out infinite; font-weight: 600; }
 
 .env-paper { position:absolute; top:calc(100% - 12px); left:50%; transform:translateX(-50%); width:94%; background:var(--white); border-radius:0 0 8px 8px; border:1px solid var(--green-pale); border-top:none; padding:0; opacity:0; will-change:transform,opacity; z-index:3; box-shadow:0 16px 48px rgba(46,107,53,0.12); }
@@ -152,7 +184,7 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 section { position:relative; }
 .sec-header { text-align:center; padding:56px 24px 28px; }
 .sec-title { font-family:'Playfair Display',serif; font-size:clamp(28px,6vw,40px); color:var(--green); font-weight:600; margin:10px 0; }
-.sec-title.light { color:var(--green); } /* Mengubah teks judul di section gelap agar kontras dengan broken white */
+.sec-title.light { color:var(--green); } 
 .sec-sub { font-size:15px; color:var(--text-mid); font-style:italic; margin-top:6px; }
 
 .orn { display:flex; align-items:center; gap:10px; margin:10px auto; max-width:260px; }
@@ -339,7 +371,9 @@ textarea.f-input { resize:vertical; min-height:80px; }
         </div>
       </div>
       <div class="env-flap-w"><div class="env-flap" id="envFlap"></div></div>
-      <div class="env-seal" id="envSeal">✦</div>
+      
+      <!-- Tombol Bunga Matahari Berputar Lembut -->
+      <div class="env-seal" id="envSeal"></div>
 
       <!-- KERTAS SURAT -->
       <div class="env-paper" id="envPaper">
