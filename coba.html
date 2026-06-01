@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scroll & Touch Zoom Wedding Invitation</title>
+    <title>Undangan Pernikahan 3D Zoom Effect</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
         body {
             width: 100vw;
             height: 100vh;
-            overflow: hidden; /* Mengunci scroll bawaan browser agar kontrol penuh di JS */
+            overflow: hidden;
             background-color: #f0f4f8;
             font-family: 'Segoe UI', sans-serif;
             display: flex;
@@ -22,7 +22,7 @@
             align-items: center;
         }
 
-        /* Container Simulasi Layar */
+        /* Bingkai utama (Simulasi Layar HP) */
         .parallax-container {
             position: relative;
             width: 100%;
@@ -33,24 +33,24 @@
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
             background: linear-gradient(180deg, #b3e5fc 0%, #e1f5fe 100%);
-            touch-action: none; /* Mencegah refresh halaman bawaan HP saat di-swipe */
         }
 
-        /* Base style untuk semua elemen yang bisa membesar/mengecil */
-        .zoom-element {
+        /* Pengaturan dasar elemen transisi */
+        .layer {
             position: absolute;
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease;
             will-change: transform, opacity;
         }
 
-        /* 1. LAYER UTAMA: KARAKTER PENGANTIN */
-        .character-layer {
-            z-index: 2;
+        /* 1. KONTEN AWAL: KARAKTER PENGANTIN & TOMBOL BUKA */
+        .layer-front {
+            z-index: 3;
+            flex-direction: column;
         }
         .dummy-avatar {
             width: 160px;
@@ -59,34 +59,35 @@
             border-radius: 50%;
             border: 6px solid #fff;
             box-shadow: 0 10px 25px rgba(255,64,129,0.3);
+            margin-bottom: 30px;
         }
-
-        /* Petunjuk Awal di Layar */
-        .scroll-hint {
-            position: absolute;
-            bottom: 10%;
-            width: 100%;
-            text-align: center;
-            z-index: 5;
-            color: #374151;
+        .btn-start {
+            padding: 12px 28px;
+            background-color: #374151;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
             font-weight: 600;
-            animation: bounce 1.5s infinite;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
+        .btn-start:active { transform: scale(0.95); }
 
-        /* 2. LAYER KEDUA: SURAT TERTUTUP (Muncul dari kecil saat di-scroll) */
-        .envelope-layer {
-            z-index: 3;
+        /* 2. KONTEN KEDUA: SURAT UNDANGAN (Sembunyi di awal) */
+        .layer-envelope {
+            z-index: 2;
             opacity: 0;
-            transform: scale(0.1);
-            pointer-events: none;
+            transform: scale(0.2); /* Di awal ukurannya sangat kecil di belakang */
         }
         .envelope {
-            width: 150px;
-            height: 110px;
+            width: 180px;
+            height: 130px;
             background-color: #ffb74d;
             border-radius: 8px;
             position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -94,24 +95,20 @@
             color: white;
             font-weight: bold;
             font-size: 0.9rem;
-            transition: background-color 0.2s;
         }
-        .envelope:hover {
-            background-color: #ffa726;
-        }
-        /* Segitiga tutup surat */
+        /* Segitiga Tutup Surat */
         .envelope::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            border-left: 75px solid transparent;
-            border-right: 75px solid transparent;
-            border-top: 55px solid #f57c00;
+            border-left: 90px solid transparent;
+            border-right: 90px solid transparent;
+            border-top: 65px solid #f57c00;
             border-radius: 8px 8px 0 0;
         }
 
-        /* 3. MODAL / POP-UP ISI UNDANGAN ASLI (Muncul setelah surat diklik) */
+        /* 3. POP-UP DETAIL ISI UNDANGAN ASLI */
         .invitation-modal {
             position: absolute;
             top: 0;
@@ -128,8 +125,8 @@
             text-align: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            transform: translateY(100px); /* Efek muncul dari bawah */
+            transition: all 0.5s ease;
+            transform: translateY(100%); /* Muncul slide-up dari bawah */
         }
         .invitation-modal.active {
             opacity: 1;
@@ -141,10 +138,6 @@
             color: #ff4081;
             margin-bottom: 20px;
         }
-        .invitation-modal p {
-            color: #4b5563;
-            margin-bottom: 10px;
-        }
         .btn-close {
             margin-top: 30px;
             padding: 10px 20px;
@@ -155,56 +148,67 @@
             cursor: pointer;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        /* --- LOGIKA ANIMASI ZOOM IN SAAT TOMBOL DIKLIK --- */
+        
+        /* Karakter utama membesar parah (efek kamera menembus objek) & menghilang */
+        .state-zoom .layer-front {
+            transform: scale(4);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Surat dari belakang maju ke depan dan ukurannya normal */
+        .state-zoom .layer-envelope {
+            transform: scale(1);
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <div class="parallax-container" id="scene">
-        <div class="scroll-hint" id="hintText">↓ Scroll / Swipe Up Untuk Masuk ↓</div>
-
-        <div class="zoom-element character-layer" id="charLayer">
+    <div class="parallax-container" id="mainContainer">
+        
+        <div class="layer layer-front">
             <div class="dummy-avatar"></div>
+            <button class="btn-start" id="btnBuka">Lihat Undangan</button>
         </div>
 
-        <div class="zoom-element envelope-layer" id="envelopeLayer">
-            <div class="envelope" id="envelopeBtn">KLIK SURAT</div>
+        <div class="layer layer-envelope">
+            <div class="envelope" id="btnSurat">KLIK SURAT</div>
         </div>
 
-        <div class="invitation-modal" id="invitationModal">
-            <h1>Selamat Datang di Pernikahan Kami</h1>
-            <p><strong>Romeo & Juliet</strong></p>
-            <p>Minggu, 12 Desember 2026</p>
+        <div class="invitation-modal" id="modalUndangan">
+            <h1>The Wedding of</h1>
+            <p style="font-size: 1.3rem; font-weight: bold; margin-bottom: 15px;">Romeo & Juliet</p>
+            <p>Sabtu, 12 Desember 2026</p>
             <p>Gedung Kebahagiaan, Bandung</p>
-            <p style="font-size: 0.8rem; margin-top: 15px; color: #9ca3af;">(Ini adalah halaman detail isi undangan pernikahanmu secara lengkap)</p>
-            <button class="btn-close" id="btnClose">Tutup Undangan</button>
+            <button class="btn-close" id="btnTutup">Kembali ke Awal</button>
         </div>
+
     </div>
 
     <script>
-        const scene = document.getElementById('scene');
-        const charLayer = document.getElementById('charLayer');
-        const envelopeLayer = document.getElementById('envelopeLayer');
-        const hintText = document.getElementById('hintText');
-        const envelopeBtn = document.getElementById('envelopeBtn');
-        const invitationModal = document.getElementById('invitationModal');
-        const btnClose = document.getElementById('btnClose');
+        const mainContainer = document.getElementById('mainContainer');
+        const btnBuka = document.getElementById('btnBuka');
+        const btnSurat = document.getElementById('btnSurat');
+        const modalUndangan = document.getElementById('modalUndangan');
+        const btnTutup = document.getElementById('btnTutup');
 
-        let scrollProgress = 0; // Angka 0 sampai 100 yang mencatat tingkat zoom
-        let touchStartY = 0;
+        // Alur 1: Klik tombol pertama -> Efek Zoom In otomatis langsung jalan
+        btnBuka.addEventListener('click', () => {
+            mainContainer.classList.add('state-zoom');
+        });
 
-        // FUNGSI UTAMA UNTUK MENGATUR ANIMASI BERDASARKAN PROGRES (0 - 100)
-        function updateZoom() {
-            // Batasi progres agar tidak kurang dari 0 atau lebih dari 100
-            scrollProgress = Math.max(0, Math.min(100, scrollProgress));
+        // Alur 2: Klik Surat -> Membuka lembar isi undangan pernikahan
+        btnSurat.addEventListener('click', () => {
+            modalUndangan.classList.add('active');
+        });
 
-            // 1. Animasi Karakter Utama (Membesar dari scale 1 ke 4, opacity memudar jadi 0)
-            const charScale = 1 + (scrollProgress * 0.03); 
-            const charOpacity = 1 - (scrollProgress / 70); // Menghilang lebih cepat di progess ke 70
-            charLayer.style.transform = `scale(${charScale})`;
-            charLayer.style.opacity = charOpacity;
-
-            // 2. Animasi Surat (Membesar dari scale 0.
+        // Alur 3: Klik Tutup -> Reset semua kembali ke tampilan paling awal
+        btnTutup.addEventListener('click', () => {
+            modalUndangan.classList.remove('active');
+            mainContainer.classList.remove('state-zoom');
+        });
+    </script>
+</body>
+</html>
