@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype Undangan 3D Parallax</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f0f4f8;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Bingkai utama simulasi layar HP */
+        .parallax-container {
+            position: relative;
+            width: 100%;
+            max-width: 412px;
+            height: 90vh;
+            max-height: 850px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            background: #fff;
+            perspective: 1000px;
+        }
+
+        /* Pengaturan dasar untuk setiap layer */
+        .layer {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.15s ease-out;
+            will-change: transform;
+        }
+
+        /* LAYER 1: BACKGROUND (Langit Gradasi) */
+        .layer-bg {
+            background: linear-gradient(180deg, #b3e5fc 0%, #e1f5fe 100%);
+            z-index: 1;
+        }
+        /* Ornamen awan di background */
+        .layer-bg::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 100px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50px;
+            top: 25%;
+            filter: blur(10px);
+        }
+
+        /* LAYER 2: MIDGROUND (Simulasi Karakter Pengantin) */
+        .layer-mid {
+            z-index: 2;
+        }
+        .dummy-avatar {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #ff80ab 0%, #ff4081 100%);
+            border-radius: 50%;
+            box-shadow: 0 10px 25px rgba(255,64,129,0.3);
+            border: 6px solid #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Teks informasi statis di depan karakter */
+        .wedding-info {
+            position: absolute;
+            width: 100%;
+            bottom: 15%;
+            text-align: center;
+            z-index: 3;
+            color: #374151;
+            padding: 0 20px;
+            pointer-events: none;
+        }
+        .wedding-info h1 {
+            font-size: 1.8rem;
+            font-family: 'Georgia', serif;
+            margin-bottom: 8px;
+        }
+
+        /* LAYER 3: FOREGROUND (Elemen Kupu-kupu/Bunga Blur di Depan) */
+        .layer-fg {
+            z-index: 4;
+            pointer-events: none;
+        }
+        /* Membuat elemen melayang di kiri & kanan depan */
+        .floating-element-1, .floating-element-2 {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ffeb3b;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            filter: blur(3px); /* Efek kamera bokeh/blur */
+            opacity: 0.8;
+        }
+        .floating-element-1 { top: 20%; left: 15%; transform: rotate(15deg); }
+        .floating-element-2 { bottom: 30%; right: 15%; transform: rotate(-45deg); width: 70px; height: 70px; background: #00e676;}
+    </style>
+</head>
+<body>
+
+    <div class="parallax-container" id="scene">
+        <div class="layer layer-bg" data-speed="1"></div>
+        
+        <div class="layer layer-mid" data-speed="3">
+            <div class="dummy-avatar">Aset Karakter</div>
+        </div>
+        
+        <div class="wedding-info">
+            <h1>Romeo & Juliet</h1>
+            <p>Save the Date | 12.12.2026</p>
+        </div>
+
+        <div class="layer layer-fg" data-speed="6">
+            <div class="floating-element-1"></div>
+            <div class="floating-element-2"></div>
+        </div>
+    </div>
+
+    <script>
+        const scene = document.getElementById('scene');
+        const layers = document.querySelectorAll('.layer');
+
+        // Deteksi gerakan kursor (PC/Laptop)
+        scene.addEventListener('mousemove', (e) => {
+            const rect = scene.getBoundingClientRect();
+            const x = e.clientX - rect.left - (rect.width / 2);
+            const y = e.clientY - rect.top - (rect.height / 2);
+
+            layers.forEach(layer => {
+                const speed = layer.getAttribute('data-speed');
+                // Pembagi (80) untuk mengontrol kelembutan ayunan efeknya
+                const xMove = (x * speed) / 80; 
+                const yMove = (y * speed) / 80;
+                layer.style.transform = `translateX(${xMove}px) translateY(${yMove}px)`;
+            });
+        });
+
+        // Deteksi gerakan gyroscope (Khusus HP/Mobile)
+        window.addEventListener('deviceorientation', (e) => {
+            // gamma = kemiringan kiri-kanan, beta = kemiringan depan-belakang
+            if (e.gamma && e.beta) {
+                layers.forEach(layer => {
+                    const speed = layer.getAttribute('data-speed');
+                    const xMove = (e.gamma * speed) / 4;
+                    const yMove = ((e.beta - 60) * speed) / 4; // 60 derajat posisi ideal pegang HP
+                    layer.style.transform = `translateX(${xMove}px) translateY(${yMove}px)`;
+                });
+            }
+        });
+
+        // Kembalikan posisi jika kursor keluar dari area (PC)
+        scene.addEventListener('mouseleave', () => {
+            layers.forEach(layer => {
+                layer.style.transform = `translateX(0px) translateY(0px) `;
+            });
+        });
+    </script>
+</body>
+</html>
