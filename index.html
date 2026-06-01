@@ -7,7 +7,8 @@
 <meta property="og:title" content="The Wedding of Resy & Afif"/>
 <meta property="og:description" content="27 Desember 2026 · Cilaja Hilir, Sindanglaya, Kab. Bandung"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+<!-- PERBAIKAN: Memuat variasi font Playfair Display, Cormorant Garamond, dan Lato yang lebih lengkap dan luwes dari Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════
    VARIABLE WARNA & DASAR (Broken White Theme)
@@ -46,7 +47,7 @@
 
 *{margin:0;padding:0;box-sizing:border-box;}
 html { scroll-behavior:smooth; }
-body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); color:var(--dark); overflow-x:hidden; }
+body { font-family:'Cormorant Garamond', serif; background:var(--broken-white); color:var(--dark); overflow-x:hidden; -webkit-font-smoothing: antialiased; }
 
 /* ── ANIMASI KEYFRAMES BERSAMA ── */
 @keyframes fadeIn    { from{opacity:0} to{opacity:1} }
@@ -60,19 +61,16 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
   33%    { border-color:var(--yellow-mid) }
   66%    { border-color:var(--orange) }
 }
-/* Animasi Putaran Bunga Matahari */
 @keyframes sunflowerRotate {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
-/* Animasi Jatuhnya Elemen Kelopak/Bunga */
 @keyframes fallAnimation {
   0%   { transform: translateY(-60px) translateX(0) rotate(0deg); opacity: 0; }
   10%  { opacity: 0.9; }
   90%  { opacity: 0.6; }
   100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
 }
-/* Denyut lembut tombol bunga matahari */
 @keyframes flowerPulse {
   0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(46,107,53,0.1); }
   50% { transform: scale(1.03); box-shadow: 0 6px 20px rgba(224,149,32,0.2); border-color: var(--yellow-mid); }
@@ -84,7 +82,6 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .ring { position:fixed; border-radius:50%; border:1px solid; top:50%; left:50%; pointer-events:none; z-index:1; transition: transform 0.2s ease-out; will-change: transform; }
 #petal-wrap { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
 
-/* Struktur CSS untuk komponen bunga/daun gugur */
 .falling-element { position:absolute; top:-40px; animation:fallAnimation linear infinite; --drift:0px; --spin:360deg; pointer-events:none; }
 .sf-mini { display: block; width: 100%; height: 100%; }
 
@@ -98,16 +95,18 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .d-fore { position:absolute; inset:0; transform:translateZ(120px) scale(0.85); pointer-events:none; filter:blur(1.5px); }
 .d-ui { position:absolute; inset:0; transform:translateZ(200px) scale(0.78); display:flex; flex-direction:column; align-items:center; justify-content:center; }
 
-.l-tag { font-size:10px; letter-spacing:5px; text-transform:uppercase; color:var(--text-mid); margin-bottom:14px; animation:fadeUp 0.8s 0.3s both; font-weight: 600; }
-.l-bride { font-size:clamp(50px,12vw,76px); color:var(--green); font-weight:600; line-height:0.92; font-family:'Playfair Display',serif; text-shadow:0 2px 14px rgba(46,107,53,0.15); animation:fadeUp 0.9s 0.5s both; }
-.l-amp { font-style:italic; color:var(--orange); font-size:1.2em; display:block; line-height:0.9; }
-.l-groom { font-size:clamp(50px,12vw,76px); color:var(--green); font-weight:600; line-height:0.92; font-family:'Playfair Display',serif; text-shadow:0 2px 14px rgba(46,107,53,0.15); animation:fadeUp 0.9s 0.7s both; }
-.l-date { font-size:13px; letter-spacing:6px; color:var(--text-mid); margin:14px 0; animation:fadeUp 0.8s 1.1s both; font-weight: 600; }
-.l-guest { background:var(--white); border:1px solid var(--green-pale); border-radius:8px; padding:10px 24px; margin:10px auto; display:none; backdrop-filter:blur(6px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-.l-guest-to { font-size:10px; letter-spacing:3px; color:var(--text-lt); }
-.l-guest-name { font-size:20px; font-style:italic; color:var(--orange); font-family:'Playfair Display',serif; font-weight: 600; }
+/* PERBAIKAN FONT LAYAR DEPAN: Mengubah struktur teks awal agar mengalir luwes dan memiliki ketebalan kontras */
+.l-tag { font-family: 'Lato', sans-serif; font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--text-mid); margin-bottom:18px; animation:fadeUp 0.8s 0.3s both; font-weight: 400; }
+.l-bride { font-size:clamp(54px, 13vw, 80px); color:var(--green); font-weight:500; font-family:'Playfair Display', serif; font-style: italic; line-height:0.95; text-shadow:0 2px 14px rgba(46,107,53,0.1); animation:fadeUp 0.9s 0.5s both; }
+.l-amp { font-family:'Playfair Display', serif; font-style:italic; color:var(--orange); font-size:1.1em; display:block; line-height:0.9; font-weight: 400; }
+.l-groom { font-size:clamp(54px, 13vw, 80px); color:var(--green); font-weight:500; font-family:'Playfair Display', serif; font-style: italic; line-height:0.95; text-shadow:0 2px 14px rgba(46,107,53,0.1); animation:fadeUp 0.9s 0.7s both; }
+.l-date { font-family: 'Cormorant Garamond', serif; font-size:16px; letter-spacing:6px; color:var(--text-mid); margin:18px 0; animation:fadeUp 0.8s 1.1s both; font-weight: 600; }
+
+.l-guest { background:var(--white); border:1px solid var(--green-pale); border-radius:8px; padding:12px 24px; margin:10px auto; display:none; backdrop-filter:blur(6px); box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+.l-guest-to { font-family: 'Lato', sans-serif; font-size:10px; letter-spacing:3px; color:var(--text-lt); text-transform: uppercase; }
+.l-guest-name { font-size:22px; font-style:italic; color:var(--orange); font-family:'Playfair Display', serif; font-weight: 600; margin-top: 4px; }
 .l-prog { margin-top:26px; animation:fadeUp 0.8s 1.4s both; }
-.l-prog-lbl { font-size:10px; letter-spacing:3px; color:var(--text-lt); margin-bottom:7px; text-align:center; }
+.l-prog-lbl { font-family: 'Lato', sans-serif; font-size:9px; letter-spacing:3px; color:var(--text-lt); margin-bottom:9px; text-align:center; }
 .l-prog-bar { width:160px; height:2px; background:var(--green-pale); border-radius:2px; margin:0 auto; overflow:hidden; }
 .l-prog-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--green-lt),var(--orange),var(--green-lt)); background-size:200%; animation:shimmer 2s linear infinite; }
 
@@ -122,13 +121,13 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-lines { position:absolute; inset:0; background: linear-gradient(135deg,transparent 49.5%,rgba(255,255,255,0.08) 49.5%,rgba(255,255,255,0.08) 50.5%,transparent 50.5%), linear-gradient(-135deg,transparent 49.5%,rgba(255,255,255,0.08) 49.5%,rgba(255,255,255,0.08) 50.5%,transparent 50.5%); }
 .env-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
 
-.env-cpl { font-size:16px; font-style:italic; color:var(--white); letter-spacing:2px; font-family:'Playfair Display',serif; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
-.env-dt { font-size:10px; color:var(--sage-pale); letter-spacing:3px; }
+/* PERBAIKAN FONT AMPLOP KELUAR: Menyelaraskan teks tulisan di badan luar amplop */
+.env-cpl { font-size:18px; font-style:italic; color:var(--white); letter-spacing:2px; font-family:'Playfair Display', serif; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+.env-dt { font-family: 'Lato', sans-serif; font-size:10px; color:var(--sage-pale); letter-spacing:3px; }
 
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
 .env-flap { width:100%; height:100%; background:linear-gradient(175deg, #8A9C76, var(--sage)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
 
-/* Vektor Bunga Matahari Sempurna Berlapis Dengan Inti yang Kontras Kompleks */
 .env-seal { 
   position:absolute; top:54%; left:50%; 
   transform:translate(-50%, -50%); 
@@ -138,14 +137,14 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
   pointer-events: none; 
 }
 
-.env-hint { position:absolute; bottom:-36px; left:50%; transform:translateX(-50%); font-size:11px; letter-spacing:3px; color:var(--text-mid); white-space:nowrap; animation:hintBob 2s ease-in-out infinite; font-weight: 600; }
+.env-hint { font-family: 'Lato', sans-serif; font-size:10px; letter-spacing:3px; color:var(--text-mid); white-space:nowrap; animation:hintBob 2s ease-in-out infinite; font-weight: 600; text-transform: uppercase; }
 
 .env-paper { position:absolute; top:calc(100% - 12px); left:50%; transform:translateX(-50%); width:94%; background:var(--white); border-radius:0 0 8px 8px; border:1px solid var(--green-pale); border-top:none; padding:0; opacity:0; will-change:transform,opacity; z-index:3; box-shadow:0 16px 48px rgba(46,107,53,0.12); }
 .paper-inner { padding:18px 16px 22px; overflow:visible; max-height:none; padding-bottom: 40px; }
 .paper-orn { text-align:center; color:var(--orange); font-size:14px; margin-bottom:10px; }
-.paper-arabic { font-size:20px; text-align:center; color:var(--green); margin-bottom:6px; }
-.paper-couple { font-size:22px; font-style:italic; text-align:center; color:var(--green); font-family:'Playfair Display',serif; margin-bottom:2px; font-weight: 600; }
-.paper-tag { font-size:8px; letter-spacing:3px; text-align:center; color:var(--text-mid); margin-bottom:14px; }
+.paper-arabic { font-family: 'Cormorant Garamond', serif; font-size:20px; text-align:center; color:var(--green); margin-bottom:8px; font-weight: 600; }
+.paper-couple { font-size:24px; font-style:italic; text-align:center; color:var(--green); font-family:'Playfair Display', serif; margin-bottom:2px; font-weight: 500; }
+.paper-tag { font-family: 'Lato', sans-serif; font-size:8px; letter-spacing:3px; text-align:center; color:var(--text-mid); margin-bottom:14px; text-transform: uppercase; }
 .paper-hr { border:none; border-top:1px solid var(--green-pale); margin:10px 0; }
 
 .pol-row { display:flex; justify-content:center; gap:10px; margin:14px 0; padding:0 4px; }
@@ -155,11 +154,10 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .pol:nth-child(3){transform:rotate(5deg);}
 .pol:hover { transform:rotate(0deg) scale(1.05)!important; z-index:10; }
 .pol img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
-.pol-cap { text-align:center; font-size:8px; color:var(--text-mid); margin-top:5px; font-family:'Playfair Display',serif; font-style:italic; }
-.paper-quote { font-size:13px; font-style:italic; text-align:center; color:var(--text-mid); line-height:1.75; font-family:'Playfair Display',serif; padding:12px 8px; border-top:1px solid var(--green-pale); border-bottom:1px solid var(--green-pale); margin:4px 0 12px; }
-.paper-quote-names { font-size:10px; text-align:center; color:var(--orange); letter-spacing:2px; margin-bottom:14px; font-weight: 600; }
+.pol-cap { text-align:center; font-size:8px; color:var(--text-mid); margin-top:5px; font-family:'Playfair Display', serif; font-style:italic; font-weight: 600; }
+.paper-quote { font-size:14px; font-style:italic; text-align:center; color:var(--text-mid); line-height:1.75; font-family:'Playfair Display', serif; padding:12px 8px; border-top:1px solid var(--green-pale); border-bottom:1px solid var(--green-pale); margin:4px 0 12px; }
+.paper-quote-names { font-size:11px; text-align:center; color:var(--orange); letter-spacing:2px; margin-bottom:14px; font-weight: 600; font-family: 'Cormorant Garamond', serif; }
 
-/* PERBAIKAN TOMBOL: Mengubah tombol kotak kaku menjadi untaian botanical bunga matahari manis melingkar */
 .paper-cta { 
   display:flex; align-items:center; justify-content:center; gap:8px;
   width:100%; padding:11px; 
@@ -167,8 +165,8 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
   color: var(--green); 
   border: 1.5px dashed var(--green-mid); 
   border-radius: 25px; 
-  font-size:14px; letter-spacing:1px; cursor:pointer; text-align:center; 
-  font-family:'Playfair Display',serif; text-decoration:none; font-weight: 600;
+  font-size:15px; letter-spacing:1px; cursor:pointer; text-align:center; 
+  font-family:'Playfair Display', serif; font-style: italic; text-decoration:none; font-weight: 500;
   animation: flowerPulse 2.5s ease-in-out infinite;
   transition: all 0.2s ease;
 }
@@ -181,7 +179,7 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 #main { display:none; opacity:0; z-index:30; position:relative; width:100%; background: var(--broken-white); }
 .sticky-nav { position:sticky; top:0; z-index:90; display:flex; justify-content:center; background:var(--green); border-bottom:2px solid var(--yellow-mid); overflow-x:auto; scrollbar-width:none; }
 .sticky-nav::-webkit-scrollbar { display:none; }
-.sticky-nav a { padding:10px 14px; color:var(--green-pale); text-decoration:none; font-size:11px; letter-spacing:2px; text-transform:uppercase; white-space:nowrap; transition:color 0.2s; font-family:'Lato',sans-serif; }
+.sticky-nav a { padding:11px 14px; color:var(--green-pale); text-decoration:none; font-size:11px; letter-spacing:2px; text-transform:uppercase; white-space:nowrap; transition:color 0.2s; font-family:'Lato', sans-serif; font-weight: 400; }
 .sticky-nav a:hover { color:var(--white); }
 
 .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s var(--ease),transform 0.8s var(--ease); }
@@ -189,9 +187,8 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 
 section { position:relative; }
 .sec-header { text-align:center; padding:56px 24px 28px; }
-.sec-title { font-family:'Playfair Display',serif; font-size:clamp(28px,6vw,40px); color:var(--green); font-weight:600; margin:10px 0; }
-.sec-title.light { color:var(--green); } 
-.sec-sub { font-size:15px; color:var(--text-mid); font-style:italic; margin-top:6px; }
+.sec-title { font-family:'Playfair Display', serif; font-size:clamp(30px, 6vw, 44px); color:var(--green); font-weight:600; margin:10px 0; font-style: italic; }
+.sec-sub { font-size:15px; color:var(--text-mid); font-style:italic; margin-top:6px; font-family: 'Cormorant Garamond', serif; }
 
 .orn { display:flex; align-items:center; gap:10px; margin:10px auto; max-width:260px; }
 .orn::before,.orn::after { content:''; flex:1; height:1px; }
@@ -203,11 +200,11 @@ section { position:relative; }
 /* Komponen Sections */
 .hero { background: linear-gradient(180deg, var(--white) 0%, var(--broken-white) 100%); padding:60px 24px; text-align:center; min-height:55vh; display:flex; align-items:center; justify-content:center; }
 .hero-inner { max-width:600px; position:relative; z-index:2; }
-.hero-bismillah { font-family:'Playfair Display',serif; font-size:30px; color:var(--green); margin-bottom:20px; letter-spacing:2px; }
-.hero-ayat { font-size:16px; line-height:2; color:var(--text-mid); font-style:italic; max-width:480px; margin:0 auto; }
-.hero-ayat-src { font-size:12px; color:var(--orange); letter-spacing:2px; margin-top:8px; font-weight: 600; }
-.hero-announce { font-size:15px; color:var(--text-mid); margin:20px 0 8px; }
-.hero-guest { font-family:'Playfair Display',serif; font-size:28px; font-style:italic; color:var(--orange); min-height:38px; font-weight: 600; }
+.hero-bismillah { font-family:'Playfair Display', serif; font-size:32px; color:var(--green); margin-bottom:24px; letter-spacing:2px; font-weight: 500; }
+.hero-ayat { font-size:17px; line-height:1.9; color:var(--text-mid); font-style:italic; max-width:480px; margin:0 auto; font-family: 'Cormorant Garamond', serif; }
+.hero-ayat-src { font-family: 'Lato', sans-serif; font-size:11px; color:var(--orange); letter-spacing:2px; margin-top:10px; font-weight: 700; text-transform: uppercase; }
+.hero-announce { font-size:16px; color:var(--text-mid); margin:24px 0 8px; font-family: 'Cormorant Garamond', serif; }
+.hero-guest { font-family:'Playfair Display', serif; font-size:30px; font-style:italic; color:var(--orange); min-height:38px; font-weight: 600; }
 
 .couple-sec { background:var(--white); padding-bottom:60px; }
 .couple-grid { display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap:16px; padding:0 24px; max-width:600px; margin:0 auto; }
@@ -215,33 +212,34 @@ section { position:relative; }
 .photo-wrap { position:relative; width:140px; height:175px; margin:0 auto 14px; }
 .photo-wrap img { width:100%; height:100%; object-fit:cover; border-radius:6px; }
 .photo-border { position:absolute; inset:-6px; border:2px solid var(--green-lt); border-radius:6px; animation:borderDance 4s ease-in-out infinite; opacity:0.6; }
-.photo-badge { position:absolute; bottom:-11px; left:50%; transform:translateX(-50%); background:var(--orange); color:var(--white); font-size:9px; padding:3px 10px; border-radius:20px; letter-spacing:1px; white-space:nowrap; }
-.couple-name { font-family:'Playfair Display',serif; font-size:26px; font-style:italic; color:var(--green); margin-top:18px; font-weight: 600; }
-.couple-full { font-size:13px; color:var(--text-mid); margin:3px 0 6px; }
-.couple-parents { font-size:12px; color:var(--text-lt); line-height:1.8; }
-.couple-and { font-family:'Playfair Display',serif; font-size:56px; font-style:italic; color:var(--orange); line-height:1; text-align:center; }
+.photo-badge { position:absolute; bottom:-11px; left:50%; transform:translateX(-50%); background:var(--orange); color:var(--white); font-family: 'Lato', sans-serif; font-size:9px; padding:3px 10px; border-radius:20px; letter-spacing:1px; white-space:nowrap; text-transform: uppercase; }
+/* Nama mempelai di halaman utama dibuat condong miring dengan sentuhan glamor serif */
+.couple-name { font-family:'Playfair Display', serif; font-size:32px; font-style:italic; color:var(--green); margin-top:22px; font-weight: 500; }
+.couple-full { font-family: 'Cormorant Garamond', serif; font-size:15px; color:var(--text-mid); font-weight: 600; margin:4px 0 6px; letter-spacing: 0.5px; }
+.couple-parents { font-size:13px; color:var(--text-lt); line-height:1.8; font-family: 'Cormorant Garamond', serif; }
+.couple-and { font-family:'Playfair Display', serif; font-size:58px; font-style:italic; color:var(--orange); line-height:1; text-align:center; font-weight: 400; }
 
 .event-sec { background: var(--broken-white); padding-bottom:60px; }
 .event-cards { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:20px; padding:0 20px; position:relative; z-index:2; }
 .event-card { background:var(--white); border:1px solid var(--green-pale); border-radius:10px; padding:30px 26px; max-width:280px; flex:1 1 240px; text-align:center; box-shadow: 0 4px 20px rgba(46,107,53,0.05); transition:transform 0.3s, background 0.3s; }
 .event-card:hover { transform:translateY(-4px); box-shadow: 0 10px 25px rgba(46,107,53,0.1); }
 .event-icon { font-size:28px; margin-bottom:12px; }
-.event-type { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--orange); margin-bottom:14px; font-weight: 600; }
-.event-day { font-size:13px; color:var(--text-mid); letter-spacing:2px; }
-.event-date { font-family:'Playfair Display',serif; font-size:20px; color:var(--green); margin:4px 0 8px; font-weight: 600; }
-.event-time { font-size:15px; color:var(--text-mid); margin-bottom:12px; }
-.event-loc { font-size:13px; color:var(--text-lt); line-height:1.9; }
+.event-type { font-family: 'Lato', sans-serif; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--orange); margin-bottom:14px; font-weight: 700; }
+.event-day { font-size:14px; color:var(--text-mid); letter-spacing:2px; font-weight: 600; }
+.event-date { font-family:'Playfair Display', serif; font-size:22px; color:var(--green); margin:6px 0 8px; font-weight: 600; font-style: italic; }
+.event-time { font-size:15px; color:var(--text-mid); margin-bottom:12px; font-weight: 500; }
+.event-loc { font-size:14px; color:var(--text-lt); line-height:1.9; font-family: 'Cormorant Garamond', serif; }
 .event-div { font-size:28px; color:var(--orange); opacity:0.5; display:flex; align-items:center; }
 
 .cd-wrap { position:relative; z-index:2; margin-top:40px; text-align:center; padding:0 20px; }
-.cd-label { font-size:10px; letter-spacing:4px; color:var(--text-mid); margin-bottom:16px; font-weight: 600; }
+.cd-label { font-family: 'Lato', sans-serif; font-size:10px; letter-spacing:4px; color:var(--text-mid); margin-bottom:16px; font-weight: 700; text-transform: uppercase; }
 .cd-nums { display:flex; align-items:center; justify-content:center; gap:10px; }
 .cd-unit { text-align:center; }
-.cd-num { font-family:'Playfair Display',serif; font-size:48px; color:var(--green); line-height:1; min-width:60px; font-weight: 600; }
-.cd-lbl { font-size:10px; letter-spacing:2px; color:var(--text-lt); text-transform:uppercase; }
+.cd-num { font-family:'Playfair Display', serif; font-size:52px; color:var(--green); line-height:1; min-width:60px; font-weight: 600; }
+.cd-lbl { font-family: 'Lato', sans-serif; font-size:9px; letter-spacing:2px; color:var(--text-lt); text-transform:uppercase; font-weight: 600; }
 .cd-sep { font-size:40px; color:var(--orange); opacity:0.4; margin-bottom:18px; }
 .map-wrap { position:relative; z-index:2; margin-top:30px; text-align:center; }
-.map-btn { display:inline-block; padding:12px 30px; border:1px solid var(--green-lt); border-radius:6px; color:var(--green); background: var(--white); text-decoration:none; font-size:14px; letter-spacing:1px; transition:all 0.3s; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+.map-btn { display:inline-block; padding:12px 30px; border:1px solid var(--green-lt); border-radius:6px; color:var(--green); background: var(--white); text-decoration:none; font-size:14px; letter-spacing:1px; transition:all 0.3s; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-family: 'Cormorant Garamond', serif; }
 .map-btn:hover { background:var(--green-bg); color:var(--green); border-color:var(--green); }
 
 .gallery-sec { background:var(--white); padding-bottom:60px; }
@@ -255,28 +253,28 @@ section { position:relative; }
 .g-item:hover::after { opacity:1; }
 
 .story-sec { background:var(--broken-white); padding-bottom:60px; }
-.story-content { flex:1; background:var(--white); border-radius:10px; padding:20px; border:1px solid var(--green-pale); box-shadow:0 4px 20px rgba(0,0,0,0.03); }
-.story-text { font-size:14px; color:var(--text-mid); line-height:1.8; }
+.story-content { flex:1; background:var(--white); border-radius:10px; padding:25px; border:1px solid var(--green-pale); box-shadow:0 4px 20px rgba(0,0,0,0.03); }
+.story-text { font-size:15px; color:var(--text-mid); line-height:1.9; font-family: 'Cormorant Garamond', serif; font-style: italic; }
 .story-video { margin-top:14px; border-radius:8px; overflow:hidden; aspect-ratio:9/16; background:transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 
 .rsvp-sec { background:var(--white); padding-bottom:60px; }
 .rsvp-form { max-width:500px; margin:0 auto 32px; padding:0 20px; }
 .f-group { margin-bottom:16px; }
-.f-label { display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:6px; font-weight:600; font-family:'Lato',sans-serif; }
-.f-input { width:100%; padding:11px 14px; border:1.5px solid var(--green-pale); border-radius:6px; font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--dark); background:var(--broken-white); outline:none; transition:border-color 0.2s, background 0.2s; }
+.f-label { display:block; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; font-weight:700; font-family:'Lato', sans-serif; }
+.f-input { width:100%; padding:11px 14px; border:1.5px solid var(--green-pale); border-radius:6px; font-family:'Cormorant Garamond', serif; font-size:16px; color:var(--dark); background:var(--broken-white); outline:none; transition:border-color 0.2s, background 0.2s; font-weight: 500; }
 .f-input:focus { border-color:var(--green-mid); background:var(--white); }
 textarea.f-input { resize:vertical; min-height:80px; }
 .radio-row { display:flex; gap:8px; }
-.radio-opt { flex:1; padding:10px 8px; border:1.5px solid var(--green-pale); border-radius:6px; text-align:center; cursor:pointer; font-size:13px; color:var(--text-mid); transition:all 0.2s; background: var(--white); }
+.radio-opt { flex:1; padding:10px 8px; border:1.5px solid var(--green-pale); border-radius:6px; text-align:center; cursor:pointer; font-size:13px; color:var(--text-mid); transition:all 0.2s; background: var(--white); font-family: 'Lato', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: 0.5px; }
 .radio-opt.sel { border-color:var(--green-mid); background:var(--green-bg); color:var(--green); font-weight:700; }
-.btn-main { width:100%; padding:14px; background:linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%); color:var(--white); border:none; border-radius:6px; font-family:'Playfair Display',serif; font-size:17px; letter-spacing:3px; cursor:pointer; transition:all 0.3s; }
+.btn-main { width:100%; padding:14px; background:linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%); color:var(--white); border:none; border-radius:6px; font-family:'Playfair Display', serif; font-size:18px; letter-spacing:3px; cursor:pointer; transition:all 0.3s; font-style: italic; }
 .btn-main:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(46,107,53,0.25); }
 
 .rsvp-list { max-width:500px; margin:0 auto; padding:0 20px; }
 .rsvp-item { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--broken-white); border:1px solid var(--green-pale); border-radius:8px; margin-bottom:8px; }
-.rsvp-name { font-family:'Playfair Display',serif; font-size:16px; color:var(--green); font-weight: 600; }
-.rsvp-detail { font-size:12px; color:var(--text-mid); margin-top:2px; }
-.badge { font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700; white-space:nowrap; }
+.rsvp-name { font-family:'Playfair Display', serif; font-size:17px; color:var(--green); font-weight: 600; font-style: italic; }
+.rsvp-detail { font-size:13px; color:var(--text-mid); margin-top:2px; font-family: 'Cormorant Garamond', serif; }
+.badge { font-family: 'Lato', sans-serif; font-size:10px; padding:4px 12px; border-radius:20px; font-weight:700; white-space:nowrap; text-transform: uppercase; letter-spacing: 0.5px; }
 .bh { background:#E8F5E9; color:#2E7D32; }
 .bt { background:#FFEBEE; color:#C62828; }
 
@@ -287,40 +285,40 @@ textarea.f-input { resize:vertical; min-height:80px; }
 .f-label.light { color:var(--green); }
 .wishes-list { max-width:500px; margin:0 auto; padding:0 20px; position:relative; z-index:2; }
 .wish-card { background:var(--white); border:1px solid var(--green-pale); border-radius:10px; padding:16px; margin-bottom:12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-.wish-name { font-family:'Playfair Display',serif; font-size:17px; color:var(--green); font-weight: 600; }
-.wish-text { font-size:14px; color:var(--text-mid); margin-top:6px; font-style:italic; line-height:1.7; }
-.wish-time { font-size:11px; color:var(--text-lt); margin-top:8px; }
+.wish-name { font-family:'Playfair Display', serif; font-size:18px; color:var(--green); font-weight: 600; font-style: italic; }
+.wish-text { font-size:15px; color:var(--text-mid); margin-top:6px; font-style:italic; line-height:1.7; font-family: 'Cormorant Garamond', serif; }
+.wish-time { font-size:11px; color:var(--text-lt); margin-top:8px; font-family: 'Lato', sans-serif; }
 
 .qr-sec { background:var(--white); padding-bottom:60px; }
 .qr-wrap { max-width:340px; margin:0 auto; padding:0 20px; }
 .qr-card { background:var(--broken-white); border:2px solid var(--green-pale); border-radius:12px; padding:28px 20px; text-align:center; box-shadow:0 4px 24px rgba(46,107,53,0.05); }
-.qr-header { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--orange); font-weight: 600; }
-.qr-couple { font-family:'Playfair Display',serif; font-size:26px; font-style:italic; color:var(--green); margin:6px 0; font-weight: 600; }
-.qr-detail { font-size:12px; color:var(--text-mid); margin-bottom:16px; }
+.qr-header { font-family: 'Lato', sans-serif; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--orange); font-weight: 700; }
+.qr-couple { font-family:'Playfair Display', serif; font-size:28px; font-style:italic; color:var(--green); margin:6px 0; font-weight: 600; }
+.qr-detail { font-size:13px; color:var(--text-mid); margin-bottom:16px; font-family: 'Cormorant Garamond', serif; }
 #qr-container { display:flex; justify-content:center; }
 #qr-container canvas,#qr-container img { border:6px solid white; border-radius:4px; }
-.qr-guest-val { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--orange); margin-top:4px; font-weight: 600; }
-.btn-outline { display:block; margin:16px auto 0; padding:10px 28px; background:var(--white); border:1.5px solid var(--green-lt); border-radius:6px; font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--green); cursor:pointer; transition:all 0.3s; font-weight: 600; }
+.qr-guest-val { font-family:'Playfair Display', serif; font-size:22px; font-style:italic; color:var(--orange); margin-top:4px; font-weight: 600; }
+.btn-outline { display:block; margin:16px auto 0; padding:10px 28px; background:var(--white); border:1.5px solid var(--green-lt); border-radius:6px; font-family:'Cormorant Garamond', serif; font-size:16px; color:var(--green); cursor:pointer; transition:all 0.3s; font-weight: 600; }
 .btn-outline:hover { background:var(--green-bg); border-color:var(--green); }
 
 .container-sec { background: linear-gradient(180deg, var(--broken-white) 0%, var(--white) 100%); padding:70px 24px; text-align:center; border-top: 1px solid var(--green-pale); }
-.closing-text { font-size:15px; color:var(--text-mid); line-height:1.9; margin:16px 0; }
-.closing-couple { font-family:'Playfair Display',serif; font-size:30px; font-style:italic; color:var(--green); margin-top:20px; font-weight: 600; }
+.closing-text { font-size:16px; color:var(--text-mid); line-height:1.9; margin:16px 0; font-family: 'Cormorant Garamond', serif; }
+.closing-couple { font-family:'Playfair Display', serif; font-size:34px; font-style:italic; color:var(--green); margin-top:20px; font-weight: 500; }
 
 /* Pemutar Musik Pojok Bawah */
 #bgm-player { position:fixed; bottom:20px; right:20px; z-index:999; display:none; align-items:center; gap:8px; background:rgba(255,255,255,0.95); border-radius:30px; padding:7px 14px 7px 7px; box-shadow:0 4px 18px rgba(46,107,53,0.1); border:1px solid var(--green-pale); backdrop-filter:blur(8px); }
 .bgm-btn { width:30px; height:30px; border-radius:50%; background:var(--orange); color:var(--white); border:none; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; }
-.bgm-lbl { font-size:10px; color:var(--text-mid); max-width:130px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight: 600; }
+.bgm-lbl { font-family: 'Lato', sans-serif; font-size:10px; color:var(--text-mid); max-width:130px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--green); color:var(--white); border:1px solid var(--yellow-mid); padding:10px 24px; border-radius:24px; font-size:14px; z-index:9999; opacity:0; transition:all 0.4s var(--ease); pointer-events:none; white-space:nowrap; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
 @media(max-width:700px){
   .couple-grid { grid-template-columns: 1fr auto 1fr; gap:10px; padding:0 12px; }
   .photo-wrap { width:120px; height:150px; }
-  .couple-name { font-size:20px; }
-  .couple-full { font-size:11px; }
+  .couple-name { font-size:24px; }
+  .couple-full { font-size:12px; }
   .couple-parents { font-size:11px; }
-  .couple-and { font-size:40px; }
+  .couple-and { font-size:42px; }
   .gallery-grid { grid-template-columns:repeat(2,1fr); grid-auto-rows:130px; }
   .g-item.wide { grid-column:span 1; }
 }
@@ -437,7 +435,6 @@ textarea.f-input { resize:vertical; min-height:80px; }
           <div class="paper-quote">"With love and joy in our hearts,<br/>we invite you to celebrate<br/>our wedding"</div>
           <div class="paper-quote-names">— Resy &amp; Afif —</div>
 
-          <!-- Modifikasi Tombol dengan Vektor Bunga Matahari Mini -->
           <button class="paper-cta" onclick="showMainInvitation()">
             <svg class="cta-flower-icon" viewBox="0 0 40 40">
               <circle cx="20" cy="20" r="12" fill="#FFD700"/>
