@@ -371,4 +371,392 @@
 <img src="https://lib.simanten.com/wp-content/uploads/2025/04/pohon-canva-al.png" style="position:absolute;left:0;bottom:0;width:clamp(80px,15vw,140px);opacity:0.2;pointer-events:none;animation:floatY 7s ease-in-out infinite"/>
 <img src="https://lib.simanten.com/wp-content/uploads/2025/04/pohon-canva-ar.png" style="position:absolute;right:0;bottom:0;width:clamp(80px,15vw,140px);opacity:0.2;pointer-events:none;animation:floatY 7s ease-in-out infinite 1.5s"/>
 <img src="https://invite.simanten.com/media/storage/gambar/2026/04/14/kupu-ainun-r.gif" style="position:absolute;right:5%;top:15%;width:clamp(30px,6vw,55px);opacity:0.6;pointer-events:none;animation:floatYR 4s ease-in-out infinite"/>
-<img src="https://invite.simanten.com/media/storage/gambar/2026/04/14/kupu-ainun-l.gif" style="position:absolute;left:5%;top:20%;width:clamp(30px,6vw,55px);opacity:0.6;pointer-events:
+<img src="https://invite.simanten.com/media/storage/gambar/2026/04/14/kupu-ainun-l.gif" style="position:absolute;left:5%;top:20%;width:clamp(30px,6vw,55px);opacity:0.6;pointer-events:none;animation:floatYR 5s ease-in-out infinite 1s"/>
+<div class="sec-header reveal">
+  <div class="orn white"><span>✦</span></div>
+  <h2 class="sec-title light">Ucapan & Doa</h2>
+  <p class="sec-sub" style="color:rgba(200,230,255,0.7)">Sampaikan doa terbaik untuk kami</p>
+  <div class="orn white"><span>✦</span></div>
+</div>
+<div class="wishes-form reveal">
+  <div class="f-group">
+    <label class="f-label light">Nama</label>
+    <input type="text" class="f-input dark" id="wish-name" placeholder="Nama Anda..."/>
+  </div>
+  <div class="f-group">
+    <label class="f-label light">Ucapan & Doa</label>
+    <textarea class="f-input dark" id="wish-text" rows="4" placeholder="Tulis ucapan dan doa terbaik Anda..."></textarea>
+  </div>
+  <button class="btn-main" style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue-mid) 100%)" onclick="submitWish()">Kirim Ucapan</button>
+</div>
+<div class="wishes-list reveal" id="wishes-list">
+  <div style="text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-style:italic">Memuat ucapan...</div>
+</div>
+</section>
+
+<section class="qr-sec" id="sec-qr">
+<div class="sec-header reveal">
+  <div class="orn green"><span>✦</span></div>
+  <h2 class="sec-title">QR Kehadiran</h2>
+  <p class="sec-sub">Tunjukkan QR ini saat tiba di lokasi</p>
+  <div class="orn green"><span>✦</span></div>
+</div>
+<div class="qr-wrap reveal">
+  <div class="qr-card">
+    <div class="qr-header">The Wedding of</div>
+    <div class="qr-couple">Resy & Afif</div>
+    <div class="qr-detail">27 Desember 2026 · Sindanglaya, Kab. Bandung</div>
+    <div id="qr-container"></div>
+    <div class="qr-guest-lbl">Tamu Undangan</div>
+    <div class="qr-guest-val" id="qr-name-display">–</div>
+    <div class="qr-note">Tunjukkan QR ini kepada panitia saat tiba</div>
+  </div>
+  <button class="btn-outline" onclick="window.print()">🖨️ Cetak / Simpan QR</button>
+</div>
+</section>
+
+<section class="closing-sec" style="position:relative;overflow:hidden">
+<img src="https://lib.simanten.com/wp-content/uploads/2025/04/pohon-canva-al.png" style="position:absolute;left:0;bottom:0;width:clamp(100px,20vw,180px);opacity:0.25;pointer-events:none;animation:floatY 6s ease-in-out infinite"/>
+<img src="https://lib.simanten.com/wp-content/uploads/2025/04/pohon-canva-ar.png" style="position:absolute;right:0;bottom:0;width:clamp(100px,20vw,180px);opacity:0.25;pointer-events:none;animation:floatY 6s ease-in-out infinite 1s"/>
+<img src="https://lib.simanten.com/wp-content/uploads/2025/04/bunga-canva-b.png" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:clamp(150px,30vw,280px);opacity:0.2;pointer-events:none;animation:floatY 5s ease-in-out infinite"/>
+<img src="https://invite.simanten.com/media/storage/gambar/2026/04/14/kupu-ainun-r.gif" style="position:absolute;right:8%;top:25%;width:clamp(35px,7vw,65px);opacity:0.7;pointer-events:none;animation:floatYRYR 5s ease-in-out infinite"/>
+<img src="https://invite.simanten.com/media/storage/gambar/2026/04/14/kupu-ainun-l.gif" style="position:absolute;left:8%;top:30%;width:clamp(35px,7vw,65px);opacity:0.7;pointer-events:none;animation:floatYRYR 4s ease-in-out infinite 1s"/>
+<div class="closing-inner reveal">
+  <div class="orn white"><span>✦</span></div>
+  <p class="closing-text">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.</p>
+  <p class="closing-couple">Resy & Afif</p>
+  <p class="closing-family">Beserta Keluarga Besar</p>
+  <div class="orn white" style="margin-top:20px"><span>✦</span></div>
+</div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ════════════════════════════════════
+RESY & AFIF – app.js
+Fitur: Animasi kelopak, Countdown,
+Musik, QR, RSVP, Wishes, Supabase
+════════════════════════════════════ */
+
+const SB_URL = 'https://bijessmsedrtfxbnieza.supabase.co';
+const SB_KEY = 'sb_publishable_mmiBBx94Ri1-PjFQE6DyHQ_oElTvxJG';
+
+const sb = {
+h: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+async get(t) {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${t}?select=*&order=created_at.desc`, { headers: sb.h });
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+},
+async post(t, d) {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${t}`, {
+      method: 'POST', headers: { ...sb.h, Prefer: 'return=representation' },
+      body: JSON.stringify(d)
+    });
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+}
+};
+
+// fallback data
+const fallRsvp = [
+{ name: 'Keluarga H. Dadan', count: 4, status: 'hadir', message: 'InsyaAllah hadir', created_at: new Date(Date.now()-86400000*2).toISOString() },
+{ name: 'Ibu Siti Rahayu', count: 2, status: 'hadir', message: '', created_at: new Date(Date.now()-86400000).toISOString() },
+];
+const fallWishes = [
+{ name: 'Keluarga Sonjaya', text: 'Selamat menempuh hidup baru! Semoga menjadi keluarga sakinah mawaddah warahmah. Barakallahu lakuma!', created_at: new Date(Date.now()-86400000*3).toISOString() },
+{ name: 'Teh Rini & Kang Dedi', text: 'Semoga pernikahan kalian menjadi awal yang indah dan penuh keberkahan. Aamiin ya Rabbal Alamiin 🙏', created_at: new Date(Date.now()-86400000).toISOString() },
+];
+
+let musicOn = false;
+let guestName = '';
+let rsvpChoice = 'hadir';
+
+// ── UTILS ──
+function getParam(k) { return new URLSearchParams(location.search).get(k) || ''; }
+function timeAgo(iso) {
+const d = Math.floor((Date.now()-new Date(iso))/86400000);
+const h = Math.floor((Date.now()-new Date(iso))/3600000);
+const m = Math.floor((Date.now()-new Date(iso))/60000);
+if (d>0) return `${d} hari lalu`;
+if (h>0) return `${h} jam lalu`;
+if (m>0) return `${m} menit lalu`;
+return 'Baru saja';
+}
+function toast(msg) {
+const t = document.getElementById('toast');
+t.textContent = msg; t.classList.add('show');
+setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── PETALS ANIMATION ──
+function createPetals() {
+const wrap = document.getElementById('petal-wrap');
+const petalTypes = [
+  { color: 'rgba(124,184,127,0.7)', w: 10, h: 14 },
+  { color: 'rgba(200,150,10,0.7)',  w: 8,  h: 8  },
+  { color: 'rgba(90,140,255,0.5)',  w: 9,  h: 12 },
+  { color: 'rgba(180,230,180,0.6)', w: 12, h: 7  },
+  { color: 'rgba(255,220,80,0.65)', w: 7,  h: 10 },
+];
+for (let i = 0; i < 28; i++) {
+  const p = document.createElement('div');
+  const type = petalTypes[i % petalTypes.length];
+  const left = Math.random() * 100;
+  const dur  = 6 + Math.random() * 8;
+  const delay = Math.random() * 10;
+  const drift = (Math.random() - 0.5) * 160;
+  const spin  = (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 360);
+  p.className = 'petal';
+  p.style.cssText = `
+    left:${left}%;
+    width:${type.w}px; height:${type.h}px;
+    background:${type.color};
+    animation-duration:${dur}s;
+    animation-delay:${delay}s;
+    --drift:${drift}px;
+    --spin:${spin}deg;
+    border-radius:${Math.random()>0.5?'50% 10% 50% 10%':'30% 60% 30% 60%'};
+  `;
+  if(wrap) wrap.appendChild(p);
+}
+}
+
+// ── OPEN INVITATION (DEPRECATED/BYPASSED) ──
+function openInvitation() {
+// Fungsi bypass langsung
+}
+
+// ── MUSIC ──
+function tryPlay() {
+const a = document.getElementById('bg-music');
+if(a) {
+  a.volume = 0.5;
+  a.play().then(() => { musicOn = true; updMusicUI(); }).catch(() => {});
+}
+}
+function toggleMusic() {
+const a = document.getElementById('bg-music');
+if(a) {
+  musicOn ? a.pause() : a.play().then(() => {});
+  musicOn = !musicOn;
+  updMusicUI();
+}
+}
+function updMusicUI() {
+const p = document.getElementById('ico-play');
+const pa = document.getElementById('ico-pause');
+if(p && pa) {
+  p.style.display  = musicOn ? 'none' : 'block';
+  pa.style.display = musicOn ? 'block' : 'none';
+}
+}
+
+// ── COUNTDOWN ──
+function startCountdown() {
+const target = new Date('2026-12-27T08:00:00+07:00');
+function tick() {
+  const diff = target - Date.now();
+  if (diff <= 0) { ['cd-d','cd-h','cd-m','cd-s'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = '00'; }); return; }
+  const pad = n => String(Math.floor(n)).padStart(2,'0');
+  const cdD = document.getElementById('cd-d');
+  const cdH = document.getElementById('cd-h');
+  const cdM = document.getElementById('cd-m');
+  const cdS = document.getElementById('cd-s');
+  if(cdD) cdD.textContent = pad(diff/86400000);
+  if(cdH) cdH.textContent = pad((diff%86400000)/3600000);
+  if(cdM) cdM.textContent = pad((diff%3600000)/60000);
+  if(cdS) cdS.textContent = pad((diff%60000)/1000);
+}
+tick(); setInterval(tick, 1000);
+}
+
+// ── SCROLL REVEAL ──
+function initReveal() {
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach((el,i) => {
+        setTimeout(() => el.classList.add('visible'), i * 120);
+      });
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
+}
+
+// ── QR CODE ──
+function initQR(name) {
+const c = document.getElementById('qr-container');
+if(!c) return;
+c.innerHTML = '';
+const txt = name
+  ? `WEDDING:RESY_AFIF|DATE:27122026|GUEST:${name}`
+  : `WEDDING:RESY_AFIF|DATE:27122026`;
+if (typeof QRCode !== 'undefined') {
+  new QRCode(c, {
+    text: txt, width: 176, height: 176,
+    colorDark: '#2E6B35', colorLight: '#FFFFFF',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+const qnd = document.getElementById('qr-name-display');
+if(qnd) qnd.textContent = name || 'Tamu Undangan';
+}
+
+// ── RSVP ──
+function selOpt(el) {
+document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('sel'));
+el.classList.add('sel');
+document.getElementById('rsvp-choice').value = el.dataset.v;
+rsvpChoice = el.dataset.v;
+}
+
+async function submitRsvp() {
+const name = document.getElementById('rsvp-name').value.trim();
+const count = parseInt(document.getElementById('rsvp-count').value) || 1;
+const msg   = document.getElementById('rsvp-msg').value.trim();
+const status = document.getElementById('rsvp-choice').value;
+if (!name) { toast('⚠️ Mohon isi nama Anda'); return; }
+const btn = document.querySelector('#sec-rsvp .btn-main');
+btn.textContent = 'Mengirim...'; btn.disabled = true;
+const rec = { name, count, status, message: msg };
+const res = await sb.post('rsvp', rec);
+fallRsvp.unshift({ ...rec, created_at: new Date().toISOString() });
+toast(res ? '✅ Konfirmasi berhasil terkirim!' : '✅ Konfirmasi tercatat!');
+document.getElementById('rsvp-name').value = '';
+document.getElementById('rsvp-msg').value = '';
+btn.textContent = 'Kirim Konfirmasi'; btn.disabled = false;
+loadRsvp();
+}
+
+async function loadRsvp() {
+const el = document.getElementById('rsvp-list');
+if(!el) return;
+const data = (await sb.get('rsvp')) || fallRsvp;
+if (!data || !data.length) {
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-lt);font-style:italic">Belum ada konfirmasi.</div>';
+  return;
+}
+el.innerHTML = data.map(r => `
+  <div class="rsvp-item">
+    <div>
+      <div class="rsvp-name">${r.name}</div>
+      <div class="rsvp-detail">${r.count} tamu · ${timeAgo(r.created_at)}${r.message ? ' · "'+r.message+'"' : ''}</div>
+    </div>
+    <span class="badge ${r.status==='hadir'?'bh':r.status==='tidak'?'bt':'br'}">
+      ${r.status==='hadir'?'✓ Hadir':r.status==='tidak'?'✗ Tidak':'? Belum'}
+    </span>
+  </div>`).join('');
+}
+
+// ── WISHES ──
+async function submitWish() {
+const name = document.getElementById('wish-name').value.trim();
+const text = document.getElementById('wish-text').value.trim();
+if (!name || !text) { toast('⚠️ Mohon isi nama dan ucapan'); return; }
+const btn = document.querySelector('#sec-wishes .btn-main');
+btn.textContent = 'Mengirim...'; btn.disabled = true;
+const rec = { name, text };
+const res = await sb.post('wishes', rec);
+fallWishes.unshift({ ...rec, created_at: new Date().toISOString() });
+toast(res ? '✅ Ucapan terkirim! Terima kasih 🙏' : '✅ Ucapan tercatat!');
+document.getElementById('wish-name').value = '';
+document.getElementById('wish-text').value = '';
+btn.textContent = 'Kirim Ucapan'; btn.disabled = false;
+loadWishes();
+}
+
+async function loadWishes() {
+const el = document.getElementById('wishes-list');
+if(!el) return;
+const data = (await sb.get('wishes')) || fallWishes;
+if (!data || !data.length) {
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-style:italic">Belum ada ucapan.</div>';
+  return;
+}
+el.innerHTML = data.map(w => `
+  <div class="wish-card">
+    <div class="wish-name">${w.name}</div>
+    <div class="wish-text">"${w.text}"</div>
+    <div class="wish-time">${timeAgo(w.created_at)}</div>
+  </div>`).join('');
+}
+
+// ── VIDEO YOUTUBE ──
+function loadVideo(iframeId, inputId) {
+const raw = document.getElementById(inputId).value.trim();
+let vid = '';
+const m = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+if (m) vid = m[1];
+if (!vid) { toast('⚠️ Link YouTube tidak valid'); return; }
+const iframe = document.getElementById(iframeId);
+const placeholder = document.getElementById(iframeId + '-placeholder');
+if(iframe && placeholder) {
+  iframe.src = `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`;
+  iframe.style.display = 'block';
+  placeholder.style.display = 'none';
+}
+localStorage.setItem('yt_' + iframeId, vid);
+}
+
+function restoreVideos() {
+['vid1'].forEach(id => {
+  const saved = localStorage.getItem('yt_' + id);
+  if (saved) {
+    const iframe = document.getElementById(id);
+    const ph = document.getElementById(id + '-placeholder');
+    if (iframe && ph) {
+      iframe.src = `https://www.youtube.com/embed/${saved}?rel=0&modestbranding=1`;
+      iframe.style.display = 'block';
+      ph.style.display = 'none';
+    }
+  }
+});
+}
+
+// ── INIT MAIN ──
+async function initMain() {
+startCountdown();
+initReveal();
+restoreVideos();
+await Promise.all([loadRsvp(), loadWishes()]);
+initQR(guestName);
+}
+
+// ── BOOT ──
+document.addEventListener('DOMContentLoaded', () => {
+guestName = getParam('to');
+
+// Langsung Tampilkan Main Content tanpa Cover
+const cover = document.getElementById('cover');
+const main = document.getElementById('main');
+const player = document.getElementById('music-player');
+
+if(cover) cover.style.display = 'none';
+if(main) main.style.display = 'block';
+if(player) player.style.display = 'flex';
+
+createPetals();
+initMain();
+setTimeout(tryPlay, 600);
+
+if (guestName) {
+  const hn = document.getElementById('hero-guest');
+  if (hn) hn.textContent = guestName;
+  const ri = document.getElementById('rsvp-name');
+  if (ri) ri.value = guestName;
+} else {
+  const hn = document.getElementById('hero-guest');
+  if (hn) hn.textContent = 'Bapak/Ibu/Saudara/i';
+}
+});
+</script>
+</body>
+</html>
