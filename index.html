@@ -123,7 +123,7 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
 .env-flap { width:100%; height:100%; background:linear-gradient(175deg, #8A9C76, var(--sage)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
 
-/* Kelopak Bunga Matahari SVG Berlapis Yang Padat Tanpa Celah Lubang */
+/* Vektor Bunga Matahari Sempurna Berlapis Dengan Inti yang Kontras Kompleks */
 .env-seal { 
   position:absolute; top:54%; left:50%; 
   transform:translate(-50%, -50%); 
@@ -240,7 +240,6 @@ section { position:relative; }
 .story-text { font-size:14px; color:var(--text-mid); line-height:1.8; }
 .story-video { margin-top:14px; border-radius:8px; overflow:hidden; aspect-ratio:9/16; background:transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 
-/* ═══ PERBAIKAN STRUKTUR FORM RSVP ═══ */
 .rsvp-sec { background:var(--white); padding-bottom:60px; }
 .rsvp-form { max-width:500px; margin:0 auto 32px; padding:0 20px; }
 .f-group { margin-bottom:16px; }
@@ -397,7 +396,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
           </g>
           <!-- Lingkaran Jingga Pembatas Inti Tengah -->
           <circle cx="50" cy="50" r="17" fill="#FFA500"/>
-          <!-- Pusat Inti Cokelat Gelap Bunga Matahari Madani -->
+          <!-- Pusat Inti Cokelat Gelap Bunga Matahari -->
           <circle cx="50" cy="50" r="13" fill="#5C3A21"/>
           <circle cx="50" cy="50" r="8" fill="#3D2210"/>
         </svg>
@@ -648,11 +647,14 @@ let bgmOn=false, envOpened=false, guestName = '';
 function getParam(k) { return new URLSearchParams(location.search).get(k) || ''; }
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
-// Kelopak Bunga Gugur
+// Kelopak Bunga Gugur Berwarna-Warni (Kuning, Oren, Putih) & Daun Sage[cite: 1]
 (function createFallingElements(){
   const c = document.getElementById('petal-wrap');
   
-  for(let i=0; i<25; i++){
+  // Array variasi warna bunga matahari mini (Kuning Cerah, Kuning Tua, Oranye, Putih Bersih)[cite: 1]
+  const flowerColors = ['#FFD700', '#F5D060', '#E09520', '#FFFFFF'];
+  
+  for(let i=0; i<32; i++){
     const p = document.createElement('div'); 
     p.className = 'falling-element';
     
@@ -660,9 +662,10 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
     const dur = 7 + Math.random() * 8; 
     const delay = -Math.random() * 12; 
     const dx = (Math.random() - 0.5) * 160;
-    const isLeaf = Math.random() > 0.75; // 25% daun, 75% bunga matahari mini
+    const isLeaf = Math.random() > 0.8; // 20% daun sage green, 80% bunga matahari warna-warni[cite: 1]
     
     const size = isLeaf ? (6 + Math.random() * 5) : (14 + Math.random() * 8);
+    const randomColor = flowerColors[i % flowerColors.length]; // Membagi rata variasi warna[cite: 1]
     
     if (isLeaf) {
       p.style.cssText = `
@@ -672,11 +675,11 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
         border-radius: 50% 0 50% 50%; opacity: 0.7;
       `;
     } else {
-      // Kelopak gugur berbentuk bunga matahari mini padat penuh
+      // Merender miniatur kelopak bunga matahari mini padat dengan warna variasi acak[cite: 1]
       p.innerHTML = `
         <svg class="sf-mini" viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="12" fill="#FFD700"/>
-          <g fill="#FFD700">
+          <circle cx="20" cy="20" r="12" fill="${randomColor}"/>
+          <g fill="${randomColor}">
             <circle cx="20" cy="6" r="4.5" transform="rotate(0 20 20)"/>
             <circle cx="20" cy="6" r="4.5" transform="rotate(45 20 20)"/>
             <circle cx="20" cy="6" r="4.5" transform="rotate(90 20 20)"/>
