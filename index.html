@@ -74,9 +74,9 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 }
 @keyframes hintBob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(5px)} }
 
-/* Latar Belakang & Panggung Ornamen */
-.bg-layer { position:fixed; inset:0; pointer-events:none; z-index:0; background: linear-gradient(160deg, #FAF7F0 0%, #F4EFE6 50%, #EBF5EC 100%); }
-.ring { position:fixed; border-radius:50%; border:1px solid; top:50%; left:50%; pointer-events:none; z-index:1; }
+/* Latar Belakang & Panggung Ornamen (will-change untuk kelancaran hardware akselerasi) */
+.bg-layer { position:fixed; inset:-20px; pointer-events:none; z-index:0; background: linear-gradient(160deg, #FAF7F0 0%, #F4EFE6 50%, #EBF5EC 100%); transition: transform 0.2s ease-out; will-change: transform; }
+.ring { position:fixed; border-radius:50%; border:1px solid; top:50%; left:50%; pointer-events:none; z-index:1; transition: transform 0.2s ease-out; will-change: transform; }
 #petal-wrap { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
 
 /* Struktur CSS untuk komponen bunga/daun gugur */
@@ -123,7 +123,7 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
 .env-flap { width:100%; height:100%; background:linear-gradient(175deg, #8A9C76, var(--sage)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
 
-/* Vektor Bunga Matahari Sempurna Berlapis Dengan Inti yang Kontras Kompleks */
+/* Kelopak Bunga Matahari SVG Berlapis Yang Padat Tanpa Celah Lubang */
 .env-seal { 
   position:absolute; top:54%; left:50%; 
   transform:translate(-50%, -50%); 
@@ -313,14 +313,13 @@ textarea.f-input { resize:vertical; min-height:80px; }
   <source src="jalaraning-tresna.mp3" type="audio/mpeg"/>
 </audio>
 
-<div class="bg-layer"></div>
-<div class="ring" style="width:380px;height:380px;border-color:rgba(156,175,136,0.25);animation:ringSpin 36s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
-<div class="ring" style="width:250px;height:250px;border-color:rgba(224,149,32,0.2);animation:ringSpinR 24s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
+<div class="bg-layer" id="parallaxBg"></div>
 
-<!-- Wadah Elemen Jatuh Berupa Miniatur Bunga Matahari & Daun Sage -->
+<div class="ring" id="parallaxRing1" style="width:380px;height:380px;border-color:rgba(156,175,136,0.25);animation:ringSpin 36s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
+<div class="ring" id="parallaxRing2" style="width:250px;height:250px;border-color:rgba(224,149,32,0.2);animation:ringSpinR 24s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
+
 <div id="petal-wrap"></div>
 
-<!-- ═══════ SCREEN 1: LANDING 3D ═══════ -->
 <div id="s-land">
   <div class="scene" id="scene3d">
     <div class="d-back"></div>
@@ -330,9 +329,9 @@ textarea.f-input { resize:vertical; min-height:80px; }
       <div style="text-align:center">
         <p class="l-tag">Undangan Pernikahan</p>
         <h1 class="l-bride">Resy</h1>
-        <span class="l-amp">&amp;</span>
+        <span class="l-amp">&</span>
         <h1 class="l-groom">Afif</h1>
-        <p class="l-date">27 &middot; XII &middot; 2026</p>
+        <p class="l-date">27 · XII · 2026</p>
         <div class="l-guest" id="lGuest">
           <div class="l-guest-to">Kepada Yth.</div>
           <div class="l-guest-name" id="lGuestName"></div>
@@ -346,25 +345,21 @@ textarea.f-input { resize:vertical; min-height:80px; }
   </div>
 </div>
 
-<!-- ═══════ SCREEN 2: ENVELOPE ═══════ -->
 <div id="s-env">
   <div class="env-scroll-box" id="envScrollBox">
     <div class="env-wrap" id="envWrap" onclick="openEnv()">
       <div class="env-body">
         <div class="env-lines"></div>
         <div class="env-inner">
-          <div class="env-cpl">Resy &amp; Afif</div>
+          <div class="env-cpl">Resy & Afif</div>
           <div class="env-dt">27 · XII · 2026</div>
         </div>
       </div>
       <div class="env-flap-w"><div class="env-flap" id="envFlap"></div></div>
       
-      <!-- Vektor Bunga Matahari Sempurna Berlapis Dengan Inti yang Kontras Kompleks -->
       <div class="env-seal" id="envSeal">
         <svg viewBox="0 0 100 100" width="100%" height="100%">
-          <!-- Pondasi Kuning Utama: Menghilangkan Efek Lubang Transparan -->
           <circle cx="50" cy="50" r="32" fill="#FFD700" />
-          <!-- Layer Kelopak Belakang -->
           <g fill="#E5B030">
             <circle cx="50" cy="22" r="9" transform="rotate(15 50 50)"/>
             <circle cx="50" cy="22" r="9" transform="rotate(45 50 50)"/>
@@ -379,7 +374,6 @@ textarea.f-input { resize:vertical; min-height:80px; }
             <circle cx="50" cy="22" r="9" transform="rotate(315 50 50)"/>
             <circle cx="50" cy="22" r="9" transform="rotate(345 50 50)"/>
           </g>
-          <!-- Layer Kelopak Depan Membulat Alami -->
           <g fill="#FFD700">
             <circle cx="50" cy="20" r="9" transform="rotate(0 50 50)"/>
             <circle cx="50" cy="20" r="9" transform="rotate(30 50 50)"/>
@@ -394,34 +388,31 @@ textarea.f-input { resize:vertical; min-height:80px; }
             <circle cx="50" cy="20" r="9" transform="rotate(300 50 50)"/>
             <circle cx="50" cy="20" r="9" transform="rotate(330 50 50)"/>
           </g>
-          <!-- Lingkaran Jingga Pembatas Inti Tengah -->
           <circle cx="50" cy="50" r="17" fill="#FFA500"/>
-          <!-- Pusat Inti Cokelat Gelap Bunga Matahari -->
           <circle cx="50" cy="50" r="13" fill="#5C3A21"/>
           <circle cx="50" cy="50" r="8" fill="#3D2210"/>
         </svg>
       </div>
 
-      <!-- KERTAS SURAT -->
       <div class="env-paper" id="envPaper">
         <div class="paper-inner">
-          <div class="paper-orn">✦ &nbsp; ✦ &nbsp; ✦</div>
+          <div class="paper-orn">✦   ✦   ✦</div>
           <div class="paper-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ</div>
-          <div class="paper-couple">Resy &amp; Afif</div>
+          <div class="paper-couple">Resy & Afif</div>
           <div class="paper-tag">UNDANGAN PERNIKAHAN</div>
           <hr class="paper-hr"/>
 
           <div class="pol-row">
-            <div class="pol"><img src="https://i.ibb.co.com/jPVtWD0d/RYN5678.jpg" alt="Resy & Afif"/><div class="pol-cap">Resy &amp; Afif ♡</div></div>
+            <div class="pol"><img src="https://i.ibb.co.com/jPVtWD0d/RYN5678.jpg" alt="Resy & Afif"/><div class="pol-cap">Resy & Afif ♡</div></div>
             <div class="pol"><img src="https://i.ibb.co.com/MyrxFMqm/IPUL7615.jpg" alt="Resy & Afif"/><div class="pol-cap">2026 ✦</div></div>
             <div class="pol"><img src="https://i.ibb.co.com/cSyCyHpH/RYN5569.jpg" alt="Resy & Afif"/><div class="pol-cap">Forever ♡</div></div>
           </div>
 
           <div class="paper-quote">"With love and joy in our hearts,<br/>we invite you to celebrate<br/>our wedding"</div>
-          <div class="paper-quote-names">— Resy &amp; Afif —</div>
+          <div class="paper-quote-names">— Resy & Afif —</div>
 
           <button class="paper-cta" onclick="showMainInvitation()">
-            Buka Undangan Detail &rarr;
+            Buka Undangan Detail →
           </button>
         </div>
       </div>
@@ -430,7 +421,6 @@ textarea.f-input { resize:vertical; min-height:80px; }
   </div>
 </div>
 
-<!-- ═══════ SCREEN 3: DETAIL UTAMA UNDANGAN ═══════ -->
 <main id="main">
   <nav class="sticky-nav">
     <a href="#sec-hero">Beranda</a>
@@ -473,7 +463,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
         <p class="couple-full">Resy Meilani</p>
         <p class="couple-parents">Putri dari<br><strong>Bapak Ujang Sulaeman & Ibu Yoyoh</strong></p>
       </div>
-      <div class="couple-and reveal d2">&amp;</div>
+      <div class="couple-and reveal d2">&</div>
       <div class="couple-card reveal d1">
         <div class="photo-wrap">
           <img src="https://i.ibb.co.com/nM7T7xkH/IPUL7601.jpg" alt="Afif"/>
@@ -647,11 +637,9 @@ let bgmOn=false, envOpened=false, guestName = '';
 function getParam(k) { return new URLSearchParams(location.search).get(k) || ''; }
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
-// Kelopak Bunga Gugur Berwarna-Warni (Kuning, Oren, Putih) & Daun Sage[cite: 1]
+// Kelopak Bunga Gugur Berwarna-Warni (Kuning, Oren, Putih) & Daun Sage
 (function createFallingElements(){
   const c = document.getElementById('petal-wrap');
-  
-  // Array variasi warna bunga matahari mini (Kuning Cerah, Kuning Tua, Oranye, Putih Bersih)[cite: 1]
   const flowerColors = ['#FFD700', '#F5D060', '#E09520', '#FFFFFF'];
   
   for(let i=0; i<32; i++){
@@ -662,10 +650,10 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
     const dur = 7 + Math.random() * 8; 
     const delay = -Math.random() * 12; 
     const dx = (Math.random() - 0.5) * 160;
-    const isLeaf = Math.random() > 0.8; // 20% daun sage green, 80% bunga matahari warna-warni[cite: 1]
+    const isLeaf = Math.random() > 0.8; 
     
     const size = isLeaf ? (6 + Math.random() * 5) : (14 + Math.random() * 8);
-    const randomColor = flowerColors[i % flowerColors.length]; // Membagi rata variasi warna[cite: 1]
+    const randomColor = flowerColors[i % flowerColors.length]; 
     
     if (isLeaf) {
       p.style.cssText = `
@@ -675,7 +663,6 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
         border-radius: 50% 0 50% 50%; opacity: 0.7;
       `;
     } else {
-      // Merender miniatur kelopak bunga matahari mini padat dengan warna variasi acak[cite: 1]
       p.innerHTML = `
         <svg class="sf-mini" viewBox="0 0 40 40">
           <circle cx="20" cy="20" r="12" fill="${randomColor}"/>
@@ -714,6 +701,27 @@ function toggleBgm(){
   else{a.play(); bgmOn=true; document.getElementById('bgmBtn').textContent='❚❚';}
 }
 document.addEventListener('click',function f(){ tryPlay(); document.removeEventListener('click',f); },{once:true});
+
+// ── AKTIVASI EFEK PARALLAX INTERAKTIF KURSOR (PC / LAPTOP) ──
+document.addEventListener('mousemove', e => {
+  // Hanya jalankan efek parallax jika layar isi utama (main) belum terbuka
+  if(document.getElementById('main').style.display === 'block') return;
+  
+  const cx = (e.clientX / window.innerWidth - 0.5) * 20;  // Rentang geser horizontal
+  const cy = (e.clientY / window.innerHeight - 0.5) * 15; // Rentang geser vertikal
+  
+  // Latar belakang bergerak lembut berlawanan dengan arah kursor
+  gsap.to('#parallaxBg', { x: -cx * 0.8, y: -cy * 0.8, duration: 1.2, ease: 'power1.out' });
+  
+  // Ornamen cincin bergerak proporsional menciptakan kedalaman ruang
+  gsap.to('#parallaxRing1', { x: cx * 0.4, y: cy * 0.4, duration: 1.5, ease: 'power1.out' });
+  gsap.to('#parallaxRing2', { x: -cx * 0.6, y: -cy * 0.6, duration: 1.8, ease: 'power1.out' });
+  
+  // Animasi parallax 3D bawaan landing screen asli
+  gsap.to('.d-back', { rotateY: cx * 0.4, rotateX: -cy * 0.4, duration: 1.8, ease: 'power1.out' });
+  gsap.to('.d-mid', { x: cx * 0.5, y: cy * 0.4, duration: 1.4, ease: 'power1.out' });
+  gsap.to('.d-fore', { x: cx * 1.6, y: cy * 1.2, duration: 0.9, ease: 'power1.out' });
+}, { passive: true });
 
 // Transisi ke Layar Amplop
 function showEnv(){
