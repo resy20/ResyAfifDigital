@@ -87,11 +87,26 @@ html,body{width:100%;height:100%;background:#1A2E10;font-family:'Cormorant Garam
 ═══════════════════════════ */
 #s-env{
   position:fixed;inset:0;z-index:20;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  /* PERBAIKAN: Mengembalikan perataan awal ke tengah vertikal sempurna */
+  align-items:center; 
+  justify-content:center;
   opacity:0;pointer-events:none;
-  /* PERBAIKAN: Mengaktifkan scroll pada layar utama amplop agar seluruh halaman bisa ditarik ke bawah saat memanjang */
   overflow-y:auto; 
   -webkit-overflow-scrolling:touch;
+}
+
+/* Container Utama Pembungkus Pergerakan */
+.env-scroll-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 140px;
+  /* PERBAIKAN: Efek transisi halus saat bergeser naik dari tengah ke atas */
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+  will-change: transform;
 }
 
 /* Envelope */
@@ -100,8 +115,7 @@ html,body{width:100%;height:100%;background:#1A2E10;font-family:'Cormorant Garam
   width:min(300px,80vw);
   z-index:10;
   cursor:pointer;
-  /* PERBAIKAN: Memberi ruang transisi agar pembungkus tidak kaku saat bergeser naik */
-  transition: margin-top 0.6s ease; 
+  transition: margin-top 0.6s ease;
 }
 .env-body{
   width:100%;padding-bottom:66%;
@@ -160,7 +174,6 @@ html,body{width:100%;height:100%;background:#1A2E10;font-family:'Cormorant Garam
 }
 .paper-inner{
   padding:18px 16px 22px;
-  /* PERBAIKAN: Menghapus max-height kaku dan overflow-y internal agar scroll menyatu secara alami ke body/layar utama */
   overflow:visible; 
   max-height:none;
   padding-bottom: 40px; 
@@ -235,7 +248,6 @@ html,body{width:100%;height:100%;background:#1A2E10;font-family:'Cormorant Garam
   border:1px solid rgba(106,158,94,0.4);
   opacity:0;pointer-events:none;transition:opacity 0.4s;
   backdrop-filter:blur(8px);
-  /* PERBAIKAN: Menyembunyikan tampilan elemen secara visual agar tidak menutupi tulisan surat */
   display: none !important; 
 }
 #bgm-player.show{opacity:1;pointer-events:all;}
@@ -342,7 +354,7 @@ html,body{width:100%;height:100%;background:#1A2E10;font-family:'Cormorant Garam
 </div>
 
 <div id="s-env">
-  <div style="position:absolute;top: 10%; display:flex;flex-direction:column;align-items:center;padding-bottom: 120px; width: 100%;">
+  <div class="env-scroll-box" id="envScrollBox">
 
     <div class="env-wrap" id="envWrap" onclick="openEnv()">
       <div class="env-body">
@@ -493,18 +505,19 @@ function openEnv(){
       duration:0.8,
       ease:'power2.out'
     }, '-=0.2')
-    // PERBAIKAN: Mengatur margin kontainer pembungkus agar memberikan ruang ekstra panjang di bagian bawah saat surat dibuka
-    .to('#envWrap',{
-      marginTop: '20px',
-      duration:0.6,
-      ease:'power2.out'
-    }, '-=0.6');
+    // PERBAIKAN: Saat diklik buka, geser box container ke posisi atas agar muat di-scroll ke bawah secara utuh
+    .call(()=>{
+      document.getElementById('envScrollBox').style.transform = 'translateY(-22%)';
+    }, null, '-=0.6');
 }
 
 function resetEnv(){
   gsap.timeline()
     .to('#envPaper',{top:'calc(100% - 12px)',opacity:0,duration:0.4,ease:'power2.in'})
-    .to('#envWrap',{marginTop:'0px',duration:0.4,ease:'power2.out'},'-=0.2')
+    // PERBAIKAN: Kembalikan posisi box kontainer ke tengah layar vertikal semula
+    .call(()=>{
+      document.getElementById('envScrollBox').style.transform = 'translateY(0)';
+    }, null, '-=0.2')
     .to('#envFlap',{rotationX:0,duration:0.5,ease:'power2.out'},'-=0.2')
     .to('#envSeal',{scale:1,opacity:1,duration:0.3,ease:'back.out(1.5)'},'-=0.1')
     .call(()=>{ envOpened=false;
