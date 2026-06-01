@@ -123,11 +123,11 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
 .env-flap { width:100%; height:100%; background:linear-gradient(175deg, #8A9C76, var(--sage)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
 
-/* PERBAIKAN SEGAL/TOMBOL: Bunga Matahari yang Jauh Lebih Detail dengan Kelopak Berlapis & Inti Cokelat Jelas */
+/* PERBAIKAN SEGAL/TOMBOL: Menutup Bagian Tengah yang Bolong dengan Struktur SVG Berlapis */
 .env-seal { 
   position:absolute; top:54%; left:50%; 
   transform:translate(-50%, -50%); 
-  width:62px; height:62px; 
+  width:64px; height:64px; 
   z-index:20; 
   animation: sunflowerRotate 20s linear infinite; 
   pointer-events: none; 
@@ -243,332 +243,7 @@ section { position:relative; }
 .rsvp-sec { background:var(--white); padding-bottom:60px; }
 .rsvp-form { max-width:500px; margin:0 auto 32px; padding:0 20px; }
 .f-group { margin-bottom:16px; }
-.f-label { display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:6px; font-weight:600; font-family:'Lato',sans-serif; }
-.f-input { width:100%; padding:11px 14px; border:1.5px solid var(--green-pale); border-radius:6px; font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--dark); background:var(--broken-white); outline:none; transition:border-color 0.2s, background 0.2s; }
-.f-input:focus { border-color:var(--green-mid); background:var(--white); }
-textarea.f-input { resize:vertical; min-height:80px; }
-.radio-row { display:flex; gap:8px; }
-.radio-opt { flex:1; padding:10px 8px; border:1.5px solid var(--green-pale); border-radius:6px; text-align:center; cursor:pointer; font-size:13px; color:var(--text-mid); transition:all 0.2s; background: var(--white); }
-.radio-opt.sel { border-color:var(--green-mid); background:var(--green-bg); color:var(--green); font-weight:700; }
-.btn-main { width:100%; padding:14px; background:linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%); color:var(--white); border:none; border-radius:6px; font-family:'Playfair Display',serif; font-size:17px; letter-spacing:3px; cursor:pointer; transition:all 0.3s; }
-.btn-main:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(46,107,53,0.25); }
-
-.rsvp-list { max-width:500px; margin:0 auto; padding:0 20px; }
-.rsvp-item { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--broken-white); border:1px solid var(--green-pale); border-radius:8px; margin-bottom:8px; }
-.rsvp-name { font-family:'Playfair Display',serif; font-size:16px; color:var(--green); font-weight: 600; }
-.rsvp-detail { font-size:12px; color:var(--text-mid); margin-top:2px; }
-.badge { font-size:11px; padding:4px 12px; border-radius:20px; font-weight:700; white-space:nowrap; }
-.bh { background:#E8F5E9; color:#2E7D32; }
-.bt { background:#FFEBEE; color:#C62828; }
-
-.wishes-sec { background: var(--broken-white); padding-bottom:60px; border-top: 1px solid var(--green-pale); }
-.f-input.dark { background:var(--white); border-color:var(--green-pale); color:var(--dark); }
-.f-input.dark::placeholder { color:var(--text-lt); }
-.f-input.dark:focus { border-color:var(--green-mid); background:var(--white); }
-.f-label.light { color:var(--green); }
-.wishes-list { max-width:500px; margin:0 auto; padding:0 20px; position:relative; z-index:2; }
-.wish-card { background:var(--white); border:1px solid var(--green-pale); border-radius:10px; padding:16px; margin-bottom:12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-.wish-name { font-family:'Playfair Display',serif; font-size:17px; color:var(--green); font-weight: 600; }
-.wish-text { font-size:14px; color:var(--text-mid); margin-top:6px; font-style:italic; line-height:1.7; }
-.wish-time { font-size:11px; color:var(--text-lt); margin-top:8px; }
-
-.qr-sec { background:var(--white); padding-bottom:60px; }
-.qr-wrap { max-width:340px; margin:0 auto; padding:0 20px; }
-.qr-card { background:var(--broken-white); border:2px solid var(--green-pale); border-radius:12px; padding:28px 20px; text-align:center; box-shadow:0 4px 24px rgba(46,107,53,0.05); }
-.qr-header { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--orange); font-weight: 600; }
-.qr-couple { font-family:'Playfair Display',serif; font-size:26px; font-style:italic; color:var(--green); margin:6px 0; font-weight: 600; }
-.qr-detail { font-size:12px; color:var(--text-mid); margin-bottom:16px; }
-#qr-container { display:flex; justify-content:center; }
-#qr-container canvas,#qr-container img { border:6px solid white; border-radius:4px; }
-.qr-guest-val { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--orange); margin-top:4px; font-weight: 600; }
-.btn-outline { display:block; margin:16px auto 0; padding:10px 28px; background:var(--white); border:1.5px solid var(--green-lt); border-radius:6px; font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--green); cursor:pointer; transition:all 0.3s; font-weight: 600; }
-.btn-outline:hover { background:var(--green-bg); border-color:var(--green); }
-
-.container-sec { background: linear-gradient(180deg, var(--broken-white) 0%, var(--white) 100%); padding:70px 24px; text-align:center; border-top: 1px solid var(--green-pale); }
-.closing-text { font-size:15px; color:var(--text-mid); line-height:1.9; margin:16px 0; }
-.closing-couple { font-family:'Playfair Display',serif; font-size:30px; font-style:italic; color:var(--green); margin-top:20px; font-weight: 600; }
-
-/* Pemutar Musik Pojok Bawah */
-#bgm-player { position:fixed; bottom:20px; right:20px; z-index:999; display:none; align-items:center; gap:8px; background:rgba(255,255,255,0.95); border-radius:30px; padding:7px 14px 7px 7px; box-shadow:0 4px 18px rgba(46,107,53,0.1); border:1px solid var(--green-pale); backdrop-filter:blur(8px); }
-.bgm-btn { width:30px; height:30px; border-radius:50%; background:var(--orange); color:var(--white); border:none; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; }
-.bgm-lbl { font-size:10px; color:var(--text-mid); max-width:130px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight: 600; }
-.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--green); color:var(--white); border:1px solid var(--yellow-mid); padding:10px 24px; border-radius:24px; font-size:14px; z-index:9999; opacity:0; transition:all 0.4s var(--ease); pointer-events:none; white-space:nowrap; }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-@media(max-width:700px){
-  .couple-grid { grid-template-columns: 1fr auto 1fr; gap:10px; padding:0 12px; }
-  .photo-wrap { width:120px; height:150px; }
-  .couple-name { font-size:20px; }
-  .couple-full { font-size:11px; }
-  .couple-parents { font-size:11px; }
-  .couple-and { font-size:40px; }
-  .gallery-grid { grid-template-columns:repeat(2,1fr); grid-auto-rows:130px; }
-  .g-item.wide { grid-column:span 1; }
-}
-</style>
-</head>
-<body>
-
-<audio id="bgm" loop preload="auto">
-  <source src="jalaraning-tresna.mp3" type="audio/mpeg"/>
-</audio>
-
-<div class="bg-layer"></div>
-<div class="ring" style="width:380px;height:380px;border-color:rgba(156,175,136,0.25);animation:ringSpin 36s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
-<div class="ring" style="width:250px;height:250px;border-color:rgba(224,149,32,0.2);animation:ringSpinR 24s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
-
-<!-- Wadah Elemen Jatuh Berupa Miniatur Bunga Matahari & Daun Sage -->
-<div id="petal-wrap"></div>
-
-<!-- ═══════ SCREEN 1: LANDING 3D ═══════ -->
-<div id="s-land">
-  <div class="scene" id="scene3d">
-    <div class="d-back"></div>
-    <div class="d-mid"></div>
-    <div class="d-fore"></div>
-    <div class="d-ui">
-      <div style="text-align:center">
-        <p class="l-tag">Undangan Pernikahan</p>
-        <h1 class="l-bride">Resy</h1>
-        <span class="l-amp">&amp;</span>
-        <h1 class="l-groom">Afif</h1>
-        <p class="l-date">27 &middot; XII &middot; 2026</p>
-        <div class="l-guest" id="lGuest">
-          <div class="l-guest-to">Kepada Yth.</div>
-          <div class="l-guest-name" id="lGuestName"></div>
-        </div>
-        <div class="l-prog">
-          <div class="l-prog-lbl">MEMBUKA UNDANGAN</div>
-          <div class="l-prog-bar"><div class="l-prog-fill" id="lFill"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ SCREEN 2: ENVELOPE ═══════ -->
-<div id="s-env">
-  <div class="env-scroll-box" id="envScrollBox">
-    <div class="env-wrap" id="envWrap" onclick="openEnv()">
-      <div class="env-body">
-        <div class="env-lines"></div>
-        <div class="env-inner">
-          <div class="env-cpl">Resy &amp; Afif</div>
-          <div class="env-dt">27 · XII · 2026</div>
-        </div>
-      </div>
-      <div class="env-flap-w"><div class="env-flap" id="envFlap"></div></div>
-      
-      <!-- PERBAIKAN UTAMA: Vektor Bunga Matahari Sempurna Berlapis Dengan Inti yang Kontras -->
-      <div class="env-seal" id="envSeal">
-        <svg viewBox="0 0 100 100" width="100%" height="100%">
-          <!-- Layer Kelopak Belakang (Sedikit Lebih Gelap untuk Kedalaman) -->
-          <g fill="#E5B030">
-            <circle cx="50" cy="22" r="9" transform="rotate(15 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(45 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(75 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(105 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(135 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(165 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(195 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(225 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(255 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(285 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(315 50 50)"/>
-            <circle cx="50" cy="22" r="9" transform="rotate(345 50 50)"/>
-          </g>
-          <!-- Layer Kelopak Depan (Kuning Cerah Membulat Alami) -->
-          <g fill="#FFD700">
-            <circle cx="50" cy="20" r="9" transform="rotate(0 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(30 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(60 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(90 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(120 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(150 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(180 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(210 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(240 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(270 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(300 50 50)"/>
-            <circle cx="50" cy="20" r="9" transform="rotate(330 50 50)"/>
-          </g>
-          <!-- Lingkaran Kuning Terang Pembatas Inti Tengah -->
-          <circle cx="50" cy="50" r="15" fill="#FFA500"/>
-          <!-- Pusat Inti Cokelat Gelap Bunga Matahari -->
-          <circle cx="50" cy="50" r="12" fill="#5C3A21"/>
-          <circle cx="50" cy="50" r="8" fill="#3D2210"/>
-        </svg>
-      </div>
-
-      <!-- KERTAS SURAT -->
-      <div class="env-paper" id="envPaper">
-        <div class="paper-inner">
-          <div class="paper-orn">✦ &nbsp; ✦ &nbsp; ✦</div>
-          <div class="paper-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ</div>
-          <div class="paper-couple">Resy &amp; Afif</div>
-          <div class="paper-tag">UNDANGAN PERNIKAHAN</div>
-          <hr class="paper-hr"/>
-
-          <div class="pol-row">
-            <div class="pol"><img src="https://i.ibb.co.com/jPVtWD0d/RYN5678.jpg" alt="Resy & Afif"/><div class="pol-cap">Resy &amp; Afif ♡</div></div>
-            <div class="pol"><img src="https://i.ibb.co.com/MyrxFMqm/IPUL7615.jpg" alt="Resy & Afif"/><div class="pol-cap">2026 ✦</div></div>
-            <div class="pol"><img src="https://i.ibb.co.com/cSyCyHpH/RYN5569.jpg" alt="Resy & Afif"/><div class="pol-cap">Forever ♡</div></div>
-          </div>
-
-          <div class="paper-quote">"With love and joy in our hearts,<br/>we invite you to celebrate<br/>our wedding"</div>
-          <div class="paper-quote-names">— Resy &amp; Afif —</div>
-
-          <button class="paper-cta" onclick="showMainInvitation()">
-            Buka Undangan Detail &rarr;
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="env-hint" id="envHint">Ketuk untuk membuka ▾</div>
-  </div>
-</div>
-
-<!-- ═══════ SCREEN 3: DETAIL UTAMA UNDANGAN ═══════ -->
-<main id="main">
-  <nav class="sticky-nav">
-    <a href="#sec-hero">Beranda</a>
-    <a href="#sec-couple">Mempelai</a>
-    <a href="#sec-event">Acara</a>
-    <a href="#sec-gallery">Galeri</a>
-    <a href="#sec-story">Kisah</a>
-    <a href="#sec-rsvp">RSVP</a>
-    <a href="#sec-wishes">Ucapan</a>
-    <a href="#sec-qr">QR</a>
-  </nav>
-
-  <section class="hero" id="sec-hero">
-    <div class="hero-inner reveal">
-      <p class="hero-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيْمِ</p>
-      <div class="orn white"><span>✦</span></div>
-      <p class="hero-ayat">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya."</p>
-      <p class="hero-ayat-src">— QS. Ar-Rum: 21</p>
-      <div class="orn white" style="margin-top:20px"><span>✦</span></div>
-      <p class="hero-announce">Dengan memohon rahmat dan ridho Allah SWT, kami mengundang:</p>
-      <p class="hero-guest" id="hero-guest"></p>
-      <p class="hero-announce" style="margin-top:4px">untuk hadir di hari bahagia kami</p>
-    </div>
-  </section>
-
-  <section class="couple-sec" id="sec-couple">
-    <div class="sec-header reveal">
-      <div class="orn green"><span>✦</span></div>
-      <h2 class="sec-title">Mempelai</h2>
-      <div class="orn green"><span>✦</span></div>
-    </div>
-    <div class="couple-grid">
-      <div class="couple-card reveal">
-        <div class="photo-wrap">
-          <img src="https://i.ibb.co.com/cSyCyHpH/RYN5569.jpg" alt="Resy"/>
-          <div class="photo-border"></div>
-          <div class="photo-badge">Mempelai Wanita</div>
-        </div>
-        <h3 class="couple-name">Resy</h3>
-        <p class="couple-full">Resy Meilani</p>
-        <p class="couple-parents">Putri dari<br><strong>Bapak Ujang Sulaeman & Ibu Yoyoh</strong></p>
-      </div>
-      <div class="couple-and reveal d2">&amp;</div>
-      <div class="couple-card reveal d1">
-        <div class="photo-wrap">
-          <img src="https://i.ibb.co.com/nM7T7xkH/IPUL7601.jpg" alt="Afif"/>
-          <div class="photo-border"></div>
-          <div class="photo-badge">Mempelai Pria</div>
-        </div>
-        <h3 class="couple-name">Afif</h3>
-        <p class="couple-full">Afif Yulma Putra</p>
-        <p class="couple-parents">Putra dari<br><strong>Bapak Sumarno & Ibu Sri Yuliani.</strong></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="event-sec" id="sec-event">
-    <div class="sec-header reveal">
-      <div class="orn white"><span>✦</span></div>
-      <h2 class="sec-title light">Acara Pernikahan</h2>
-      <div class="orn white"><span>✦</span></div>
-    </div>
-    <div class="event-cards">
-      <div class="event-card reveal">
-        <div class="event-icon">🕌</div>
-        <div class="event-type">Akad Nikah</div>
-        <div class="event-day">Ahad</div>
-        <div class="event-date">27 Desember 2026</div>
-        <div class="event-time">08.00 – 10.00 WIB</div>
-        <div class="event-loc">📍 Rumah Mempelai Wanita<br>Cilaja Hilir, Sindanglaya<br>Kab. Bandung</div>
-      </div>
-      <div class="event-div reveal d1">✦</div>
-      <div class="event-card reveal d2">
-        <div class="event-icon">🌸</div>
-        <div class="event-type">Resepsi Pernikahan</div>
-        <div class="event-day">Ahad</div>
-        <div class="event-date">27 Desember 2026</div>
-        <div class="event-time">11.00 – 15.00 WIB</div>
-        <div class="event-loc">📍 Rumah Mempelai Wanita<br>Cilaja Hilir, Sindanglaya<br>Kab. Bandung</div>
-      </div>
-    </div>
-    <div class="cd-wrap reveal">
-      <p class="cd-label">MENUJU HARI BAHAGIA</p>
-      <div class="cd-nums">
-        <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-lbl">Hari</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-lbl">Jam</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-lbl">Menit</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-lbl">Detik</div></div>
-      </div>
-    </div>
-    <div class="map-wrap reveal">
-      <a href="https://maps.google.com/?q=Cilaja+Hilir+Sindanglaya+Kab+Bandung" target="_blank" class="map-btn">🗺️ Buka Google Maps</a>
-    </div>
-  </section>
-
-  <section class="gallery-sec" id="sec-gallery">
-    <div class="sec-header reveal">
-      <div class="orn green"><span>✦</span></div>
-      <h2 class="sec-title">Momen Berharga</h2>
-      <div class="orn green"><span>✦</span></div>
-    </div>
-    <div class="gallery-grid reveal">
-      <div class="g-item tall"><img src="https://i.ibb.co.com/cSyCyHpH/RYN5569.jpg" alt="Resy & Afif" loading="lazy"/></div>
-      <div class="g-item"><img src="https://i.ibb.co.com/5g76thMx/RYN5604.jpg" alt="Resy & Afif" loading="lazy"/></div>
-      <div class="g-item"><img src="https://i.ibb.co.com/gMrDKS55/RYN6009.jpg" alt="Resy & Afif" loading="lazy"/></div>
-      <div class="g-item"><img src="https://i.ibb.co.com/R53qMXs/IMG-7608.avif" alt="Resy & Afif" loading="lazy"/></div>
-      <div class="g-item"><img src="https://i.ibb.co.com/fBGWPWk/IPUL7611.jpg" alt="Resy & Afif" loading="lazy"/></div>
-      <div class="g-item wide"><img src="https://i.ibb.co.com/MyrxFMqm/IPUL7615.jpg" alt="Resy & Afif" loading="lazy"/></div>
-    </div>
-  </section>
-
-  <section class="story-sec" id="sec-story">
-    <div class="sec-header reveal">
-      <div class="orn green"><span>✦</span></div>
-      <h2 class="sec-title">Kisah Cinta Kami</h2>
-      <div class="orn green"><span>✦</span></div>
-    </div>
-    <div style="max-width:400px;margin:0 auto;padding:0 20px 60px;" class="reveal">
-      <div class="story-content">
-        <div class="story-text" style="text-align:center;margin-bottom:20px">Berawal dari pertemuan tidak sengaja di waktu kuliah dan perjalanan di Gunung Merbabu. Kisah cinta kami berlanjut hingga ke tahap ini.</div>
-        <div class="story-video">
-          <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
-            <source src="NAMA_FILE_VIDEO_ANDA.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="rsvp-sec" id="sec-rsvp">
-    <div class="sec-header reveal">
-      <div class="orn green"><span>✦</span></div>
-      <h2 class="sec-title">Konfirmasi Kehadiran</h2>
-      <div class="orn green"><span>✦</span></div>
-    </div>
-    <div class="rsvp-form reveal">
-      <div class="f-group"><label class="f-label">Nama Lengkap</label><input type="text" class="f-input" id="rsvp-name"/></div>
+.f-group"><label class="f-label">Nama Lengkap</label><input type="text" class="f-input" id="rsvp-name"/></div>
       <div class="f-group"><label class="f-label">Jumlah Tamu</label><input type="number" class="f-input" id="rsvp-count" value="1"/></div>
       <div class="f-group">
         <label class="f-label">Kehadiran</label>
@@ -645,7 +320,7 @@ let bgmOn=false, envOpened=false, guestName = '';
 function getParam(k) { return new URLSearchParams(location.search).get(k) || ''; }
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
-// PERBAIKAN ORNAMEN JATUH: Mengubah total partikel jatuh menjadi bentuk vektor Bunga Matahari Mini + Daun Sage[cite: 1]
+// Kelopak Bunga Gugur
 (function createFallingElements(){
   const c = document.getElementById('petal-wrap');
   
@@ -662,7 +337,6 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
     const size = isLeaf ? (6 + Math.random() * 5) : (14 + Math.random() * 8);
     
     if (isLeaf) {
-      // Merender daun sage kecil melayang
       p.style.cssText = `
         width: ${size}px; height: ${size * 1.5}px; background: #9CAF88;
         left: ${left}%; animation: fallAnimation ${dur}s linear ${delay}s infinite; 
@@ -670,21 +344,22 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
         border-radius: 50% 0 50% 50%; opacity: 0.7;
       `;
     } else {
-      // Merender gambar Bunga Matahari Mini murni secara presisi (Vektor SVG)
+      // Kelopak gugur berbentuk bunga matahari mini padat penuh
       p.innerHTML = `
         <svg class="sf-mini" viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="12" fill="#FFD700"/>
           <g fill="#FFD700">
-            <circle cx="20" cy="8" r="4" transform="rotate(0 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(45 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(90 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(135 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(180 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(225 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(270 20 20)"/>
-            <circle cx="20" cy="8" r="4" transform="rotate(315 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(0 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(45 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(90 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(135 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(180 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(225 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(270 20 20)"/>
+            <circle cx="20" cy="6" r="4.5" transform="rotate(315 20 20)"/>
           </g>
-          <circle cx="20" cy="20" r="6" fill="#E09520"/>
-          <circle cx="20" cy="20" r="5" fill="#5C3A21"/>
+          <circle cx="20" cy="20" r="8" fill="#E09520"/>
+          <circle cx="20" cy="20" r="5.5" fill="#5C3A21"/>
         </svg>
       `;
       p.style.cssText = `
