@@ -24,6 +24,11 @@
   --green-pale: #C8E6CA;
   --green-bg:   #EBF5EC;
 
+  /* Tambahan Warna Sage khusus untuk komponen amplop */
+  --sage:       #9CAF88;
+  --sage-dark:  #7A8C66;
+  --sage-pale:  #D2DDD4;
+
   --orange:     #E09520;
   --yellow:     #C8960A;
   --yellow-mid: #E5B030;
@@ -104,42 +109,54 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-scroll-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; padding-bottom: 140px; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; }
 .env-wrap { position:relative; width:min(300px,80vw); z-index:10; cursor:pointer; transition: margin-top 0.6s ease; }
 
-/* PERBAIKAN WARNA SURAT: Mengubah badan surat menjadi Hijau dengan bayangan lembut */
-.env-body { width:100%; padding-bottom:66%; background:linear-gradient(145deg, var(--green), #1E4623); border-radius:6px; border:1.5px solid var(--green-pale); position:relative; overflow:hidden; box-shadow:0 20px 60px rgba(13,36,16,0.3); }
-.env-lines { position:absolute; inset:0; background: linear-gradient(135deg,transparent 49.5%,rgba(200,230,200,0.1) 49.5%,rgba(200,230,200,0.1) 50.5%,transparent 50.5%), linear-gradient(-135deg,transparent 49.5%,rgba(200,230,200,0.1) 49.5%,rgba(200,230,200,0.1) 50.5%,transparent 50.5%); }
+/* PERBAIKAN WARNA SURAT: Mengubah badan surat menjadi warna Hijaunya Hijau Sage Gelap */
+.env-body { width:100%; padding-bottom:66%; background:linear-gradient(145deg, var(--sage), var(--sage-dark)); border-radius:6px; border:1.5px solid var(--sage-pale); position:relative; overflow:hidden; box-shadow:0 20px 60px rgba(122,140,102,0.25); }
+.env-lines { position:absolute; inset:0; background: linear-gradient(135deg,transparent 49.5%,rgba(255,255,255,0.08) 49.5%,rgba(255,255,255,0.08) 50.5%,transparent 50.5%), linear-gradient(-135deg,transparent 49.5%,rgba(255,255,255,0.08) 49.5%,rgba(255,255,255,0.08) 50.5%,transparent 50.5%); }
 .env-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
 
-/* Menyesuaikan warna font di dalam amplop agar kontras dengan warna hijau */
-.env-cpl { font-size:16px; font-style:italic; color:var(--white); letter-spacing:2px; font-family:'Playfair Display',serif; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-.env-dt { font-size:10px; color:var(--green-pale); letter-spacing:3px; }
+.env-cpl { font-size:16px; font-style:italic; color:var(--white); letter-spacing:2px; font-family:'Playfair Display',serif; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+.env-dt { font-size:10px; color:var(--sage-pale); letter-spacing:3px; }
 
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
 
-/* PERBAIKAN WARNA SURAT: Mengubah warna lipatan tutup surat menjadi hijau senada */
-.env-flap { width:100%; height:100%; background:linear-gradient(175deg, #24542A, var(--green)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
+/* PERBAIKAN WARNA SURAT: Mengubah warna lipatan tutup surat menjadi senada dengan Hijau Sage */
+.env-flap { width:100%; height:100%; background:linear-gradient(175deg, #8A9C76, var(--sage)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
 
-/* PERBAIKAN TOMBOL: Mengubah segel tombol menjadi bentuk bunga matahari kuning interaktif */
+/* PERBAIKAN TOMBOL: Mengubah kelopak bunga matahari menjadi bulat-bulat manis (tidak lincip) */
 .env-seal { 
   position:absolute; top:46%; left:50%; transform:translate(-50%,-50%); 
-  width:48px; height:48px; 
-  background: #FFD700; /* Warna Kuning Emas */
-  clip-path: polygon(
-    50% 0%, 64% 19%, 85% 15%, 79% 36%, 98% 44%, 85% 61%, 88% 82%, 67% 79%, 50% 98%, 33% 79%, 12% 82%, 15% 61%, 2% 44%, 21% 36%, 15% 15%, 36% 19%
-  ); /* Kliping Kelopak Bunga Matahari */
-  display:flex; align-items:center; justify-content:center; 
-  z-index:10; 
-  box-shadow:0 4px 12px rgba(0,0,0,0.2); 
-  animation: sunflowerSpin 12s linear infinite; 
+  width:50px; height:50px; 
+  background: #FFD700; /* Warna Kuning Terang Bunga Matahari */
+  border-radius: 50%;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15); 
+  animation: sunflowerSpin 16s linear infinite; 
 }
-/* Inti cokelat di tengah bunga matahari */
+
+/* Membuat lapisan kelopak luar membulat menggunakan efek bayangan box berulang (CSS Multiple Shadows) */
+.env-seal::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: transparent;
+  /* Membuat simulasi pola 8 kelopak melingkar berbentuk bulat/oval */
+  box-shadow: 
+    0 -8px 0 2px #FFD700,   0 8px 0 2px #FFD700, 
+    -8px 0 0 2px #FFD700,   8px 0 0 2px #FFD700,
+    -6px -6px 0 2px #FFD700, 6px 6px 0 2px #FFD700,
+    -6px 6px 0 2px #FFD700,  6px -6px 0 2px #FFD700;
+}
+
+/* Inti tengah bunga matahari (Cokelat) */
 .env-seal::after {
   content: '';
   position: absolute;
-  width: 18px;
-  height: 18px;
-  background: #5C3A21; /* Cokelat Inti Bunga */
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px; height: 20px;
+  background: #5C3A21; 
   border-radius: 50%;
-  border: 1px dashed var(--yellow-mid);
+  border: 1px dotted rgba(255,215,0,0.6);
 }
 
 .env-hint { position:absolute; bottom:-36px; left:50%; transform:translateX(-50%); font-size:11px; letter-spacing:3px; color:var(--text-mid); white-space:nowrap; animation:hintBob 2s ease-in-out infinite; font-weight: 600; }
@@ -297,7 +314,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
 .btn-outline { display:block; margin:16px auto 0; padding:10px 28px; background:var(--white); border:1.5px solid var(--green-lt); border-radius:6px; font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--green); cursor:pointer; transition:all 0.3s; font-weight: 600; }
 .btn-outline:hover { background:var(--green-bg); border-color:var(--green); }
 
-.closing-sec { background: linear-gradient(180deg, var(--broken-white) 0%, var(--white) 100%); padding:70px 24px; text-align:center; border-top: 1px solid var(--green-pale); }
+.container-sec { background: linear-gradient(180deg, var(--broken-white) 0%, var(--white) 100%); padding:70px 24px; text-align:center; border-top: 1px solid var(--green-pale); }
 .closing-text { font-size:15px; color:var(--text-mid); line-height:1.9; margin:16px 0; }
 .closing-couple { font-family:'Playfair Display',serif; font-size:30px; font-style:italic; color:var(--green); margin-top:20px; font-weight: 600; }
 
@@ -327,7 +344,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
 </audio>
 
 <div class="bg-layer"></div>
-<div class="ring" style="width:380px;height:380px;border-color:rgba(106,158,94,0.15);animation:ringSpin 36s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
+<div class="ring" style="width:380px;height:380px;border-color:rgba(156,175,136,0.25);animation:ringSpin 36s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
 <div class="ring" style="width:250px;height:250px;border-color:rgba(224,149,32,0.2);animation:ringSpinR 24s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
 
 <!-- Wadah Kelopak Bunga -->
@@ -372,7 +389,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
       </div>
       <div class="env-flap-w"><div class="env-flap" id="envFlap"></div></div>
       
-      <!-- Tombol Bunga Matahari Berputar Lembut -->
+      <!-- Tombol Bunga Matahari Membulat (Melingkar Lembut) -->
       <div class="env-seal" id="envSeal"></div>
 
       <!-- KERTAS SURAT -->
@@ -583,7 +600,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
     </div>
   </section>
 
-  <section class="closing-sec">
+  <section class="container-sec">
     <div class="closing-inner reveal">
       <p class="closing-text">Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.</p>
       <p class="closing-couple">Resy & Afif</p>
@@ -623,7 +640,7 @@ function toast(msg) { const t = document.getElementById('toast'); t.textContent 
 // Kelopak Bunga Gugur
 (function createPetals(){
   const c=document.getElementById('petal-wrap');
-  const cols=['rgba(46,107,53,0.3)','rgba(224,149,32,0.4)','rgba(255,255,255,0.8)'];
+  const cols=['rgba(156,175,136,0.4)','rgba(224,149,32,0.4)','rgba(255,255,255,0.8)'];
   for(let i=0;i<24;i++){
     const p=document.createElement('div'); p.className='petal';
     const s=5+Math.random()*9, l=Math.random()*100, dur=6+Math.random()*8, delay=-Math.random()*12, dx=(Math.random()-0.5)*150;
