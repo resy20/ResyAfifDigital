@@ -24,7 +24,7 @@
   --green-pale: #C8E6CA;
   --green-bg:   #EBF5EC;
 
-  /* Tambahan Warna Sage khusus untuk komponen amplop */
+  /* Komponen Sage untuk Surat */
   --sage:       #9CAF88;
   --sage-dark:  #7A8C66;
   --sage-pale:  #D2DDD4;
@@ -60,24 +60,26 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
   33%    { border-color:var(--yellow-mid) }
   66%    { border-color:var(--orange) }
 }
-@keyframes petal {
-  0%   { transform:translateY(-60px) translateX(0) rotate(0deg); opacity:0; }
-  10%  { opacity:0.9; }
-  90%  { opacity:0.6; }
-  100% { transform:translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity:0; }
-}
-@keyframes sunflowerSpin {
+/* Animasi Putaran Bunga Matahari */
+@keyframes sunflowerRotate {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
-  50% { transform: translate(-50%, -50%) rotate(180deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+/* Animasi Jatuhnya Elemen Kelopak/Bunga */
+@keyframes fallAnimation {
+  0%   { transform: translateY(-60px) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
 }
 @keyframes hintBob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(5px)} }
 
-/* Latar Belakang Cerah & Kelopak Gugur */
+/* Latar Belakang & Panggung Ornamen */
 .bg-layer { position:fixed; inset:0; pointer-events:none; z-index:0; background: linear-gradient(160deg, #FAF7F0 0%, #F4EFE6 50%, #EBF5EC 100%); }
 .ring { position:fixed; border-radius:50%; border:1px solid; top:50%; left:50%; pointer-events:none; z-index:1; }
 #petal-wrap { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
-.petal { position:absolute; top:-40px; border-radius:50% 10% 50% 10%; animation:petal linear infinite; --drift:0px; --spin:360deg; }
+/* Elemen partikel gugur (Bunga/Daun) */
+.falling-element { position:absolute; top:-40px; animation:fallAnimation linear infinite; --drift:0px; --spin:360deg; }
 
 /* ═══════════════════════════
    SCREEN 1 — LANDING (3D)
@@ -109,7 +111,6 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-scroll-box { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; padding-bottom: 140px; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; }
 .env-wrap { position:relative; width:min(300px,80vw); z-index:10; cursor:pointer; transition: margin-top 0.6s ease; }
 
-/* PERBAIKAN WARNA SURAT: Mengubah badan surat menjadi warna Hijaunya Hijau Sage Gelap */
 .env-body { width:100%; padding-bottom:66%; background:linear-gradient(145deg, var(--sage), var(--sage-dark)); border-radius:6px; border:1.5px solid var(--sage-pale); position:relative; overflow:hidden; box-shadow:0 20px 60px rgba(122,140,102,0.25); }
 .env-lines { position:absolute; inset:0; background: linear-gradient(135deg,transparent 49.5%,rgba(255,255,255,0.08) 49.5%,rgba(255,255,255,0.08) 50.5%,transparent 50.5%), linear-gradient(-135deg,transparent 49.5%,rgba(255,255,255,0.08) 49.5%,rgba(255,255,255,0.08) 50.5%,transparent 50.5%); }
 .env-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
@@ -118,45 +119,16 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 .env-dt { font-size:10px; color:var(--sage-pale); letter-spacing:3px; }
 
 .env-flap-w { position:absolute; top:0; left:0; right:0; height:56%; perspective:700px; perspective-origin:50% 0%; overflow:visible; z-index:5;}
-
-/* PERBAIKAN WARNA SURAT: Mengubah warna lipatan tutup surat menjadi senada dengan Hijau Sage */
 .env-flap { width:100%; height:100%; background:linear-gradient(175deg, #8A9C76, var(--sage)); clip-path:polygon(0 0,50% 88%,100% 0); transform-origin:top center; transform-style:preserve-3d; will-change:transform; }
 
-/* PERBAIKAN TOMBOL: Mengubah kelopak bunga matahari menjadi bulat-bulat manis (tidak lincip) */
+/* PERBAIKAN SEGAL/TOMBOL: Menjadikan wadah SVG murni agar berada di atas tumpukan dan memutar indah */
 .env-seal { 
-  position:absolute; top:46%; left:50%; transform:translate(-50%,-50%); 
-  width:50px; height:50px; 
-  background: #FFD700; /* Warna Kuning Terang Bunga Matahari */
-  border-radius: 50%;
-  box-shadow:0 4px 12px rgba(0,0,0,0.15); 
-  animation: sunflowerSpin 16s linear infinite; 
-}
-
-/* Membuat lapisan kelopak luar membulat menggunakan efek bayangan box berulang (CSS Multiple Shadows) */
-.env-seal::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  background: transparent;
-  /* Membuat simulasi pola 8 kelopak melingkar berbentuk bulat/oval */
-  box-shadow: 
-    0 -8px 0 2px #FFD700,   0 8px 0 2px #FFD700, 
-    -8px 0 0 2px #FFD700,   8px 0 0 2px #FFD700,
-    -6px -6px 0 2px #FFD700, 6px 6px 0 2px #FFD700,
-    -6px 6px 0 2px #FFD700,  6px -6px 0 2px #FFD700;
-}
-
-/* Inti tengah bunga matahari (Cokelat) */
-.env-seal::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px; height: 20px;
-  background: #5C3A21; 
-  border-radius: 50%;
-  border: 1px dotted rgba(255,215,0,0.6);
+  position:absolute; top:52%; left:50%; 
+  transform:translate(-50%, -50%); 
+  width:58px; height:58px; 
+  z-index:20; /* Berada di atas lipatan kain luar */
+  animation: sunflowerRotate 22s linear infinite; 
+  pointer-events: none; /* Klik tembus ke pembungkus amplop di bawahnya */
 }
 
 .env-hint { position:absolute; bottom:-36px; left:50%; transform:translateX(-50%); font-size:11px; letter-spacing:3px; color:var(--text-mid); white-space:nowrap; animation:hintBob 2s ease-in-out infinite; font-weight: 600; }
@@ -193,10 +165,6 @@ body { font-family:'Cormorant Garamond',serif; background:var(--broken-white); c
 
 .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s var(--ease),transform 0.8s var(--ease); }
 .reveal.visible { opacity:1; transform:translateY(0); }
-.reveal-l { opacity:0; transform:translateX(-40px); transition:opacity 0.8s var(--ease),transform 0.8s var(--ease); }
-.reveal-r { opacity:0; transform:translateX(40px); transition:opacity 0.8s var(--ease),transform 0.8s var(--ease); }
-.reveal-l.visible,.reveal-r.visible { opacity:1; transform:translateX(0); }
-.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}
 
 section { position:relative; }
 .sec-header { text-align:center; padding:56px 24px 28px; }
@@ -347,7 +315,7 @@ textarea.f-input { resize:vertical; min-height:80px; }
 <div class="ring" style="width:380px;height:380px;border-color:rgba(156,175,136,0.25);animation:ringSpin 36s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
 <div class="ring" style="width:250px;height:250px;border-color:rgba(224,149,32,0.2);animation:ringSpinR 24s linear infinite;transform:translate(-50%,-50%) rotate(0deg)"></div>
 
-<!-- Wadah Kelopak Bunga -->
+<!-- Wadah Elemen Jatuh (Bunga Kuning, Oren, Putih, Daun Sage) -->
 <div id="petal-wrap"></div>
 
 <!-- ═══════ SCREEN 1: LANDING 3D ═══════ -->
@@ -389,8 +357,29 @@ textarea.f-input { resize:vertical; min-height:80px; }
       </div>
       <div class="env-flap-w"><div class="env-flap" id="envFlap"></div></div>
       
-      <!-- Tombol Bunga Matahari Membulat (Melingkar Lembut) -->
-      <div class="env-seal" id="envSeal"></div>
+      <!-- PERBAIKAN UTAMA: Tombol Segel Berbentuk Bunga Matahari Membulat Sempurna Dari SVG -->
+      <div class="env-seal" id="envSeal">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <!-- 12 Kelopak Bulat/Membulat Sempurna Mengelilingi Pusat -->
+          <g fill="#FFD700" stroke="#E5B030" stroke-width="0.5">
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(0 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(30 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(60 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(90 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(120 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(150 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(180 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(210 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(240 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(270 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(300 50 50)" />
+            <ellipse cx="50" cy="18" rx="7" ry="14" transform="rotate(330 50 50)" />
+          </g>
+          <!-- Pusat Cokelat Bunga Matahari -->
+          <circle cx="50" cy="50" r="13" fill="#5C3A21" stroke="#422814" stroke-width="1" />
+          <circle cx="50" cy="50" r="9" fill="#422814" opacity="0.4" stroke="none" />
+        </svg>
+      </div>
 
       <!-- KERTAS SURAT -->
       <div class="env-paper" id="envPaper">
@@ -637,14 +626,37 @@ let bgmOn=false, envOpened=false, guestName = '';
 function getParam(k) { return new URLSearchParams(location.search).get(k) || ''; }
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
-// Kelopak Bunga Gugur
-(function createPetals(){
-  const c=document.getElementById('petal-wrap');
-  const cols=['rgba(156,175,136,0.4)','rgba(224,149,32,0.4)','rgba(255,255,255,0.8)'];
-  for(let i=0;i<24;i++){
-    const p=document.createElement('div'); p.className='petal';
-    const s=5+Math.random()*9, l=Math.random()*100, dur=6+Math.random()*8, delay=-Math.random()*12, dx=(Math.random()-0.5)*150;
-    p.style.cssText=`width:${s}px;height:${s*1.4}px;background:${cols[i%cols.length]};left:${l}%;animation:petal ${dur}s linear ${delay}s infinite;--drift:${dx}px;--spin:360deg;`;
+// PERBAIKAN ORNAMEN JATUH: Mengubah dari daun jatuh menjadi bunga warna-warni (kuning, oren, putih) + sedikit daun sage
+(function createFallingElements(){
+  const c = document.getElementById('petal-wrap');
+  // Menyiapkan bentuk bunga murni (SVG path) dan daun kecil
+  const types = [
+    { type: 'flower', color: '#FFD700', w: 10, h: 10 }, // Bunga Kuning
+    { type: 'flower', color: '#E09520', w: 9,  h: 9  }, // Bunga Oren
+    { type: 'flower', color: '#FFFFFF', w: 11, h: 11 }, // Bunga Putih
+    { type: 'leaf',   color: '#9CAF88', w: 7,  h: 12 }  // Sedikit Daun Sage
+  ];
+  
+  for(let i=0; i<32; i++){
+    const p = document.createElement('div'); 
+    p.className = 'falling-element';
+    const item = types[i % types.length];
+    const left = Math.random() * 100; 
+    const dur = 6 + Math.random() * 8; 
+    const delay = -Math.random() * 12; 
+    const dx = (Math.random() - 0.5) * 150;
+    
+    p.style.cssText = `
+      width: ${item.w}px; 
+      height: ${item.h}px; 
+      background: ${item.color}; 
+      left: ${left}%; 
+      animation: fallAnimation ${dur}s linear ${delay}s infinite; 
+      --drift: ${dx}px; 
+      --spin: ${360 + Math.random() * 360}deg;
+      border-radius: ${item.type === 'flower' ? '50%' : '50% 0 50% 50%'};
+      box-shadow: ${item.type === 'flower' ? '0 0 0 2px ' + item.color : 'none'};
+    `;
     c.appendChild(p);
   }
 })();
